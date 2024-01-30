@@ -2,7 +2,7 @@
 
 # Group Members
 
-Ryan Maxin, Derek Maxin, Marcus Puntillo,Jia Wen Li
+Ryan Maxin, Derek Maxin, Marcus Puntillo, Jia Wen Li
 
 ## Project Proposal
 
