@@ -1,8 +1,12 @@
 # Team 101-5
 
-# Group Members
+# Contributers
 
 Ryan Maxin, Derek Maxin, Marcus Puntillo, Jia Wen Li
+
+# Conventions
+**Branching**: [user]-[issue number]-[description] <br>
+**Example**: mapuntil-56-question-deletion
 
 ## Project Proposal
 
