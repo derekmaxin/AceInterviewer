@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1059119278680",
+    "project_id": "aceinterviewer346",
+    "storage_bucket": "aceinterviewer346.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1059119278680:android:3cfc332e7f32e283f3b82d",
+        "android_client_info": {
+          "package_name": "com.example.interviewpractice"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCU8pBv5SP5xgGWEkVaUBRiabs9JPfEGlc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
