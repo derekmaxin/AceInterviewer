@@ -1,4 +1,4 @@
-package com.example.interviewpractice.elements
+package com.example.interviewpractice.ui.elements
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
