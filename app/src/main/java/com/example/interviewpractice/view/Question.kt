@@ -1,4 +1,4 @@
-package com.example.interviewpractice.ui.elements
+package com.example.interviewpractice.view
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
@@ -15,9 +15,9 @@ import androidx.compose.ui.unit.dp
 fun Question() {
     Card() {
         Text(
-            text = "Question",
+            text = "Question that might be too long to fill the screen",
             modifier = Modifier
-                .padding(16.dp),
+                .padding(12.dp),
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.bodySmall,
         )
