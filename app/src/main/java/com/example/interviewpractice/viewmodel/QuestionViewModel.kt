@@ -7,8 +7,7 @@ import com.example.interviewpractice.model.Model
 
 class QuestionViewModel(private val model: Model): ModelSubscriber {
 
-    // TODO: Include attributes that will be updated by the model
-
+    var showTags = mutableStateOf(false)
     var questionText = mutableStateOf("")
     var tags = mutableStateOf(emptyList<String>())
 
