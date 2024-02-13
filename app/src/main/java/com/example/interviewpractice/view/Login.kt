@@ -4,6 +4,10 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
@@ -18,6 +22,8 @@ import com.example.interviewpractice.R
 @Composable
 @Preview
 fun LoginScreen() {
+    var username by remember {mutableStateOf("")}
+    var password by remember { mutableStateOf("")}
     Surface(
 
     ) {
@@ -33,8 +39,9 @@ fun LoginScreen() {
                 modifier = Modifier.fillMaxWidth().height(500.dp).padding(vertical = 8.dp),
             )
             TextField(
-                value = "username",
-                onValueChange = { },
+                value = username,
+//                placeholder = {Text("username")},
+                onValueChange = {username = it },
                 label = { Text("username") },
                 modifier = Modifier.fillMaxWidth().height(85.dp).padding(vertical = 8.dp),
                 keyboardOptions = KeyboardOptions.Default.copy(
@@ -46,8 +53,9 @@ fun LoginScreen() {
                 textStyle = TextStyle(fontSize = 28.sp)
             )
             TextField(
-                value = "password",
-                onValueChange = { },
+                value = password,
+//                placeholder = {Text("password")},
+                onValueChange = {password = it },
                 label = { Text("Password") },
                 modifier = Modifier.fillMaxWidth().height(85.dp).padding(vertical = 8.dp),
                 keyboardOptions = KeyboardOptions.Default.copy(
