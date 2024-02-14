@@ -12,8 +12,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
-import com.example.interviewpractice.ui.elements.NavBar
-import com.example.interviewpractice.ui.elements.Question
+import com.example.interviewpractice.viewmodel.QuestionViewModel
 
 @Composable
 @Preview
@@ -31,8 +30,9 @@ fun HomeScreen() {
             TextButton(onClick = { }) {
                 Text("Question of the day",
                     style = TextStyle(
-                        fontSize = 14.sp,
+                        fontSize = 20.sp,
                         color = Color.Black,
+                        fontWeight = FontWeight.Bold
                     )
                 )
             }
@@ -40,10 +40,15 @@ fun HomeScreen() {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center
             ) {
-                Question()
+                //Question(QuestionViewModel) TODO: IMPLEMENT WHEN MARCUS IS DONE THE QUESTION COMPONENT
             }
             Text(
                 text = "My answered",
+                style = TextStyle(
+                    fontSize = 20.sp,
+                    color = Color.Black,
+                    fontWeight = FontWeight.Bold
+                ),
                 modifier = Modifier.padding(16.dp)
             )
             for (i in 0..2) {

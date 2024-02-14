@@ -2,9 +2,7 @@ package com.example.interviewpractice.view
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
@@ -40,7 +38,7 @@ fun Tag(text: String) {
 }
 
 @Composable
-fun Question(questionViewModel: QuestionViewModel) {
+fun Question(questionViewModel: QuestionViewModel?) {
     val viewModel by remember { mutableStateOf(questionViewModel) }
 
     Card(
@@ -52,20 +50,22 @@ fun Question(questionViewModel: QuestionViewModel) {
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(6.dp)
         ) {
-            Text(
-                text =  viewModel.questionText.value,
-                modifier = Modifier
-                    .padding(4.dp,0.dp,4.dp,0.dp),
-                textAlign = TextAlign.Left,
-                style = MaterialTheme.typography.bodyLarge,
-            )
-            if (viewModel.showTags.value) {
+            viewModel?.questionText?.value?.let {
+                Text(
+                    text = it,
+                    modifier = Modifier
+                        .padding(4.dp,0.dp,4.dp,0.dp),
+                    textAlign = TextAlign.Left,
+                    style = MaterialTheme.typography.bodyLarge,
+                )
+            }
+            if (viewModel?.showTags?.value == true) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
-                    for (tag in viewModel.tags.value) {
+                    for (tag in viewModel?.tags?.value!!) {
                         Tag(tag)
                     }
                 }

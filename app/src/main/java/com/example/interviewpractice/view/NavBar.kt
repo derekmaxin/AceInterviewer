@@ -1,4 +1,4 @@
-package com.example.interviewpractice.ui.elements
+package com.example.interviewpractice.view
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
