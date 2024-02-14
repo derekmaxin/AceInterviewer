@@ -1,3 +1,5 @@
+package com.example.interviewpractice.view
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
@@ -62,7 +64,7 @@ fun LoginScreen() {
                 onClick = { },
                 modifier = Modifier.fillMaxWidth().height(100.dp).padding(vertical = 8.dp)
             ) {
-                Text("Login",
+                Text("Log in",
                     style = TextStyle(
                         fontSize = 32.sp,
                         color = Color.White,
