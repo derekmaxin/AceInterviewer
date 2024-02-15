@@ -10,6 +10,9 @@ class RegisterViewModel(private val model: Model): Subscriber{
     // loading
     // success
     // Error
+    init {
+        model.subscribe(this)
+    }
 
     fun verifyRegister(username: String, email: String, password: String) {
         try {

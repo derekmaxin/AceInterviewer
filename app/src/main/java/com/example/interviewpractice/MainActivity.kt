@@ -23,6 +23,7 @@ class MainActivity : ComponentActivity() {
         val model = Model()
         val controller = UserController(model)
         val register = RegisterViewModel(model)
+        model.checkAuth()
 
         setContent {
             InterviewPracticeTheme {

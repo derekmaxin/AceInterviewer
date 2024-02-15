@@ -1,15 +1,19 @@
 package com.example.interviewpractice.model
 
 import com.example.interviewpractice.viewmodel.Subscriber
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 
-class Model {
+class Model: Presenter() {
     private val subscribers = mutableListOf<Subscriber>()
-    fun notifySubscribers() {
-        subscribers.forEach() {
-            it.update()
+    private var auth = Firebase.auth
+    init{
+
+    }
+    fun checkAuth() {
+        val currentUser = auth.currentUser
+        if (currentUser != null) {
+            notifySubscribers()
         }
     }
-
-    fun subscribe(subscriber: Subscriber) { subscribers.add(subscriber) }
-    fun unsubscribe(subscriber: Subscriber) { subscribers.remove(subscriber) }
 }
