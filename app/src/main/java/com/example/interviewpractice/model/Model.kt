@@ -76,6 +76,8 @@ class Model: Presenter() {
     fun logout() {
         auth.signOut()
         user = null
+        //Stop loading after we finished authentication
+        loading = false
     }
 
     private fun updateCurrentUser(username: String, email: String, password: String): FirebaseUser {
