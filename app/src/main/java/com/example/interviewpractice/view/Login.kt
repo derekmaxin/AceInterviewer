@@ -67,7 +67,7 @@ fun LoginScreen() {
                 textStyle = TextStyle(fontSize = 28.sp)
             )
             Button(
-                onClick = { },
+                onClick = {/*verifyRegister()*/ },
                 modifier = Modifier.fillMaxWidth().height(100.dp).padding(vertical = 8.dp)
             ) {
                 Text("Login",

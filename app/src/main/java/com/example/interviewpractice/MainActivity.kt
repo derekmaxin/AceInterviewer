@@ -11,11 +11,20 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.interviewpractice.controller.UserController
+import com.example.interviewpractice.model.Model
 import com.example.interviewpractice.ui.theme.InterviewPracticeTheme
+import com.example.interviewpractice.viewmodel.RegisterView
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        //Initialize views and models
+        val model = Model()
+        val controller = UserController(model)
+        val register = RegisterView(model)
+
         setContent {
             InterviewPracticeTheme {
                 // A surface container using the 'background' color from the theme
