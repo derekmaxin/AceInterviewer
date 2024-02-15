@@ -1,8 +1,10 @@
 package com.example.interviewpractice
 
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -23,7 +25,7 @@ import com.example.interviewpractice.viewmodel.auth.RegisterViewModel
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import com.example.interviewpractice.view.auth.MainView
-import com.example.interviewpractice.viewmodel.auth.MainViewModel
+import com.example.interviewpractice.viewmodel.MainViewModel
 
 class MainActivity : ComponentActivity() {
 
@@ -35,6 +37,7 @@ class MainActivity : ComponentActivity() {
     private lateinit var mainVM: MainViewModel
 
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
