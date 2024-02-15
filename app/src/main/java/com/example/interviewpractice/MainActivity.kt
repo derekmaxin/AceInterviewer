@@ -8,29 +8,50 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.interviewpractice.controller.UserController
 import com.example.interviewpractice.model.Model
 import com.example.interviewpractice.ui.theme.InterviewPracticeTheme
+import com.example.interviewpractice.view.auth.Loading
+import com.example.interviewpractice.view.auth.LoginScreen
+import com.example.interviewpractice.view.auth.RegisterScreen
+import com.example.interviewpractice.viewmodel.auth.LoginViewModel
 import com.example.interviewpractice.viewmodel.auth.RegisterViewModel
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import com.example.interviewpractice.view.auth.MainView
+import com.example.interviewpractice.viewmodel.auth.MainViewModel
 
 class MainActivity : ComponentActivity() {
+
+    private lateinit var model: Model
+    private lateinit var controller: UserController
+
+    private lateinit var registerVM: RegisterViewModel
+    private lateinit var loginVM: LoginViewModel
+    private lateinit var mainVM: MainViewModel
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         //Initialize views and models
-        val model = Model()
-        val controller = UserController(model)
-        val register = RegisterViewModel(model)
-        model.checkAuth()
+        model = Model()
+        controller = UserController(model)
+        registerVM = RegisterViewModel(model)
+        loginVM = LoginViewModel(model)
+        mainVM = MainViewModel(model)
+        model.initAuth()
+
 
         setContent {
             InterviewPracticeTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-//                    LoginScreen()
-                    Greeting("Android")
+                    MainView(registerViewModel = registerVM, loginViewModel = loginVM, mainViewModel = mainVM, controller=controller)
                 }
             }
         }

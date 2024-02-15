@@ -22,16 +22,13 @@ import androidx.compose.ui.unit.sp
 import com.example.interviewpractice.R
 import com.example.interviewpractice.controller.UserController
 import com.example.interviewpractice.viewmodel.auth.LoginViewModel
+import com.example.interviewpractice.viewmodel.auth.RegisterViewModel
 
 @Composable
 //@Preview
-fun LoginScreen(viewModel: LoginViewModel, controller: UserController, onSwitch: () -> Unit ) {
+fun RegisterScreen(viewModel: RegisterViewModel, controller: UserController, onSwitch: () -> Unit) {
     val vm by remember { mutableStateOf(viewModel) }
     val c by remember { mutableStateOf(controller) }
-
-//    var username by remember { mutableStateOf("") }
-//    var email by remember { mutableStateOf("") }
-//    var password by remember { mutableStateOf("") }
 
 
 
@@ -50,15 +47,28 @@ fun LoginScreen(viewModel: LoginViewModel, controller: UserController, onSwitch:
                 modifier = Modifier.fillMaxWidth().height(200.dp).padding(vertical = 8.dp),
             )
             TextField(
+                value = vm.username,
+                onValueChange = {vm.username = it },
+                label = { Text("Username") },
+                modifier = Modifier.fillMaxWidth().height(85.dp).padding(vertical = 8.dp),
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    imeAction = ImeAction.Done,
+                ),
+                keyboardActions = KeyboardActions(
+                    onDone = { }
+                ),
+                textStyle = TextStyle(fontSize = 28.sp)
+            )
+            TextField(
                 value = vm.email,
                 onValueChange = {vm.email = it },
                 label = { Text("Email") },
                 modifier = Modifier.fillMaxWidth().height(85.dp).padding(vertical = 8.dp),
                 keyboardOptions = KeyboardOptions.Default.copy(
-                    imeAction = ImeAction.Next,
+                    imeAction = ImeAction.Done,
                 ),
                 keyboardActions = KeyboardActions(
-                    onNext = { }
+                    onDone = { }
                 ),
                 textStyle = TextStyle(fontSize = 28.sp)
             )
@@ -76,10 +86,10 @@ fun LoginScreen(viewModel: LoginViewModel, controller: UserController, onSwitch:
                 textStyle = TextStyle(fontSize = 28.sp)
             )
             Button(
-                onClick = {c.verifySignIn(password = vm.password, email = vm.email) },
+                onClick = {c.verifyRegister(username = vm.username, password = vm.password, email = vm.email) },
                 modifier = Modifier.fillMaxWidth().height(100.dp).padding(vertical = 8.dp)
             ) {
-                Text("Log in",
+                Text("Register",
                     style = TextStyle(
                         fontSize = 32.sp,
                         color = Color.White,
@@ -87,12 +97,12 @@ fun LoginScreen(viewModel: LoginViewModel, controller: UserController, onSwitch:
                 )
             }
             Button(
-                onClick = onSwitch,
+                onClick = onSwitch ,
                 modifier = Modifier.fillMaxWidth().padding(vertical = 0.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Transparent) //containerColor vs backgroundColor
             ) {
-                Text("Register",
+                Text("Log in",
                     style = TextStyle(
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Light,

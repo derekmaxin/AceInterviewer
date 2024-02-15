@@ -3,6 +3,7 @@ package com.example.interviewpractice.viewmodel
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import com.example.interviewpractice.model.Model
+import com.example.interviewpractice.viewmodel.auth.RegisterViewModel
 
 class QuestionViewModel(private val model: Model): Subscriber {
 
@@ -17,4 +18,6 @@ class QuestionViewModel(private val model: Model): Subscriber {
     override fun update() {
         Log.d("QUESTION VIEW MODEL", "Updated")
     }
+
+
 }

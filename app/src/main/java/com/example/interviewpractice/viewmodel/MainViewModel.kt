@@ -9,32 +9,26 @@ import com.example.interviewpractice.model.Model
 import com.example.interviewpractice.viewmodel.Subscriber
 import com.google.firebase.auth.FirebaseUser
 
-class RegisterViewModel(private val m: Model): Subscriber{
-    //View specific
-    var username by mutableStateOf("")
-    var password by mutableStateOf("")
-    var email by mutableStateOf("")
+class MainViewModel(private val m: Model): Subscriber{
 
-    // TODO: Include attributes that will be updated by the model
-    // Recall that you should use mutableStateOf() in your definition.
-//    var loading: Boolean by mutableStateOf(false)
-//    var user: FirebaseUser? by mutableStateOf(null)
-
-    // TODO: implement errors
-    //    var error by mutableStateOf("")
+    var loading: Boolean by mutableStateOf(false)
+    var user: FirebaseUser? by mutableStateOf(null)
     var error: Exception? by mutableStateOf(null)
 
 
     init {
         m.subscribe(this)
+        m.systemDataSubscribe(this)
     }
 
     override fun update() {
         error = m.error
+        user = m.user
+        loading = m.loading
         Log.d(TAG, "Updated")
     }
     companion object {
-        private const val TAG = "RegisterViewModel"
+        private const val TAG = "MainViewModel"
     }
 
 }
