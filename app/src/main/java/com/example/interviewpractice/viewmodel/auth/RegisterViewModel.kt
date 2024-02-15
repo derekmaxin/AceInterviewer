@@ -1,8 +1,11 @@
-package com.example.interviewpractice.viewmodel
+package com.example.interviewpractice.viewmodel.auth
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
+import com.example.interviewpractice.model.Model
+import com.example.interviewpractice.viewmodel.Subscriber
 
-class RegisterView(): ViewModel() {
+class RegisterViewModel(private val model: Model): Subscriber{
     //States:
     // loading
     // success
@@ -39,6 +42,10 @@ class RegisterView(): ViewModel() {
     }
     private fun verifyUsername(username: String) {
         return
+    }
+
+    override fun update() {
+        Log.d("LOGIN VIEW MODEL", "Updated")
     }
 
 }

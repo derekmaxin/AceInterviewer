@@ -1,4 +1,4 @@
-package com.example.interviewpractice.view
+package com.example.interviewpractice.view.auth
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*

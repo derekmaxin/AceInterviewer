@@ -1,6 +1,5 @@
 package com.example.interviewpractice
 
-import LoginScreen
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -14,7 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.interviewpractice.controller.UserController
 import com.example.interviewpractice.model.Model
 import com.example.interviewpractice.ui.theme.InterviewPracticeTheme
-import com.example.interviewpractice.viewmodel.RegisterView
+import com.example.interviewpractice.viewmodel.auth.RegisterViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,14 +22,14 @@ class MainActivity : ComponentActivity() {
         //Initialize views and models
         val model = Model()
         val controller = UserController(model)
-        val register = RegisterView(model)
+        val register = RegisterViewModel(model)
 
         setContent {
             InterviewPracticeTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    LoginScreen()
-//                    Greeting("Android")
+//                    LoginScreen()
+                    Greeting("Android")
                 }
             }
         }
