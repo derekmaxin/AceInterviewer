@@ -16,9 +16,6 @@ class UserController(private val model: Model) {
             //After this point, we have no user errors
 
             model.createAccount(username = username.trim(), email = email.trim(), password = password.trim())
-
-            //Stop loading after we finished authentication
-            model.loading = false
         }
         catch (ex: Exception) {
             Log.w(TAG, "verifyRegister:failure", ex)
@@ -53,9 +50,6 @@ class UserController(private val model: Model) {
             //After this point, we have no user errors
 
             model.logout()
-
-            //Stop loading after we finished authentication
-            model.loading = false
         }
         catch (ex: Exception) {
             Log.w(TAG, "verifyLogout:failure", ex)
