@@ -3,6 +3,9 @@ package com.example.interviewpractice.view
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -12,11 +15,13 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
+import com.example.interviewpractice.controller.UserController
 import com.example.interviewpractice.viewmodel.QuestionViewModel
 
 @Composable
-@Preview
-fun HomeScreen() {
+//@Preview
+fun HomeScreen(controller: UserController) {
+    val c by remember { mutableStateOf(controller) }
     Surface() {
         Column(
             modifier = Modifier
@@ -51,6 +56,7 @@ fun HomeScreen() {
                 ),
                 modifier = Modifier.padding(16.dp)
             )
+
             for (i in 0..2) {
                 Row(
                     modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
@@ -58,6 +64,17 @@ fun HomeScreen() {
                 ) {
                     QuestionAnswered()
                 }
+            }
+            Button(
+                onClick = {c.verifyLogout() },
+                modifier = Modifier.fillMaxWidth().height(100.dp).padding(vertical = 8.dp)
+            ) {
+                Text("Log out",
+                    style = TextStyle(
+                        fontSize = 32.sp,
+                        color = Color.White,
+                    )
+                )
             }
         }
         Column(
