@@ -1,7 +1,7 @@
 package com.example.interviewpractice.types
 
-data class User(val _username: String, val _email: String) {
-    val username: String? = _username
-    val email: String? = _email
-    //Add more user fields here, like birthday, first/last name, photo url?, etc
-}
+import com.google.firebase.firestore.IgnoreExtraProperties
+
+//Add more user fields here, like birthday, first/last name, photo url?, etc
+data class User(val username: String?, val email: String?)
+

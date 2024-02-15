@@ -76,6 +76,8 @@ class Model: Presenter() {
     fun logout() {
         auth.signOut()
         user = null
+        //Stop loading after we finished authentication
+        loading = false
     }
 
     private fun updateCurrentUser(username: String, email: String, password: String): FirebaseUser {
@@ -92,7 +94,7 @@ class Model: Presenter() {
         }
         user.updateProfile(profileUpdates)
 
-        val userData = User(_username=username,_email=email)
+        val userData = User(username=username,email=email)
         db.collection("users").document(user.uid).set(userData)
             .addOnCompleteListener() { task ->
                 if (task.isSuccessful) {
