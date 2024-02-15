@@ -2,10 +2,10 @@ package com.example.interviewpractice.viewmodel
 
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
-import com.example.interviewpractice.user_interface.ModelSubscriber
 import com.example.interviewpractice.model.Model
+import com.example.interviewpractice.viewmodel.auth.RegisterViewModel
 
-class QuestionViewModel(private val model: Model): ModelSubscriber {
+class QuestionViewModel(private val model: Model): Subscriber {
 
     var showTags = mutableStateOf(false)
     var questionText = mutableStateOf("")
@@ -18,4 +18,6 @@ class QuestionViewModel(private val model: Model): ModelSubscriber {
     override fun update() {
         Log.d("QUESTION VIEW MODEL", "Updated")
     }
+
+
 }
