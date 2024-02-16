@@ -49,7 +49,7 @@ class Model: Presenter() {
                 } else {
                     // If account creation fails, display a message to the user.
                     Log.w(TAG, "createUserWithEmail:failure", task.exception)
-                    throw Exception(task.exception)
+//                    throw Exception(task.exception)
                     loading = false
                 }
             }
