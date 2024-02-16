@@ -24,7 +24,7 @@ import com.example.interviewpractice.viewmodel.auth.LoginViewModel
 import com.example.interviewpractice.viewmodel.auth.RegisterViewModel
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
-import com.example.interviewpractice.view.auth.MainView
+import com.example.interviewpractice.view.MainView
 import com.example.interviewpractice.viewmodel.MainViewModel
 
 class MainActivity : ComponentActivity() {

@@ -24,7 +24,8 @@ import com.example.interviewpractice.controller.UserController
 import com.example.interviewpractice.viewmodel.auth.LoginViewModel
 
 @Composable
-fun LoginScreen(viewModel: LoginViewModel, controller: UserController, onSwitch: () -> Unit ) {
+fun LoginScreen(viewModel: LoginViewModel, controller: UserController, onSwitch: () -> Unit,
+                onNavigateToHome: () -> Unit, onNavigateToRegister: () -> Unit) {
     val vm by remember { mutableStateOf(viewModel) }
     val c by remember { mutableStateOf(controller) }
 
@@ -96,7 +97,8 @@ fun LoginScreen(viewModel: LoginViewModel, controller: UserController, onSwitch:
                 )
             }
             Button(
-                onClick = {c.verifySignIn(password = vm.password, email = vm.email) },
+                onClick = {/*c.verifySignIn(password = vm.password, email = vm.email)*/
+                          onNavigateToHome()},
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(100.dp)
@@ -110,7 +112,8 @@ fun LoginScreen(viewModel: LoginViewModel, controller: UserController, onSwitch:
                 )
             }
             Button(
-                onClick = onSwitch,
+                //onClick = onSwitch,
+                onClick = onNavigateToRegister,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 0.dp),
