@@ -1,4 +1,4 @@
-package com.example.interviewpractice.viewmodel.auth
+package com.example.interviewpractice.viewmodel
 
 import android.util.Log
 import androidx.compose.runtime.getValue

@@ -1,5 +1,7 @@
 package com.example.interviewpractice.view.auth
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
@@ -17,9 +19,10 @@ import com.example.interviewpractice.controller.UserController
 import com.example.interviewpractice.model.Model
 import com.example.interviewpractice.view.HomeScreen
 import com.example.interviewpractice.viewmodel.auth.LoginViewModel
-import com.example.interviewpractice.viewmodel.auth.MainViewModel
+import com.example.interviewpractice.viewmodel.MainViewModel
 import com.example.interviewpractice.viewmodel.auth.RegisterViewModel
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 //@Preview
 fun MainView(registerViewModel: RegisterViewModel, loginViewModel: LoginViewModel, mainViewModel: MainViewModel, controller: UserController) {
