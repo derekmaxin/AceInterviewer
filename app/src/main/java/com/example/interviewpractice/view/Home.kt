@@ -3,6 +3,7 @@ package com.example.interviewpractice.view
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -17,11 +18,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.example.interviewpractice.controller.UserController
 import com.example.interviewpractice.viewmodel.QuestionViewModel
+import com.example.interviewpractice.viewmodel.PlayBarViewModel
+import com.example.interviewpractice.viewmodel.PlayState
+import com.example.interviewpractice.model.Model
+import com.example.interviewpractice.view.PlayBar
 
 @Composable
 //@Preview
 fun HomeScreen(controller: UserController) {
     val c by remember { mutableStateOf(controller) }
+    val model = Model()
+    val questionVM = QuestionViewModel(model)
+
     Surface() {
         Column(
             modifier = Modifier
@@ -45,7 +53,7 @@ fun HomeScreen(controller: UserController) {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center
             ) {
-                //Question(QuestionViewModel) TODO: IMPLEMENT WHEN MARCUS IS DONE THE QUESTION COMPONENT
+                Question(questionVM)
             }
             Text(
                 text = "My answered",
@@ -90,8 +98,11 @@ fun HomeScreen(controller: UserController) {
 
 @Composable
 fun QuestionAnswered() {
+    val model = Model()
+    val playBarVM = PlayBarViewModel(model)
+
     Card(
-        modifier = Modifier.fillMaxWidth().height(100.dp)
+        modifier = Modifier.fillMaxWidth().height(125.dp)
     ) {
         Box() {// Needed to align notification number in top-right
             Button(
@@ -118,16 +129,7 @@ fun QuestionAnswered() {
                         maxLines = 1
                     )
                     Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = "~Audio Recording~",
-                        style = TextStyle(
-                            fontSize = 14.sp,
-                            color = Color.Black,
-                        ),
-                        modifier = Modifier.padding(8.dp),
-                        overflow = TextOverflow.Ellipsis,
-                        maxLines = 1
-                    )
+                    PlayBar(playBarVM)
                 }
             }
             }
