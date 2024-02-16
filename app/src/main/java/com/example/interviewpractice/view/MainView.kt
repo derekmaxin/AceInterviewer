@@ -1,4 +1,4 @@
-package com.example.interviewpractice.view.auth
+package com.example.interviewpractice.view
 
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -12,6 +12,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.createGraph
 import com.example.interviewpractice.Greeting
 import com.example.interviewpractice.GreetingPreview
 import com.example.interviewpractice.R
@@ -21,6 +25,9 @@ import com.example.interviewpractice.view.HomeScreen
 import com.example.interviewpractice.viewmodel.auth.LoginViewModel
 import com.example.interviewpractice.viewmodel.MainViewModel
 import com.example.interviewpractice.viewmodel.auth.RegisterViewModel
+import com.example.interviewpractice.view.auth.Loading
+import com.example.interviewpractice.view.auth.LoginScreen
+import com.example.interviewpractice.view.auth.RegisterScreen
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -32,26 +39,45 @@ fun MainView(registerViewModel: RegisterViewModel, loginViewModel: LoginViewMode
 
     var loggingIn by remember {mutableStateOf(false)}
 
-    if (mainVM.loading) {
-        //Auth is loading
-        Loading()
-    }
-    else if (mainVM.user != null) {
-        //If user is signed in
-        HomeScreen(controller = controller)
+    // NavController //////////////////////////////////////////////////////////
 
-        //REMOVE GREETING, THIS IS JUST TO SHOW USER EMAIL (FOR DEBUGGING PURPOSES)
-        Greeting(mainVM.user!!.email!!)
+    val navController = rememberNavController()
+
+    NavHost(navController = navController, startDestination = "login") {
+        composable("login") { LoginScreen(viewModel = loginVM,
+            controller = controller, onNavigateToHome = { navController.navigate("home")},
+            onNavigateToRegister = { navController.navigate("register")},
+            onSwitch = { loggingIn = !loggingIn }) }
+
+        composable("home") { HomeScreen(controller = controller) }
+
+        composable("register") { RegisterScreen(viewModel = registerVM, controller = controller) {
+        }}
     }
-    else {
-        //No user is logged in
-        if (loggingIn) {
-            LoginScreen(viewModel = loginVM, controller = controller) {loggingIn = !loggingIn}
-        }
-        else {
-            RegisterScreen(viewModel = registerVM, controller = controller) {loggingIn = !loggingIn}
-        }
+
+    //////////////////////////////////////////////////////////////////////////
 
 
-    }
+//    if (mainVM.loading) {
+//        //Auth is loading
+//        Loading()
+//    }
+//    else if (mainVM.user != null) {
+//        //If user is signed in
+//        HomeScreen(controller = controller)
+//
+//        //REMOVE GREETING, THIS IS JUST TO SHOW USER EMAIL (FOR DEBUGGING PURPOSES)
+//        Greeting(mainVM.user!!.email!!)
+//    }
+//    else {
+//        //No user is logged in
+//        if (loggingIn) {
+//            LoginScreen(viewModel = loginVM, controller = controller) {loggingIn = !loggingIn}
+//        }
+//        else {
+//            RegisterScreen(viewModel = registerVM, controller = controller) {loggingIn = !loggingIn}
+//        }
+//
+//
+//    }
 }
