@@ -16,6 +16,7 @@ Type: Mobile App
 Click [here](https://git.uwaterloo.ca/kotlin-gang/team-101-5/-/wikis/Project-Proposal) for our Project Proposal. 
 
 # Release 1.0.0
+_February 16, 2024_
 * Added Home Page
 * Added Login Screen
 * Added Registration Screen
