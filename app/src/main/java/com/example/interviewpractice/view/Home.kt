@@ -75,11 +75,11 @@ fun HomeScreen(controller: UserController) {
             }
             Button(
                 onClick = {c.verifyLogout() },
-                modifier = Modifier.fillMaxWidth().height(100.dp).padding(vertical = 8.dp)
+                modifier = Modifier.fillMaxWidth().height(50.dp).padding(vertical = 4.dp)
             ) {
                 Text("Log out",
                     style = TextStyle(
-                        fontSize = 32.sp,
+                        fontSize = 16.sp,
                         color = Color.White,
                     )
                 )

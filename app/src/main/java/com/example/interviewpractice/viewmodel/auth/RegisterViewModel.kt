@@ -14,6 +14,7 @@ class RegisterViewModel(private val m: Model): Subscriber{
     var username by mutableStateOf("")
     var password by mutableStateOf("")
     var email by mutableStateOf("")
+    var passwordConfirm by mutableStateOf("")
 
     // TODO: Include attributes that will be updated by the model
     // Recall that you should use mutableStateOf() in your definition.

@@ -19,19 +19,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.example.interviewpractice.R
 import com.example.interviewpractice.controller.UserController
 import com.example.interviewpractice.viewmodel.auth.LoginViewModel
 
 @Composable
-fun LoginScreen(viewModel: LoginViewModel, controller: UserController, onSwitch: () -> Unit,
-                onNavigateToHome: () -> Unit, onNavigateToRegister: () -> Unit) {
+fun LoginScreen(
+    viewModel: LoginViewModel,
+    controller: UserController,
+    onNavigateToRegister: () -> Unit)
+{
     val vm by remember { mutableStateOf(viewModel) }
     val c by remember { mutableStateOf(controller) }
-
-//    var username by remember { mutableStateOf("") }
-//    var email by remember { mutableStateOf("") }
-//    var password by remember { mutableStateOf("") }
 
 
 
@@ -97,8 +97,7 @@ fun LoginScreen(viewModel: LoginViewModel, controller: UserController, onSwitch:
                 )
             }
             Button(
-                onClick = {/*c.verifySignIn(password = vm.password, email = vm.email)*/
-                          onNavigateToHome()},
+                onClick = {c.verifySignIn(password = vm.password, email = vm.email)},
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(100.dp)

@@ -74,8 +74,8 @@ fun RegisterScreen(viewModel: RegisterViewModel, controller: UserController, onS
                 textStyle = TextStyle(fontSize = 28.sp)
             )
             TextField(
-                value = "",
-                onValueChange = { },
+                value = vm.passwordConfirm,
+                onValueChange = {vm.passwordConfirm = it },
                 label = { Text("Confirm Password *") },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -97,7 +97,7 @@ fun RegisterScreen(viewModel: RegisterViewModel, controller: UserController, onS
             FieldsOfInterest()
             Spacer(modifier = Modifier.height(8.dp))
             Button(
-                onClick = { },
+                onClick = {c.verifyRegister(username = vm.username, password = vm.password, email = vm.email) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(70.dp)
