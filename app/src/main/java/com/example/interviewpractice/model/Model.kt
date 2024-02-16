@@ -50,6 +50,7 @@ class Model: Presenter() {
                     // If account creation fails, display a message to the user.
                     Log.w(TAG, "createUserWithEmail:failure", task.exception)
                     throw Exception(task.exception)
+                    loading = false
                 }
             }
         //Must be non-null after successful sign-in
@@ -68,7 +69,8 @@ class Model: Presenter() {
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w(TAG, "signIn:failure", task.exception)
-                    throw Exception(task.exception)
+//                    throw Exception(task.exception)
+                    loading = false
                 }
             }
     }
