@@ -83,7 +83,7 @@ fun LoginScreen(
                 textStyle = TextStyle(fontSize = 28.sp)
             )
             Button(
-                onClick = { },
+                onClick = {c.verifyForgotPassword(vm.email) },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Transparent)
             ) {

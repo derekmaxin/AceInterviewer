@@ -82,6 +82,19 @@ class Model: Presenter() {
         loading = false
     }
 
+    fun resetPassword(email: String) {
+        Firebase.auth.sendPasswordResetEmail(email)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Log.d(TAG, "Email sent to $email.")
+                }
+                else {
+                    Log.w(TAG, "resetPassword:failure", task.exception)
+//                    throw Exception(task.exception)
+                }
+            }
+    }
+
     private fun updateCurrentUser(username: String, email: String, password: String): FirebaseUser {
         val user = auth.currentUser
         //throw if user is null
