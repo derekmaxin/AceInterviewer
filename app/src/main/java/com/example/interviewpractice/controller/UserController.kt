@@ -58,6 +58,20 @@ class UserController(private val model: Model) {
             //Todo: deal with exceptions. I suggest using "snackbars" https://m2.material.io/components/snackbars/android#using-snackbars
         }
     }
+
+    fun verifyForgotPassword(email: String) {
+        try {
+            verifyEmail(email)
+            model.resetPassword(email)
+        }
+        catch(ex: Exception) {
+            Log.w(TAG, "verifyForgotPassword:failure", ex)
+            model.error = ex
+            model.loading = false
+            //Todo: deal with exceptions. I suggest using "snackbars" https://m2.material.io/components/snackbars/android#using-snackbars
+        }
+
+    }
     private fun verifyEmail(email: String) {
         return
     }
@@ -67,6 +81,7 @@ class UserController(private val model: Model) {
     private fun verifyUsername(username: String) {
         return
     }
+
     companion object {
         private const val TAG = "UserController"
     }
