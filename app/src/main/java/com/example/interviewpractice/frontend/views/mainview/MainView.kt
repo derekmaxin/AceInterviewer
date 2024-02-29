@@ -39,7 +39,7 @@ import kotlinx.coroutines.launch
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 //@Preview
-fun MainView(registerViewModel: RegisterViewModel, loginViewModel: LoginViewModel, mainViewModel: MainViewModel, controller: UserController) {
+fun MainView(registerViewModel: RegisterViewModel, loginViewModel: LoginViewModel, mainViewModel: MainViewModel, controller: UserController, clearError: () -> Unit) {
     val registerVM by remember { mutableStateOf(registerViewModel) }
     val loginVM by remember { mutableStateOf(loginViewModel) }
     val mainVM by remember { mutableStateOf(mainViewModel) }
@@ -59,6 +59,7 @@ fun MainView(registerViewModel: RegisterViewModel, loginViewModel: LoginViewMode
 
         val toast = Toast.makeText(LocalContext.current, text, duration) // in Activity
         toast.show()
+        clearError()
     }
     if (mainVM.loading) {
         //Auth is loading
