@@ -7,6 +7,7 @@ import com.example.interviewpractice.model.Model
 import com.example.interviewpractice.types.ErrorType
 import com.example.interviewpractice.types.UIError
 import com.example.interviewpractice.types.UserException
+import android.util.Patterns
 
 class UserController(private val model: Model) {
     fun verifyRegister(username: String, password:String,email:String) {
@@ -14,7 +15,7 @@ class UserController(private val model: Model) {
             model.loading = true
             verifyUsername(username)
             verifyPassword(password)
-            verifyEmail(email)
+            verifyEmailFormat(email)
 
             model.createAccount(username = username.trim(), email = email.trim(), password = password.trim())
         }
@@ -23,9 +24,9 @@ class UserController(private val model: Model) {
         handler("verifySignIn") {
             model.loading = true
             verifyPassword(password)
-            verifyEmail(email)
+            verifyEmailFormat(email)
 
-            model.signIn(email = email.trim(), password = password.trim())
+            model.signIn(email = email, password = password.trim())
         }
     }
 
@@ -39,7 +40,7 @@ class UserController(private val model: Model) {
 
     fun verifyForgotPassword(email: String) {
         handler("verifyForgotPassword") {
-            verifyEmail(email)
+            verifyEmailFormat(email)
 
             model.resetPassword(email)
         }
@@ -71,9 +72,8 @@ class UserController(private val model: Model) {
         //Todo: deal with exceptions on the frontend.
         //I suggest using "snackbars" https://m2.material.io/components/snackbars/android#using-snackbars
     }
-    private fun verifyEmail(email: String) {
-        throw UserException("Invalid email format")
-        return
+    private fun verifyEmailFormat(email: String) {
+        if (!Patterns.EMAIL_ADDRESS.matcher(email.trim()).matches()) throw UserException("Improperly formatted email")
     }
     private fun verifyPassword(password: String) {
         return

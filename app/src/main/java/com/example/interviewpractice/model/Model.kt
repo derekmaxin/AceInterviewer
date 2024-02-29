@@ -3,6 +3,7 @@ package com.example.interviewpractice.model
 import android.util.Log
 import com.example.interviewpractice.types.User
 import com.example.interviewpractice.frontend.Subscriber
+import com.example.interviewpractice.types.ErrorType
 import com.example.interviewpractice.types.UIError
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseUser
@@ -37,6 +38,10 @@ class Model: Presenter() {
             notifySystemSubscribers()
         }
 
+    fun clearError() {
+        error = null
+    }
+
 
     fun createAccount(username: String, email: String, password: String) {
         auth.createUserWithEmailAndPassword(email, password)
@@ -70,7 +75,7 @@ class Model: Presenter() {
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w(TAG, "signIn:failure", task.exception)
-//                    throw Exception(task.exception)
+                    error = UIError(task.exception!!.message!!, ErrorType.SYSTEM)
                     loading = false
                 }
             }
