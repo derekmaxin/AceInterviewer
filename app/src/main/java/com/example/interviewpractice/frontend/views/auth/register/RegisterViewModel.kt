@@ -1,15 +1,13 @@
-package com.example.interviewpractice.viewmodel.auth
+package com.example.interviewpractice.frontend.views.auth.register
 
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.ViewModel
 import com.example.interviewpractice.model.Model
-import com.example.interviewpractice.viewmodel.Subscriber
-import com.google.firebase.auth.FirebaseUser
+import com.example.interviewpractice.frontend.Subscriber
 
-class RegisterViewModel(private val m: Model): Subscriber{
+class RegisterViewModel(private val m: Model): Subscriber {
     //View specific
     var username by mutableStateOf("")
     var password by mutableStateOf("")

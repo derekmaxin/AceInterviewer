@@ -1,4 +1,4 @@
-package com.example.interviewpractice.view.auth
+package com.example.interviewpractice.frontend.views.auth.login
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -16,13 +16,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
 import com.example.interviewpractice.R
 import com.example.interviewpractice.controller.UserController
-import com.example.interviewpractice.viewmodel.auth.LoginViewModel
 
 @Composable
 fun LoginScreen(

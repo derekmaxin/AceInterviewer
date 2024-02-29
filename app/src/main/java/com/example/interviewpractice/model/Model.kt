@@ -2,7 +2,7 @@ package com.example.interviewpractice.model
 
 import android.util.Log
 import com.example.interviewpractice.types.User
-import com.example.interviewpractice.viewmodel.Subscriber
+import com.example.interviewpractice.frontend.Subscriber
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.auth

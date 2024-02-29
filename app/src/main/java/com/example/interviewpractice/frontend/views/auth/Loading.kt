@@ -1,8 +1,7 @@
-package com.example.interviewpractice.view.auth
+package com.example.interviewpractice.frontend.views.auth
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
