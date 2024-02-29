@@ -1,9 +1,8 @@
-package com.example.interviewpractice.view
+package com.example.interviewpractice.frontend.views.home
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -14,14 +13,14 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.example.interviewpractice.controller.UserController
-import com.example.interviewpractice.viewmodel.QuestionViewModel
-import com.example.interviewpractice.viewmodel.PlayBarViewModel
-import com.example.interviewpractice.viewmodel.PlayState
+import com.example.interviewpractice.frontend.NavBar
+import com.example.interviewpractice.frontend.question.Question
+import com.example.interviewpractice.frontend.components.playbar.PlayBar
+import com.example.interviewpractice.frontend.question.QuestionViewModel
+import com.example.interviewpractice.frontend.components.playbar.PlayBarViewModel
 import com.example.interviewpractice.model.Model
-import com.example.interviewpractice.view.PlayBar
 
 @Composable
 //@Preview

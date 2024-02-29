@@ -10,22 +10,15 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.interviewpractice.controller.UserController
 import com.example.interviewpractice.model.Model
 import com.example.interviewpractice.ui.theme.InterviewPracticeTheme
-import com.example.interviewpractice.view.auth.Loading
-import com.example.interviewpractice.view.auth.LoginScreen
-import com.example.interviewpractice.view.auth.RegisterScreen
-import com.example.interviewpractice.viewmodel.auth.LoginViewModel
-import com.example.interviewpractice.viewmodel.auth.RegisterViewModel
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
-import com.example.interviewpractice.view.MainView
-import com.example.interviewpractice.viewmodel.MainViewModel
+import com.example.interviewpractice.frontend.views.auth.login.LoginViewModel
+import com.example.interviewpractice.frontend.views.auth.register.RegisterViewModel
+import com.example.interviewpractice.frontend.views.mainview.MainView
+import com.example.interviewpractice.frontend.views.mainview.MainViewModel
 
 class MainActivity : ComponentActivity() {
 

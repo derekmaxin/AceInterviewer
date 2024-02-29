@@ -1,9 +1,9 @@
-package com.example.interviewpractice.viewmodel
+package com.example.interviewpractice.frontend.question
 
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import com.example.interviewpractice.model.Model
-import com.example.interviewpractice.viewmodel.auth.RegisterViewModel
+import com.example.interviewpractice.frontend.Subscriber
 
 class QuestionViewModel(private val model: Model): Subscriber {
 

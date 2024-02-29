@@ -1,4 +1,4 @@
-package com.example.interviewpractice.view
+package com.example.interviewpractice.frontend.views.mainview
 
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -12,12 +12,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.interviewpractice.Greeting
 import com.example.interviewpractice.controller.UserController
-import com.example.interviewpractice.viewmodel.auth.LoginViewModel
-import com.example.interviewpractice.viewmodel.MainViewModel
-import com.example.interviewpractice.viewmodel.auth.RegisterViewModel
-import com.example.interviewpractice.view.auth.Loading
-import com.example.interviewpractice.view.auth.LoginScreen
-import com.example.interviewpractice.view.auth.RegisterScreen
+import com.example.interviewpractice.frontend.views.home.HomeScreen
+import com.example.interviewpractice.frontend.views.auth.login.LoginViewModel
+import com.example.interviewpractice.frontend.views.auth.register.RegisterViewModel
+import com.example.interviewpractice.frontend.views.auth.Loading
+import com.example.interviewpractice.frontend.views.auth.login.LoginScreen
+import com.example.interviewpractice.frontend.views.auth.register.RegisterScreen
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -61,7 +61,8 @@ fun MainView(registerViewModel: RegisterViewModel, loginViewModel: LoginViewMode
             composable("login") { LoginScreen(controller = controller, viewModel = loginVM, onNavigateToRegister ={unauthenticatedNavController.navigate("register")}) }
 
             composable("register") { RegisterScreen(viewModel = registerVM, controller = controller) {
-            }}
+            }
+            }
         }
     }
 

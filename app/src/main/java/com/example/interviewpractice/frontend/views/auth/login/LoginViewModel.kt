@@ -1,9 +1,9 @@
-package com.example.interviewpractice.viewmodel.auth
+package com.example.interviewpractice.frontend.views.auth.login
 
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import com.example.interviewpractice.model.Model
-import com.example.interviewpractice.viewmodel.Subscriber
+import com.example.interviewpractice.frontend.Subscriber
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import com.google.firebase.auth.FirebaseUser
