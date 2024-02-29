@@ -24,7 +24,7 @@ import java.time.YearMonth
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 //@Preview
-fun RegisterScreen(viewModel: RegisterViewModel, controller: UserController, onSwitch: () -> Unit) {
+fun RegisterScreen(viewModel: RegisterViewModel, controller: UserController) {
     val vm by remember { mutableStateOf(viewModel) }
     val c by remember { mutableStateOf(controller) }
 

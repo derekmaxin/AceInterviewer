@@ -4,75 +4,75 @@ import android.text.TextUtils
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import com.example.interviewpractice.model.Model
+import com.example.interviewpractice.types.ErrorType
+import com.example.interviewpractice.types.UIError
+import com.example.interviewpractice.types.UserException
 
 class UserController(private val model: Model) {
     fun verifyRegister(username: String, password:String,email:String) {
-        try {
+        handler("verifyRegister") {
             model.loading = true
             verifyUsername(username)
             verifyPassword(password)
             verifyEmail(email)
 
-            //After this point, we have no user errors
-
             model.createAccount(username = username.trim(), email = email.trim(), password = password.trim())
-        }
-        catch (ex: Exception) {
-            Log.w(TAG, "verifyRegister:failure", ex)
-            model.error = ex
-            model.loading = false
-            //Todo: deal with exceptions. I suggest using "snackbars" https://m2.material.io/components/snackbars/android#using-snackbars
-
         }
     }
     fun verifySignIn(password:String,email:String) {
-        try {
+        handler("verifySignIn") {
             model.loading = true
-//            Thread.sleep(4000)
             verifyPassword(password)
             verifyEmail(email)
-            //After this point, we have no user errors
 
             model.signIn(email = email.trim(), password = password.trim())
-        }
-        catch (ex: Exception) {
-            Log.w(TAG, "verifySignIn:failure", ex)
-            model.error = ex
-            model.loading = false
-            //Todo: deal with exceptions. I suggest using "snackbars" https://m2.material.io/components/snackbars/android#using-snackbars
         }
     }
 
     fun verifyLogout() {
-        try {
+        handler("verifyLogout") {
             model.loading = true
 
-            //After this point, we have no user errors
-
             model.logout()
-        }
-        catch (ex: Exception) {
-            Log.w(TAG, "verifyLogout:failure", ex)
-            model.error = ex
-            model.loading = false
-            //Todo: deal with exceptions. I suggest using "snackbars" https://m2.material.io/components/snackbars/android#using-snackbars
         }
     }
 
     fun verifyForgotPassword(email: String) {
-        try {
+        handler("verifyForgotPassword") {
             verifyEmail(email)
+
             model.resetPassword(email)
         }
-        catch(ex: Exception) {
-            Log.w(TAG, "verifyForgotPassword:failure", ex)
-            model.error = ex
-            model.loading = false
-            //Todo: deal with exceptions. I suggest using "snackbars" https://m2.material.io/components/snackbars/android#using-snackbars
-        }
+    }
 
+    private fun handler(functionName: String, func: () -> Unit) {
+        try {
+            func()
+        }
+        catch(ex: UserException) {
+            //Catch user errors
+            Log.w(TAG, "$functionName:userException -> ${ex.message}")
+            model.error = UIError(ex.message!!,ErrorType.USER)
+
+            //Cleanup
+            model.loading = false
+        }
+        catch(ex: Exception) {
+            //Catch system errors
+            //The model will do its own error checking, so this block should only be reached if something goes very wrong
+            Log.wtf(TAG, "$functionName:catastrophicFailure", ex)
+//            ex.printStackTrace()
+            model.error = UIError(ex.toString(),ErrorType.CATASTROPHIC)
+
+            //Cleanup
+            model.loading = false
+
+        }
+        //Todo: deal with exceptions on the frontend.
+        //I suggest using "snackbars" https://m2.material.io/components/snackbars/android#using-snackbars
     }
     private fun verifyEmail(email: String) {
+        throw UserException("Invalid email format")
         return
     }
     private fun verifyPassword(password: String) {
