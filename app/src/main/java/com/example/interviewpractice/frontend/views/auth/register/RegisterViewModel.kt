@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.example.interviewpractice.model.Model
 import com.example.interviewpractice.frontend.Subscriber
+import com.example.interviewpractice.types.UIError
 
 class RegisterViewModel(private val m: Model): Subscriber {
     //View specific
@@ -14,14 +15,7 @@ class RegisterViewModel(private val m: Model): Subscriber {
     var email by mutableStateOf("")
     var passwordConfirm by mutableStateOf("")
 
-    // TODO: Include attributes that will be updated by the model
-    // Recall that you should use mutableStateOf() in your definition.
-//    var loading: Boolean by mutableStateOf(false)
-//    var user: FirebaseUser? by mutableStateOf(null)
-
-    // TODO: implement errors
-    //    var error by mutableStateOf("")
-    var error: Exception? by mutableStateOf(null)
+    var error: UIError? by mutableStateOf(null)
 
 
     init {
@@ -29,7 +23,6 @@ class RegisterViewModel(private val m: Model): Subscriber {
     }
 
     override fun update() {
-        error = m.error
         Log.d(TAG, "Updated")
     }
     companion object {

@@ -1,11 +1,24 @@
 package com.example.interviewpractice.frontend.views.mainview
 
 import android.os.Build
+import android.util.Log
+import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.Icon
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -18,6 +31,10 @@ import com.example.interviewpractice.frontend.views.auth.register.RegisterViewMo
 import com.example.interviewpractice.frontend.views.auth.Loading
 import com.example.interviewpractice.frontend.views.auth.login.LoginScreen
 import com.example.interviewpractice.frontend.views.auth.register.RegisterScreen
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -35,16 +52,20 @@ fun MainView(registerViewModel: RegisterViewModel, loginViewModel: LoginViewMode
     val authenticatedNavController = rememberNavController()
 
 
+    mainVM.error?.let {err ->
+        //TODO: Work with snackbars instead of Toasts. This is just a placeholder
+        val text = "${err.errorType} ERROR: ${err.message}"
+        val duration = Toast.LENGTH_LONG
+
+        val toast = Toast.makeText(LocalContext.current, text, duration) // in Activity
+        toast.show()
+    }
     if (mainVM.loading) {
         //Auth is loading
         Loading()
     }
     else if (mainVM.user != null) {
 //        //If user is signed in
-//        HomeScreen(controller = controller)
-//
-//        //REMOVE GREETING, THIS IS JUST TO SHOW USER EMAIL (FOR DEBUGGING PURPOSES)
-//
 
         NavHost(navController = authenticatedNavController, startDestination = "home") {
             composable("home") {
@@ -52,20 +73,12 @@ fun MainView(registerViewModel: RegisterViewModel, loginViewModel: LoginViewMode
                 Greeting(mainVM.user!!.email!!)
             }
         }
-
-
     }
     else {
-
+        Log.d("WAT","ERROR STATE: ${mainVM.error?.message}")
         NavHost(navController = unauthenticatedNavController, startDestination = "login") {
             composable("login") { LoginScreen(controller = controller, viewModel = loginVM, onNavigateToRegister ={unauthenticatedNavController.navigate("register")}) }
-
-            composable("register") { RegisterScreen(viewModel = registerVM, controller = controller) {
-            }
-            }
+            composable("register") { RegisterScreen(viewModel = registerVM, controller = controller) }
         }
     }
-
-
-//
 }

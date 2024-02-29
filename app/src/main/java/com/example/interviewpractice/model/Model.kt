@@ -3,6 +3,7 @@ package com.example.interviewpractice.model
 import android.util.Log
 import com.example.interviewpractice.types.User
 import com.example.interviewpractice.frontend.Subscriber
+import com.example.interviewpractice.types.UIError
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.auth
@@ -30,7 +31,7 @@ class Model: Presenter() {
             notifySystemSubscribers()
         }
     //error state
-    var error: Exception? = null
+    var error: UIError? = null
         set(value) {
             field = value
             notifySystemSubscribers()
