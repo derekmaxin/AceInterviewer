@@ -14,7 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import com.example.interviewpractice.controller.UserController
+import com.example.interviewpractice.controller.AuthController
 import android.os.Build
 import androidx.annotation.RequiresApi
 import java.time.LocalDate
@@ -24,7 +24,7 @@ import java.time.YearMonth
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 //@Preview
-fun RegisterScreen(viewModel: RegisterViewModel, controller: UserController) {
+fun RegisterScreen(viewModel: RegisterViewModel, controller: AuthController) {
     val vm by remember { mutableStateOf(viewModel) }
     val c by remember { mutableStateOf(controller) }
 

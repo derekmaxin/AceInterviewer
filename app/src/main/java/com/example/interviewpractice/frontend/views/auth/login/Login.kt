@@ -18,12 +18,12 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.example.interviewpractice.R
-import com.example.interviewpractice.controller.UserController
+import com.example.interviewpractice.controller.AuthController
 
 @Composable
 fun LoginScreen(
     viewModel: LoginViewModel,
-    controller: UserController,
+    controller: AuthController,
     onNavigateToRegister: () -> Unit)
 {
     val vm by remember { mutableStateOf(viewModel) }
