@@ -14,19 +14,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.interviewpractice.controller.UserController
+import com.example.interviewpractice.controller.AuthController
 import com.example.interviewpractice.frontend.NavBar
 import com.example.interviewpractice.frontend.question.Question
 import com.example.interviewpractice.frontend.components.playbar.PlayBar
 import com.example.interviewpractice.frontend.question.QuestionViewModel
 import com.example.interviewpractice.frontend.components.playbar.PlayBarViewModel
-import com.example.interviewpractice.model.Model
+import com.example.interviewpractice.model.AuthModel
 
 @Composable
 //@Preview
-fun HomeScreen(controller: UserController) {
+fun HomeScreen(controller: AuthController) {
     val c by remember { mutableStateOf(controller) }
-    val model = Model()
+    val model = AuthModel()
     val questionVM = QuestionViewModel(model)
 
     Surface() {
@@ -97,7 +97,7 @@ fun HomeScreen(controller: UserController) {
 
 @Composable
 fun QuestionAnswered() {
-    val model = Model()
+    val model = AuthModel()
     val playBarVM = PlayBarViewModel(model)
 
     Card(

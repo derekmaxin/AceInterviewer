@@ -4,12 +4,12 @@ import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import com.example.interviewpractice.model.Model
+import com.example.interviewpractice.model.AuthModel
 import com.example.interviewpractice.frontend.Subscriber
 import com.example.interviewpractice.types.UIError
 import com.google.firebase.auth.FirebaseUser
 
-class MainViewModel(private val m: Model): Subscriber {
+class MainViewModel(private val m: AuthModel): Subscriber {
 
     var loading: Boolean by mutableStateOf(false)
     var user: FirebaseUser? by mutableStateOf(null)
@@ -17,15 +17,22 @@ class MainViewModel(private val m: Model): Subscriber {
 
 
     init {
-        m.systemDataSubscribe(this)
+        m.subscribe(this)
     }
 
     override fun update() {
-        error = m.error
-        user = m.user
-        loading = m.loading
-        Log.i(TAG,"Update auth state")
-        Log.d(TAG, "Loading: $loading, user: ${user?.email}")
+        if (error != m.error) {
+            error = m.error
+            Log.d(TAG,"Updated loading state: error -> ${error?.message}")
+        }
+        if (user != m.user) {
+            user = m.user
+            Log.d(TAG,"Updated auth state: user -> $user")
+        }
+        if (loading != m.loading) {
+            loading = m.loading
+            Log.d(TAG,"Updated loading state: loading -> $loading")
+        }
     }
     companion object {
         private const val TAG = "MainViewModel"
