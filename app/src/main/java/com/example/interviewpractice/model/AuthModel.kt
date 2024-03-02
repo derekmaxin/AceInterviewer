@@ -39,9 +39,9 @@ class AuthModel: Presenter() {
             notifySubscribers()
         }
 
-//    fun clearError() {
-//        error = null
-//    }
+    fun clearError() {
+        error = null
+    }
 
 
     suspend fun createAccount(username: String, email: String, password: String){
@@ -54,20 +54,6 @@ class AuthModel: Presenter() {
         auth.signInWithEmailAndPassword(email, password).await()
         user = auth.currentUser
         Log.d(TAG, "signIn:success")
-//            .addOnCompleteListener { task ->
-//                if (task.isSuccessful) {
-//                    // Sign in success, tell the viewModels there is a new user signed in
-//                    Log.d(TAG, "signIn:success")
-//                    user = auth.currentUser
-//                    //Stop loading after we finished authentication
-//                    loading = false
-//                } else {
-//                    // If sign in fails, display a message to the user.
-//                    Log.w(TAG, "signIn:failure", task.exception)
-//                    error = UIError(task.exception!!.message!!, ErrorType.SYSTEM)
-//                    loading = false
-//                }
-//            }
     }
 
     fun logout() {
@@ -77,17 +63,9 @@ class AuthModel: Presenter() {
         loading = false
     }
 
-    fun resetPassword(email: String) {
-        Firebase.auth.sendPasswordResetEmail(email)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    Log.d(TAG, "Email sent to $email.")
-                }
-                else {
-                    Log.w(TAG, "resetPassword:failure", task.exception)
-//                    throw Exception(task.exception)
-                }
-            }
+    suspend fun resetPassword(email: String) {
+        Firebase.auth.sendPasswordResetEmail(email).await()
+        Log.d(TAG, "resetPassword:success (sent email)")
     }
 
     private suspend fun updateCurrentUser(username: String, email: String) {

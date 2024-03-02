@@ -23,21 +23,16 @@ class MainViewModel(private val m: AuthModel): Subscriber {
     override fun update() {
         if (error != m.error) {
             error = m.error
-            Log.i(TAG,"Updated loading state: error -> $error")
+            Log.d(TAG,"Updated loading state: error -> ${error?.message}")
         }
         if (user != m.user) {
             user = m.user
-            Log.i(TAG,"Updated auth state: user -> $user")
+            Log.d(TAG,"Updated auth state: user -> $user")
         }
         if (loading != m.loading) {
             loading = m.loading
-            Log.i(TAG,"Updated loading state: loading -> $loading")
+            Log.d(TAG,"Updated loading state: loading -> $loading")
         }
-
-
-
-
-        Log.d(TAG, "Loading: $loading, user: ${user?.email}")
     }
     companion object {
         private const val TAG = "MainViewModel"
