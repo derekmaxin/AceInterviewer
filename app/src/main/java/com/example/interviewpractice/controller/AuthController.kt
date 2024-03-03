@@ -21,7 +21,6 @@ import kotlinx.coroutines.launch
 class AuthController(private val model: AuthModel) {
     fun verifyRegister(username: String, password:String,email:String) {
         handler("verifyRegister") {
-            model.loading = true
             verifyUsernameFormat(username)
             verifyPasswordFormat(password)
             verifyEmailFormat(email)
@@ -34,10 +33,9 @@ class AuthController(private val model: AuthModel) {
     }
     fun verifySignIn(password:String,email:String) {
         handler("verifySignIn") {
-            model.loading = true
             verifyPasswordFormat(password)
             verifyEmailFormat(email)
-            model.signIn(email = email, password = password.trim())
+            model.signIn(email = email, password = password)
             //User should now be authenticated
             Log.d(TAG,"verifySignIn:success")
             }
@@ -46,14 +44,12 @@ class AuthController(private val model: AuthModel) {
 
     fun verifyLogout() {
         handler("verifyLogout") {
-            model.loading = true
             model.logout()
         }
     }
 
     fun verifyForgotPassword(email: String) {
         handler("verifyForgotPassword") {
-            model.loading = true
             verifyEmailFormat(email)
 
             model.resetPassword(email)
@@ -64,23 +60,24 @@ class AuthController(private val model: AuthModel) {
     private fun handler(functionName: String, func: suspend () -> Unit) {
         MainScope().launch {
             try {
+                model.loading = true
                 func()
             }
             catch (ex: FirebaseAuthException) {
                 //Represents user errors that are caught by Firebase Auth
                 model.error = UIError(ex.message!!,ErrorType.USER)
-                Log.d(TAG,"$functionName:userException[${ex.errorCode}] --> ${ex.message}")
+                Log.w(TAG,"$functionName:userException[${ex.errorCode}] --> ${ex.message}")
 
             }
             catch (ex: FirebaseFirestoreException) {
                 //Represents user errors that are caught by Firestore
                 model.error = UIError(ex.message!!,ErrorType.USER)
-                Log.d(TAG,"$functionName:userException --> ${ex.message}")
+                Log.w(TAG,"$functionName:userException --> ${ex.message}")
             }
             catch (ex: FirebaseException) {
                 //Represents all remaining (system) errors that are caught by Firebase
                 model.error = UIError(ex.message!!,ErrorType.SYSTEM)
-                Log.d(TAG,"$functionName:systemException --> ${ex.message}")
+                Log.e(TAG,"$functionName:systemException --> ${ex.message}")
             }
             catch(ex: UserException) {
                 //Represents all user errors that are caught by us
