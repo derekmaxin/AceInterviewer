@@ -4,8 +4,9 @@ import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import com.example.interviewpractice.model.AuthModel
 import com.example.interviewpractice.frontend.Subscriber
+import com.example.interviewpractice.model.MainModel
 
-class QuestionViewModel(private val model: AuthModel): Subscriber {
+class QuestionViewModel(private val model: MainModel): Subscriber {
 
     var showTags = mutableStateOf(false)
     var questionText = mutableStateOf("")

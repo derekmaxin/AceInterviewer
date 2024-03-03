@@ -6,10 +6,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.example.interviewpractice.model.AuthModel
 import com.example.interviewpractice.frontend.Subscriber
+import com.example.interviewpractice.model.MainModel
 import com.example.interviewpractice.types.UIError
 import com.google.firebase.auth.FirebaseUser
 
-class MainViewModel(private val m: AuthModel): Subscriber {
+class MainViewModel(private val m: AuthModel ): Subscriber {
 
     var loading: Boolean by mutableStateOf(false)
     var user: FirebaseUser? by mutableStateOf(null)

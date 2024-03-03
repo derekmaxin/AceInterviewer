@@ -102,6 +102,6 @@ class AuthModel: Presenter() {
         }
     }
     companion object {
-        private const val TAG = "Model"
+        private const val TAG = "AuthModel"
     }
 }

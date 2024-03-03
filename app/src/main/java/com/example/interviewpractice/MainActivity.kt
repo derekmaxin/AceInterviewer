@@ -13,21 +13,31 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.interviewpractice.controller.AuthController
+import com.example.interviewpractice.controller.QuestionController
+import com.example.interviewpractice.frontend.question.QuestionViewModel
 import com.example.interviewpractice.model.AuthModel
 import com.example.interviewpractice.ui.theme.InterviewPracticeTheme
 import com.example.interviewpractice.frontend.views.auth.login.LoginViewModel
 import com.example.interviewpractice.frontend.views.auth.register.RegisterViewModel
 import com.example.interviewpractice.frontend.views.mainview.MainView
 import com.example.interviewpractice.frontend.views.mainview.MainViewModel
+import com.example.interviewpractice.frontend.views.search.SearchViewModel
+import com.example.interviewpractice.model.MainModel
 
 class MainActivity : ComponentActivity() {
 
-    private lateinit var model: AuthModel
-    private lateinit var controller: AuthController
+    private lateinit var authModel: AuthModel
+    private lateinit var mainModel: MainModel
+
+    private lateinit var authController: AuthController
+    private lateinit var questionController: QuestionController
 
     private lateinit var registerVM: RegisterViewModel
     private lateinit var loginVM: LoginViewModel
     private lateinit var mainVM: MainViewModel
+    private lateinit var searchVM: SearchViewModel
+
+    private lateinit var questionVM: QuestionViewModel
 
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -35,19 +45,34 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         //Initialize views and models
-        model = AuthModel()
-        controller = AuthController(model)
-        registerVM = RegisterViewModel(model)
-        loginVM = LoginViewModel(model)
-        mainVM = MainViewModel(model)
-        model.initAuth()
+        authModel = AuthModel()
+        mainModel = MainModel()
+
+        authController = AuthController(authModel)
+        questionController = QuestionController(mainModel)
+
+        registerVM = RegisterViewModel(authModel)
+        loginVM = LoginViewModel(authModel)
+        mainVM = MainViewModel(authModel)
+        searchVM = SearchViewModel(mainModel)
+
+        questionVM = QuestionViewModel(mainModel)
+        authModel.initAuth()
 
 
         setContent {
             InterviewPracticeTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    MainView(registerViewModel = registerVM, loginViewModel = loginVM, mainViewModel = mainVM, controller=controller) {model.clearError()}
+                    MainView(registerViewModel = registerVM,
+                        loginViewModel = loginVM,
+                        mainViewModel = mainVM,
+                        authController=authController,
+                        searchViewModel = searchVM,
+                        questionViewModel = questionVM,
+                        questionController=questionController
+                        )
+                    {authModel.clearError()}
                 }
             }
         }
