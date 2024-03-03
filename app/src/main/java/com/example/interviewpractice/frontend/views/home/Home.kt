@@ -15,7 +15,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.interviewpractice.controller.AuthController
-import com.example.interviewpractice.frontend.NavBar
+import com.example.interviewpractice.frontend.components.NavBar
 import com.example.interviewpractice.frontend.question.Question
 import com.example.interviewpractice.frontend.components.playbar.PlayBar
 import com.example.interviewpractice.frontend.question.QuestionViewModel

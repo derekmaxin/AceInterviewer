@@ -23,7 +23,7 @@ class MainViewModel(private val m: AuthModel): Subscriber {
     override fun update() {
         if (error != m.error) {
             error = m.error
-            Log.d(TAG,"Updated loading state: error -> ${error?.message}")
+            Log.d(TAG,"Updated error state: error -> ${error?.message}")
         }
         if (user != m.user) {
             user = m.user
