@@ -36,7 +36,7 @@ fun Tag(text: String) {
 }
 
 @Composable
-fun Question(questionViewModel: QuestionViewModel?) {
+fun Question(questionViewModel: QuestionViewModel) {
     val viewModel by remember { mutableStateOf(questionViewModel) }
 
     Card(

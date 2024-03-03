@@ -11,33 +11,38 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
-@Preview
-fun NavBar() {
-    BottomAppBar(
-        contentPadding = PaddingValues(16.dp), // Add padding as needed
-        content = {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                IconButton(onClick = { /* Handle navigation action */ }) {
-                    Icon(Icons.Default.Star, contentDescription = "Home")
-                }
-                IconButton(onClick = { /* Handle navigation action */ }) {
-                    Icon(Icons.Default.Search, contentDescription = "Search")
-                }
-
-                IconButton(onClick = { /* Handle navigation action */ }) {
-                    Icon(Icons.Default.Home, contentDescription = "Home")
-                }
-                IconButton(onClick = { /* Handle navigation action */ }) {
-                    Icon(Icons.Default.Notifications, contentDescription = "Settings")
-                }
-                IconButton(onClick = { /* Handle navigation action */ }) {
-                    Icon(Icons.Default.Person, contentDescription = "Settings")
+//@Preview
+fun NavBar(goToSearch: () -> Unit, goToHome: () -> Unit, goToProfile: () -> Unit) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize(),
+        verticalArrangement = Arrangement.Bottom
+    ) {
+        BottomAppBar(
+            contentPadding = PaddingValues(16.dp), // Add padding as needed
+            content = {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    IconButton(onClick = { /* Handle navigation action */ }) {
+                        Icon(Icons.Default.Star, contentDescription = "Reviews")
+                    }
+                    IconButton(onClick = goToSearch) {
+                        Icon(Icons.Default.Search, contentDescription = "Search")
+                    }
+                    IconButton(onClick = goToHome) {
+                        Icon(Icons.Default.Home, contentDescription = "Home")
+                    }
+                    IconButton(onClick = { /* Handle navigation action */ }) {
+                        Icon(Icons.Default.Notifications, contentDescription = "Settings")
+                    }
+                    IconButton(onClick = goToProfile) {
+                        Icon(Icons.Default.Person, contentDescription = "Profile")
+                    }
                 }
             }
-        }
-    )
+        )
+    }
 }

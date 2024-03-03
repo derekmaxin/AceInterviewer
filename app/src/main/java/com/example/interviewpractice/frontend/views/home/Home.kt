@@ -24,10 +24,7 @@ import com.example.interviewpractice.model.AuthModel
 
 @Composable
 //@Preview
-fun HomeScreen(controller: AuthController) {
-    val c by remember { mutableStateOf(controller) }
-    val model = AuthModel()
-    val questionVM = QuestionViewModel(model)
+fun HomeScreen(c: AuthController,questionVM: QuestionViewModel ) {
 
     Surface() {
         Column(
@@ -83,13 +80,6 @@ fun HomeScreen(controller: AuthController) {
                     )
                 )
             }
-        }
-        Column(
-            modifier = Modifier
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.Bottom
-        ) {
-            NavBar()
         }
     }
 }

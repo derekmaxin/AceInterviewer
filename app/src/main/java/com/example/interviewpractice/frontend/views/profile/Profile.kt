@@ -23,7 +23,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
-import com.example.interviewpractice.frontend.NavBar
+import com.example.interviewpractice.frontend.components.NavBar
 import com.example.interviewpractice.R
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -41,7 +41,7 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 @Preview
-fun ProfileScreen() {
+fun ProfileView() {
     Surface() {
         Column(
             modifier = Modifier
@@ -147,13 +147,6 @@ fun ProfileScreen() {
             ) {
                 Text(text = "Your Best Asked Questions")
             }
-        }
-        Column(
-            modifier = Modifier
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.Bottom
-        ) {
-            NavBar()
         }
     }
 }
