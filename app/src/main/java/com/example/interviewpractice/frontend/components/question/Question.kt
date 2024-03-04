@@ -28,21 +28,17 @@ fun Tag(text: String) {
         Text(
             text = text,
             modifier = Modifier
-                .padding(12.dp, 6.dp, 12.dp, 6.dp),
+                .padding(8.dp, 4.dp, 8.dp, 4.dp),
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.bodySmall,
         )
     }
 }
-
 @Composable
 fun Question(questionViewModel: QuestionViewModel) {
     val viewModel by remember { mutableStateOf(questionViewModel) }
 
-    Card(
-        modifier = Modifier
-            .padding(12.dp)
-    ) {
+    Card() {
         Column(
             modifier = Modifier
                 .padding(16.dp),
@@ -69,7 +65,35 @@ fun Question(questionViewModel: QuestionViewModel) {
                 }
             }
         }
+    }
+}
 
-
+@Composable
+fun DummyQuestion(qText: String, tags: List<String>) {
+    Card() {
+        Column(
+            modifier = Modifier
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(6.dp)
+        ) {
+            Text(
+                text = qText,
+                modifier = Modifier
+                    .padding(4.dp, 0.dp, 4.dp, 0.dp),
+                textAlign = TextAlign.Left,
+                style = MaterialTheme.typography.bodyLarge,
+            )
+            if (tags.isNotEmpty()) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    for (tag in tags) {
+                        Tag(tag)
+                    }
+                }
+            }
+        }
     }
 }
