@@ -1,4 +1,4 @@
-package com.example.interviewpractice.view.auth
+package com.example.interviewpractice.frontend.views.auth.register
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.selection.selectable
@@ -14,8 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import com.example.interviewpractice.controller.UserController
-import com.example.interviewpractice.viewmodel.auth.RegisterViewModel
+import com.example.interviewpractice.controller.AuthController
 import android.os.Build
 import androidx.annotation.RequiresApi
 import java.time.LocalDate
@@ -25,7 +24,7 @@ import java.time.YearMonth
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 //@Preview
-fun RegisterScreen(viewModel: RegisterViewModel, controller: UserController, onSwitch: () -> Unit) {
+fun RegisterScreen(viewModel: RegisterViewModel, controller: AuthController) {
     val vm by remember { mutableStateOf(viewModel) }
     val c by remember { mutableStateOf(controller) }
 
@@ -74,8 +73,8 @@ fun RegisterScreen(viewModel: RegisterViewModel, controller: UserController, onS
                 textStyle = TextStyle(fontSize = 28.sp)
             )
             TextField(
-                value = "",
-                onValueChange = { },
+                value = vm.passwordConfirm,
+                onValueChange = {vm.passwordConfirm = it },
                 label = { Text("Confirm Password *") },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -97,7 +96,7 @@ fun RegisterScreen(viewModel: RegisterViewModel, controller: UserController, onS
             FieldsOfInterest()
             Spacer(modifier = Modifier.height(8.dp))
             Button(
-                onClick = { },
+                onClick = {c.verifyRegister(username = vm.username, password = vm.password, email = vm.email) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(70.dp)

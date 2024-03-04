@@ -1,4 +1,4 @@
-package com.example.interviewpractice.view
+package com.example.interviewpractice.frontend.question
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,9 +16,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.interviewpractice.viewmodel.QuestionViewModel
 
 @Composable
 fun Tag(text: String) {
@@ -37,7 +35,7 @@ fun Tag(text: String) {
     }
 }
 @Composable
-fun Question(questionViewModel: QuestionViewModel?) {
+fun Question(questionViewModel: QuestionViewModel) {
     val viewModel by remember { mutableStateOf(questionViewModel) }
 
     Card() {
