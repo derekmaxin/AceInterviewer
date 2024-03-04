@@ -86,7 +86,7 @@ fun MainView(
 
             }
             composable("search") {
-                SearchView(c = questionController)
+                SearchView(c = questionController, searchVM = searchViewModel)
             }
             composable("profile") {
                 ProfileView()

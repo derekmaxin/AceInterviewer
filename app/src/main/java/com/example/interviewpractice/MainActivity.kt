@@ -49,7 +49,7 @@ class MainActivity : ComponentActivity() {
         mainModel = MainModel()
 
         authController = AuthController(authModel)
-        questionController = QuestionController(mainModel)
+        questionController = QuestionController(mm = mainModel, am = authModel)
 
         registerVM = RegisterViewModel(authModel)
         loginVM = LoginViewModel(authModel)
@@ -57,6 +57,7 @@ class MainActivity : ComponentActivity() {
         searchVM = SearchViewModel(mainModel)
 
         questionVM = QuestionViewModel(mainModel)
+
         authModel.initAuth()
 
 

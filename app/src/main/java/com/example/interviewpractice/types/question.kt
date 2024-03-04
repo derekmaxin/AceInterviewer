@@ -2,7 +2,7 @@ package com.example.interviewpractice.types
 
 data class Question(
     val questionText: String,
-    val tags: MutableList<Tags> = mutableListOf<Tags>(),
+    val tags: List<Tag> = listOf<Tag>(),
     val hasVoice: Boolean,
     val hasText: Boolean,
     val deprecated: Boolean
@@ -26,7 +26,7 @@ data class AnsweredQuestion(
 
 
 
-enum class Tags(val v: String) {
+enum class Tag(val v: String) {
     BIOLOGY("biology"),
     ENGLISH("english"),
     CHEMISTRY("chemistry"),
