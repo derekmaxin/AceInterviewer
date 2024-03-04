@@ -23,8 +23,11 @@ data class AnsweredQuestion(
     val questionID: Int
 )
 
-
-
+//Format as needed
+//data class Notification(
+//    val questionID: Int,
+//
+//)
 
 enum class Tag(val v: String) {
     BIOLOGY("biology"),
