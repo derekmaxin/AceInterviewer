@@ -118,6 +118,6 @@ class AuthController(private val model: AuthModel) {
     }
 
     companion object {
-        private const val TAG = "UserController"
+        private const val TAG = "AuthController"
     }
 }
