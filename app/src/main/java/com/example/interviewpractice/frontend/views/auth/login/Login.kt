@@ -2,7 +2,6 @@ package com.example.interviewpractice.frontend.views.auth.login
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -16,6 +15,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.sp
 import com.example.interviewpractice.R
 import com.example.interviewpractice.controller.AuthController
@@ -28,8 +29,6 @@ fun LoginScreen(
 {
     val vm by remember { mutableStateOf(viewModel) }
     val c by remember { mutableStateOf(controller) }
-
-
 
     Surface {
         Column(
@@ -55,10 +54,8 @@ fun LoginScreen(
                     .height(85.dp)
                     .padding(vertical = 8.dp),
                 keyboardOptions = KeyboardOptions.Default.copy(
-                    imeAction = ImeAction.Next,
-                ),
-                keyboardActions = KeyboardActions(
-                    onNext = { }
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Done
                 ),
                 textStyle = TextStyle(fontSize = 28.sp)
             )
@@ -71,11 +68,10 @@ fun LoginScreen(
                     .height(85.dp)
                     .padding(vertical = 8.dp),
                 keyboardOptions = KeyboardOptions.Default.copy(
-                    imeAction = ImeAction.Done,
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Done
                 ),
-                keyboardActions = KeyboardActions(
-                    onDone = { }
-                ),
+                visualTransformation = PasswordVisualTransformation(),
                 textStyle = TextStyle(fontSize = 28.sp)
             )
             Button(

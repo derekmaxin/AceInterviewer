@@ -20,6 +20,10 @@ import androidx.annotation.RequiresApi
 import java.time.LocalDate
 import androidx.compose.runtime.*
 import java.time.YearMonth
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -27,8 +31,6 @@ import java.time.YearMonth
 fun RegisterScreen(viewModel: RegisterViewModel, controller: AuthController) {
     val vm by remember { mutableStateOf(viewModel) }
     val c by remember { mutableStateOf(controller) }
-
-
 
     Surface {
         Column(
@@ -58,8 +60,12 @@ fun RegisterScreen(viewModel: RegisterViewModel, controller: AuthController) {
                 label = { Text("Username *") },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(85.dp)
+                    .height(80.dp)
                     .padding(vertical = 8.dp),
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Done
+                ),
                 textStyle = TextStyle(fontSize = 28.sp)
             )
             TextField(
@@ -68,8 +74,12 @@ fun RegisterScreen(viewModel: RegisterViewModel, controller: AuthController) {
                 label = { Text("Password *") },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(85.dp)
+                    .height(80.dp)
                     .padding(vertical = 8.dp),
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Done
+                ),
                 textStyle = TextStyle(fontSize = 28.sp)
             )
             TextField(
@@ -78,9 +88,14 @@ fun RegisterScreen(viewModel: RegisterViewModel, controller: AuthController) {
                 label = { Text("Confirm Password *") },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(85.dp)
+                    .height(80.dp)
                     .padding(vertical = 8.dp),
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Done
+                ),
                 textStyle = TextStyle(fontSize = 28.sp)
+
             )
             TextField(
                 value = vm.email,
@@ -88,11 +103,16 @@ fun RegisterScreen(viewModel: RegisterViewModel, controller: AuthController) {
                 label = { Text("Email *") },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(85.dp)
+                    .height(80.dp)
                     .padding(vertical = 8.dp),
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Done
+                ),
                 textStyle = TextStyle(fontSize = 28.sp)
             )
             BirthdaySelect()
+            HorizontalDivider(modifier = Modifier.fillMaxWidth())
             FieldsOfInterest()
             Spacer(modifier = Modifier.height(8.dp))
             Button(
@@ -157,7 +177,7 @@ fun FieldsOfInterest(){
                     Text(
                         text = option,
                         modifier = Modifier
-                            .padding(vertical = 16.dp),
+                            .padding(vertical = 8.dp),
                     )
                 }
             }
