@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.sp
 import com.example.interviewpractice.controller.QuestionController
 import com.example.interviewpractice.frontend.components.NavBar
 import com.example.interviewpractice.frontend.question.QuestionViewModel
+import com.example.interviewpractice.frontend.views.leaderboard.LeaderboardView
 import com.example.interviewpractice.frontend.views.profile.ProfileView
 import com.example.interviewpractice.frontend.views.search.SearchView
 import com.example.interviewpractice.frontend.views.search.SearchViewModel
@@ -81,26 +82,26 @@ fun MainView(
         //If user is signed in
 
         NavHost(navController = anc, startDestination = "home") {
+            composable("leaderboard") {
+                LeaderboardView()
+            }
             composable("home") {
                 HomeScreen(c = authController, questionVM = questionViewModel)
-
             }
             composable("search") {
                 SearchView(c = questionController, searchVM = searchViewModel)
             }
             composable("profile") {
-                ProfileView()
+                ProfileView(goToLeaderboard = { anc.navigate("leaderboard") })
             }
-
-
         }
-            NavBar(
+        NavBar(
 //                goToReviews={anc.navigate("reviews")},
-                goToSearch={anc.navigate("search")},
-                goToHome={anc.navigate("home")},
+            goToSearch={anc.navigate("search")},
+            goToHome={anc.navigate("home")},
 //                goToNotfications={anc.navigate("notifications")},
-                goToProfile={anc.navigate("profile")}
-            )
+            goToProfile={anc.navigate("profile")}
+        )
 
     }
     else {
