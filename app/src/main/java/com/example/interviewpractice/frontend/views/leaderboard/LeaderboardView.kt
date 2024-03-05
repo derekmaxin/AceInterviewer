@@ -56,7 +56,7 @@ fun Podium(firstPlace: LeaderboardEntry, secondPlace: LeaderboardEntry, thirdPla
         horizontalArrangement = Arrangement.Center
     ) {
         for (i in intArrayOf(1, 0 ,2)) {
-            val podiumHeight = if (i == 0) 90.dp else (3 - i) * 30.dp // Adjust the height as needed
+            val podiumHeight = if (i == 0) 90.dp else (3 - i) * 30.dp
             val color = if (i == 0) Color(0xFFFFD700) else if (i == 1) Color(0xFFC0C0C0) else Color(0xFFCD7F32)
             val modifier = Modifier
                 .width(80.dp)
