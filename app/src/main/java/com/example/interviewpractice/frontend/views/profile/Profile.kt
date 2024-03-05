@@ -26,18 +26,21 @@ import androidx.compose.material.icons.filled.Done
 
 
 @Composable
-@Preview
-fun ProfileView() {
+//@Preview
+fun ProfileView(goToLeaderboard: () -> Unit) {
     Surface() {
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = 16.dp)
-                .padding(vertical = 32.dp),
+                .padding(vertical = 16.dp),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.Start
         ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth())
+            {
                 ProfilePicture(
                     painter = painterResource(id = R.drawable.klee),
                     contentDescription = "Profile Picture"
@@ -49,7 +52,7 @@ fun ProfileView() {
                     Text(text = "@dmaxin", style = TextStyle(fontSize = 10.sp))
                     Text(text = "dmaxin@uwaterloo.ca", style = TextStyle(fontSize = 10.sp))
                 }
-                Spacer(modifier = Modifier.width(48.dp))
+                Spacer(modifier = Modifier.width(36.dp))
                 HistoryButton()
                 Spacer(modifier = Modifier.width(16.dp))
                 ProgressButton()
@@ -82,11 +85,11 @@ fun ProfileView() {
                     )
                 }
             }
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(8.dp))
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(25.dp)
+                    .height(35.dp)
                     .padding(horizontal = 8.dp)
                     .padding(vertical = 4.dp)
                     .clickable { /* Handle button click */ },
@@ -94,18 +97,19 @@ fun ProfileView() {
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center,
                     modifier = Modifier.fillMaxSize(),
                     ) {
-                    HorizontalDivider(modifier = Modifier.width(120.dp))
+                    HorizontalDivider(modifier = Modifier.width(75.dp))
                     Text(
                         text = "Click to expand",
                         modifier = Modifier.padding(horizontal = 8.dp)
                     )
-                    HorizontalDivider(modifier = Modifier.width(120.dp))
+                    HorizontalDivider(modifier = Modifier.width(75.dp))
                 }
             }
             //PLACEHOLDER
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(8.dp))
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -132,6 +136,12 @@ fun ProfileView() {
                 onClick = {  }
             ) {
                 Text(text = "Your Best Asked Questions")
+            }
+            Button(
+                modifier = Modifier.fillMaxWidth(),
+                onClick = goToLeaderboard
+            ) {
+                Text(text = "Leaderboards")
             }
         }
     }

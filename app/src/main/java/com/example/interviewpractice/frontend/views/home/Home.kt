@@ -31,7 +31,7 @@ fun HomeScreen(c: AuthController,questionVM: QuestionViewModel ) {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = 16.dp)
-                .padding(vertical = 32.dp),
+                .padding(vertical = 16.dp),
 
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.Start
