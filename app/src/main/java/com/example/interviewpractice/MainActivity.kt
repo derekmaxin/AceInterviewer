@@ -14,7 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.interviewpractice.controller.AuthController
 import com.example.interviewpractice.controller.QuestionController
-import com.example.interviewpractice.frontend.question.QuestionViewModel
+import com.example.interviewpractice.frontend.components.question.QuestionViewModel
 import com.example.interviewpractice.model.AuthModel
 import com.example.interviewpractice.ui.theme.InterviewPracticeTheme
 import com.example.interviewpractice.frontend.views.auth.login.LoginViewModel

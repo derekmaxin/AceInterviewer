@@ -1,4 +1,4 @@
-package com.example.interviewpractice.frontend.question
+package com.example.interviewpractice.frontend.components.question
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

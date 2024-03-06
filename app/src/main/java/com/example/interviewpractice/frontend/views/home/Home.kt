@@ -3,9 +3,6 @@ package com.example.interviewpractice.frontend.views.home
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -15,16 +12,15 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.interviewpractice.controller.AuthController
-import com.example.interviewpractice.frontend.components.NavBar
-import com.example.interviewpractice.frontend.question.Question
+import com.example.interviewpractice.frontend.components.question.Question
 import com.example.interviewpractice.frontend.components.playbar.PlayBar
-import com.example.interviewpractice.frontend.question.QuestionViewModel
+import com.example.interviewpractice.frontend.components.question.QuestionViewModel
 import com.example.interviewpractice.frontend.components.playbar.PlayBarViewModel
 import com.example.interviewpractice.model.AuthModel
 
 @Composable
 //@Preview
-fun HomeScreen(c: AuthController,questionVM: QuestionViewModel ) {
+fun HomeScreen(c: AuthController,questionVM: QuestionViewModel) {
 
     Surface() {
         Column(
