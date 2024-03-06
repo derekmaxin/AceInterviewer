@@ -1,4 +1,4 @@
-package com.example.interviewpractice.frontend.question
+package com.example.interviewpractice.frontend.components.question
 
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf

@@ -71,13 +71,16 @@ fun ProfileView(goToLeaderboard: () -> Unit) {
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.fillMaxSize(),
                 ) {
-                    Badge(painter = painterResource(id = R.drawable.klee),
+                    ProfileBadge(
+                        painter = painterResource(id = R.drawable.klee),
                         contentDescription = "Badge", modifier = Modifier.weight(1f))
                     Spacer(modifier = Modifier.width(8.dp))
-                    Badge(painter = painterResource(id = R.drawable.klee),
+                    ProfileBadge(
+                        painter = painterResource(id = R.drawable.klee),
                         contentDescription = "Badge", modifier = Modifier.weight(1f))
                     Spacer(modifier = Modifier.width(8.dp))
-                    Badge(painter = painterResource(id = R.drawable.klee),
+                    ProfileBadge(
+                        painter = painterResource(id = R.drawable.klee),
                         contentDescription = "Badge", modifier = Modifier.weight(1f))
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
@@ -208,9 +211,10 @@ fun ProgressButton() {
 }
 
 @Composable
-fun Badge(painter: Painter,
-          contentDescription: String?,
-          modifier: Modifier = Modifier
+fun ProfileBadge(
+    painter: Painter,
+    contentDescription: String?,
+    modifier: Modifier = Modifier
 ) {
     Box(
         modifier = modifier
