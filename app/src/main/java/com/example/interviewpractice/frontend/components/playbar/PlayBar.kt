@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
@@ -41,8 +42,7 @@ fun PlayBar(playBarViewModel: PlayBarViewModel) {
                 if (playBarViewModel.playState.value == PlayState.PAUSE) {
                     Icon(Icons.Filled.PlayArrow, contentDescription = "Play")
                 } else {
-                    // TODO: Find pause icon
-                    // Icon(Icons.Filled.Pause, contentDescription = "Pause") PAUSE ICON?
+                    Icon(Icons.Filled.Pause, contentDescription = "Pause")
                 }
 
             }
