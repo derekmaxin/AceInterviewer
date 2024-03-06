@@ -9,13 +9,14 @@ import com.example.interviewpractice.model.MainModel
 class NotificationViewModel(private val model: MainModel): Subscriber {
 
     var expanded = mutableStateOf(false)
+    var notifications = mutableStateOf(listOf<String>(""))
 
     init {
         model.subscribe(this)
     }
 
     override fun update() {
-        Log.d("REVIEW VIEW MODEL", "Updated")
+        Log.d("NOTIFS VIEW MODEL", "Updated")
     }
 
 

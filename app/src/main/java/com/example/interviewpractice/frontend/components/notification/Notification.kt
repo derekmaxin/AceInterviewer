@@ -2,64 +2,94 @@ package com.example.interviewpractice.frontend.components.notification
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
-import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.Badge
+import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import com.example.interviewpractice.frontend.components.review.NotificationViewModel
 
 @Composable
-@Preview
-fun Notification() {
-    var expanded by remember { mutableStateOf(false) }
+fun Notification(viewModel: NotificationViewModel) {
 
-    Card(
+    BadgedBox(
+        badge = { Badge { Text(viewModel.notifications.value.size.toString()) } },
         modifier = Modifier
-            .fillMaxWidth()
-            .animateContentSize(),
-         onClick = {
-            expanded = !expanded
-        }
+            .padding(16.dp)
     ) {
-        if (expanded) {
-
-        } else {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .animateContentSize(),
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(6.dp)
             ) {
                 Row(
-                    horizontalArrangement = Arrangement.Start
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text(
-                        text = "default text",
-                        style = MaterialTheme.typography.bodyMedium,
-                    )
+                    Row(
+                        horizontalArrangement = Arrangement.Start
+                    ) {
+                        Text(
+                            text = "default text",
+                            style = MaterialTheme.typography.bodyLarge,
+                        )
+                    }
+
+                    Row(
+                        horizontalArrangement = Arrangement.End,
+                    ) {
+                        IconButton(
+                            onClick = { viewModel.expanded.value = !viewModel.expanded.value },
+                            content = {
+                                if (viewModel.expanded.value) { Icon(Icons.Filled.ExpandLess, contentDescription = null) }
+                                else { Icon(Icons.Filled.ExpandMore, contentDescription = null) }
+
+                            }
+                        )
+                    }
                 }
 
-                Row(
-                    horizontalArrangement = Arrangement.End,
-                ) {
-                    Icon(Icons.Filled.ExpandMore, contentDescription = "Play")
+                if (viewModel.expanded.value) {
+                    for (notification in viewModel.notifications.value) {
+                        ElevatedCard(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            elevation = CardDefaults.cardElevation(
+                                defaultElevation = 6.dp
+                            )
+                        ) {
+                            Text(
+                                modifier = Modifier
+                                    .padding(6.dp),
+                                text = notification,
+                                style = MaterialTheme.typography.bodyLarge,
+                            )
+                        }
+                    }
                 }
             }
-
-
         }
-
     }
 }
