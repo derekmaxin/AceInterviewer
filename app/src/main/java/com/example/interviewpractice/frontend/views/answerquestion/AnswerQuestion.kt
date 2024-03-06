@@ -40,7 +40,6 @@ fun SimpleOutlinedTextField() {
 @Composable
 @Preview
 fun AnswerScreen() {
-
     Surface() {
         Column(
             modifier = Modifier
