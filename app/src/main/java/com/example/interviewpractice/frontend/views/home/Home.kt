@@ -20,7 +20,10 @@ import com.example.interviewpractice.model.AuthModel
 
 @Composable
 //@Preview
-fun HomeScreen(c: AuthController, questionVM: QuestionViewModel) {
+fun HomeScreen(
+    c: AuthController,
+    questionVM: QuestionViewModel,
+    goToMakeQuestion: () -> Unit) {
 
     Surface() {
         Column(
@@ -64,6 +67,17 @@ fun HomeScreen(c: AuthController, questionVM: QuestionViewModel) {
                 ) {
                     QuestionAnswered()
                 }
+            }
+            Button(
+                onClick = goToMakeQuestion,
+                modifier = Modifier.fillMaxWidth().height(50.dp).padding(vertical = 4.dp)
+            ) {
+                Text("Add a question",
+                    style = TextStyle(
+                        fontSize = 16.sp,
+                        color = Color.White,
+                    )
+                )
             }
             Button(
                 onClick = {c.verifyLogout() },
