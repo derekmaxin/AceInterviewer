@@ -36,9 +36,9 @@ fun MakeQuestionScreen(viewModel: MakeQuestionViewModel, goToHome: () -> Unit)
 {
     val vm by remember { mutableStateOf(viewModel) }
 //    val tagList by remember { mutatableStateListOf<String>() }
-    val tagList = listOf("Biology", "English", "Chemistry", "Art", "Computer Science", "Math"
-        , "Finance", "Physics", "Business")
-    var tagText = remember { mutableStateOf("") }
+//    val tagList = listOf("Biology", "English", "Chemistry", "Art", "Computer Science", "Math"
+//        , "Finance", "Physics", "Business")
+//    var tagText = remember { mutableStateOf("") }
 
     Surface {
         Column(
