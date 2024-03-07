@@ -20,7 +20,7 @@ import com.example.interviewpractice.model.AuthModel
 
 @Composable
 //@Preview
-fun HomeScreen(c: AuthController,questionVM: QuestionViewModel) {
+fun HomeScreen(c: AuthController, questionVM: QuestionViewModel) {
 
     Surface() {
         Column(
