@@ -22,6 +22,8 @@ import com.example.interviewpractice.controller.QuestionController
 import com.example.interviewpractice.frontend.components.NavBar
 import com.example.interviewpractice.frontend.components.question.QuestionViewModel
 import com.example.interviewpractice.frontend.views.leaderboard.LeaderboardView
+import com.example.interviewpractice.frontend.views.makequestion.MakeQuestionScreen
+import com.example.interviewpractice.frontend.views.makequestion.MakeQuestionViewModel
 import com.example.interviewpractice.frontend.views.profile.ProfileView
 import com.example.interviewpractice.frontend.views.search.SearchView
 import com.example.interviewpractice.frontend.views.search.SearchViewModel
@@ -37,6 +39,7 @@ fun MainView(
     questionViewModel: QuestionViewModel,
     authController: AuthController,
     questionController: QuestionController,
+    makeQuestionViewModel: MakeQuestionViewModel,
     clearError: () -> Unit)
 {
     val registerVM by remember { mutableStateOf(registerViewModel) }
@@ -70,8 +73,13 @@ fun MainView(
             composable("leaderboard") {
                 LeaderboardView()
             }
+            composable("make question") {
+                MakeQuestionScreen(viewModel = makeQuestionViewModel,
+                    goToHome = { anc.navigate("home") })
+            }
             composable("home") {
-                HomeScreen(c = authController, questionVM = questionViewModel)
+                HomeScreen(c = authController, questionVM = questionViewModel,
+                    goToMakeQuestion = { anc.navigate("make question") })
             }
             composable("search") {
                 SearchView(c = questionController, searchVM = searchViewModel)

@@ -21,6 +21,7 @@ import com.example.interviewpractice.frontend.views.auth.login.LoginViewModel
 import com.example.interviewpractice.frontend.views.auth.register.RegisterViewModel
 import com.example.interviewpractice.frontend.views.mainview.MainView
 import com.example.interviewpractice.frontend.views.mainview.MainViewModel
+import com.example.interviewpractice.frontend.views.makequestion.MakeQuestionViewModel
 import com.example.interviewpractice.frontend.views.search.SearchViewModel
 import com.example.interviewpractice.model.MainModel
 
@@ -38,8 +39,7 @@ class MainActivity : ComponentActivity() {
     private lateinit var searchVM: SearchViewModel
 
     private lateinit var questionVM: QuestionViewModel
-
-
+    private lateinit var makeQuestionVM: MakeQuestionViewModel
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,6 +57,7 @@ class MainActivity : ComponentActivity() {
         searchVM = SearchViewModel(mainModel)
 
         questionVM = QuestionViewModel(mainModel)
+        makeQuestionVM = MakeQuestionViewModel(mainModel)
 
         authModel.initAuth()
 
@@ -71,7 +72,8 @@ class MainActivity : ComponentActivity() {
                         authController=authController,
                         searchViewModel = searchVM,
                         questionViewModel = questionVM,
-                        questionController=questionController
+                        questionController=questionController,
+                        makeQuestionViewModel = makeQuestionVM
                         )
                     {authModel.clearError()}
                 }
