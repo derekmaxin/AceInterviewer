@@ -25,6 +25,7 @@ import com.example.interviewpractice.frontend.views.leaderboard.LeaderboardView
 import com.example.interviewpractice.frontend.views.makequestion.MakeQuestionScreen
 import com.example.interviewpractice.frontend.views.makequestion.MakeQuestionViewModel
 import com.example.interviewpractice.frontend.views.profile.ProfileView
+import com.example.interviewpractice.frontend.views.review.ReviewView
 import com.example.interviewpractice.frontend.views.search.SearchView
 import com.example.interviewpractice.frontend.views.search.SearchViewModel
 
@@ -70,6 +71,9 @@ fun MainView(
         //If user is signed in
 
         NavHost(navController = anc, startDestination = "home") {
+            composable("reviews") {
+                ReviewView(questionVM = questionViewModel)
+            }
             composable("leaderboard") {
                 LeaderboardView()
             }
@@ -89,7 +93,7 @@ fun MainView(
             }
         }
         NavBar(
-//                goToReviews={anc.navigate("reviews")},
+            goToReviews={anc.navigate("reviews")},
             goToSearch={anc.navigate("search")},
             goToHome={anc.navigate("home")},
 //                goToNotfications={anc.navigate("notifications")},
