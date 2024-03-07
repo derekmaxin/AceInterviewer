@@ -6,5 +6,5 @@ import androidx.compose.runtime.setValue
 import com.example.interviewpractice.model.MainModel
 
 class SearchViewModel(model: MainModel) {
-    var password by mutableStateOf("")
+    var search by mutableStateOf("")
 }
