@@ -39,7 +39,7 @@ import com.example.interviewpractice.frontend.components.question.Question
 
 @Composable
 //@Preview
-fun SearchView(c: QuestionController, searchVM: SearchViewModel) {
+fun SearchView(c: QuestionController, searchVM: SearchViewModel, goToMakeQuestion: () -> Unit) {
 
     val vm by remember { mutableStateOf(searchVM) }
     Surface() {
@@ -143,7 +143,7 @@ fun SearchView(c: QuestionController, searchVM: SearchViewModel) {
             }
             Text(text = "Not here?")
             Button(
-                onClick = { },
+                onClick = { goToMakeQuestion() },
                 modifier = Modifier
                     .height(50.dp)
                     .padding(vertical = 4.dp)

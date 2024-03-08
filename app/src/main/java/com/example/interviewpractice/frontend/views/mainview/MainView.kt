@@ -93,7 +93,7 @@ fun MainView(
                 Notifications(viewModel = notificationsViewModel)            }
 
             composable("search") {
-                SearchView(c = questionController, searchVM = searchViewModel)
+                SearchView(c = questionController, searchVM = searchViewModel, goToMakeQuestion = { anc.navigate("make question") })
             }
             composable("profile") {
                 ProfileView(goToLeaderboard = { anc.navigate("leaderboard") })
