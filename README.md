@@ -5,8 +5,8 @@
 Ryan Maxin, Derek Maxin, Marcus Puntillo, Jia Wen Li
 
 # Conventions
-**Branching**: [user]-[issue number]-[description] <br>
-**Example**: mapuntil-56-question-deletion
+**Branching**: [issue-number]-[description] <br>
+**Example**: 56-question-deletion
 
 ## Project Proposal
 
