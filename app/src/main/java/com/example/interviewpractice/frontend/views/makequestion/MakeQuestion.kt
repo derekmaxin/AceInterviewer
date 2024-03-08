@@ -22,7 +22,6 @@ import androidx.compose.ui.AbsoluteAlignment
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -35,10 +34,8 @@ import androidx.compose.ui.unit.sp
 fun MakeQuestionScreen(viewModel: MakeQuestionViewModel, goToHome: () -> Unit)
 {
     val vm by remember { mutableStateOf(viewModel) }
-//    val tagList by remember { mutatableStateListOf<String>() }
 //    val tagList = listOf("Biology", "English", "Chemistry", "Art", "Computer Science", "Math"
 //        , "Finance", "Physics", "Business")
-//    var tagText = remember { mutableStateOf("") }
 
     Surface {
         Column(
@@ -99,7 +96,7 @@ fun MakeQuestionScreen(viewModel: MakeQuestionViewModel, goToHome: () -> Unit)
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(50.dp)
+                        .height(155.dp)
                         .border(width = 3.dp, color = Color.LightGray)
                 ) {
                     FlowRow(
@@ -109,13 +106,41 @@ fun MakeQuestionScreen(viewModel: MakeQuestionViewModel, goToHome: () -> Unit)
                             .padding(8.dp)
                     ) {
                         FilterChip(
-                            selected = vm.selectedTag1,
-                            onClick = { vm.selectedTag1 = !vm.selectedTag1 },
-                            label = { Text("Tag 1") })
+                            selected = vm.biologyTag,
+                            onClick = { vm.biologyTag = !vm.biologyTag },
+                            label = { Text("Biology") })
                         FilterChip(
-                            selected = vm.selectedTag2,
-                            onClick = { vm.selectedTag2 = !vm.selectedTag2 },
-                            label = { Text("Tag 2") })
+                            selected = vm.englishTag,
+                            onClick = { vm.englishTag = !vm.englishTag },
+                            label = { Text("English") })
+                        FilterChip(
+                            selected = vm.chemistryTag,
+                            onClick = { vm.chemistryTag = !vm.chemistryTag },
+                            label = { Text("Chemistry") })
+                        FilterChip(
+                            selected = vm.artTag,
+                            onClick = { vm.artTag = !vm.artTag },
+                            label = { Text("Art") })
+                        FilterChip(
+                            selected = vm.computerScienceTag,
+                            onClick = { vm.computerScienceTag = !vm.computerScienceTag },
+                            label = { Text("Computer Science") })
+                        FilterChip(
+                            selected = vm.mathTag,
+                            onClick = { vm.mathTag = !vm.mathTag },
+                            label = { Text("Math") })
+                        FilterChip(
+                            selected = vm.financeTag,
+                            onClick = { vm.financeTag = !vm.financeTag },
+                            label = { Text("Finance") })
+                        FilterChip(
+                            selected = vm.physicsTag,
+                            onClick = { vm.physicsTag = !vm.physicsTag },
+                            label = { Text("Physics") })
+                        FilterChip(
+                            selected = vm.businessTag,
+                            onClick = { vm.businessTag = !vm.businessTag },
+                            label = { Text("Business") })
                     }
                 }
             }
