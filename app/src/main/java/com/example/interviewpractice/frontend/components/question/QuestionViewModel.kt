@@ -18,6 +18,4 @@ class QuestionViewModel(private val model: MainModel): Subscriber {
     override fun update() {
         Log.d("QUESTION VIEW MODEL", "Updated")
     }
-
-
 }

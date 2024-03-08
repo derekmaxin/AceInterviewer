@@ -24,6 +24,8 @@ import com.example.interviewpractice.frontend.components.question.QuestionViewMo
 import com.example.interviewpractice.frontend.views.leaderboard.LeaderboardView
 import com.example.interviewpractice.frontend.views.makequestion.MakeQuestionScreen
 import com.example.interviewpractice.frontend.views.makequestion.MakeQuestionViewModel
+import com.example.interviewpractice.frontend.views.notifications.Notifications
+import com.example.interviewpractice.frontend.views.notifications.NotificationsViewModel
 import com.example.interviewpractice.frontend.views.profile.ProfileView
 import com.example.interviewpractice.frontend.views.review.ReviewView
 import com.example.interviewpractice.frontend.views.search.SearchView
@@ -41,11 +43,13 @@ fun MainView(
     authController: AuthController,
     questionController: QuestionController,
     makeQuestionViewModel: MakeQuestionViewModel,
+    notificationsViewModel: NotificationsViewModel,
     clearError: () -> Unit)
 {
     val registerVM by remember { mutableStateOf(registerViewModel) }
     val loginVM by remember { mutableStateOf(loginViewModel) }
     val mainVM by remember { mutableStateOf(mainViewModel) }
+    val notifVM by remember { mutableStateOf(notificationsViewModel)}
 
 
     // NavController //////////////////////////////////////////////////////////
@@ -85,6 +89,9 @@ fun MainView(
                 HomeScreen(c = authController, questionVM = questionViewModel,
                     goToMakeQuestion = { anc.navigate("make question") })
             }
+            composable("notifications") {
+                Notifications(viewModel = notificationsViewModel)            }
+
             composable("search") {
                 SearchView(c = questionController, searchVM = searchViewModel)
             }
@@ -96,7 +103,7 @@ fun MainView(
             goToReviews={anc.navigate("reviews")},
             goToSearch={anc.navigate("search")},
             goToHome={anc.navigate("home")},
-//                goToNotfications={anc.navigate("notifications")},
+            goToNotifications={anc.navigate("notifications")},
             goToProfile={anc.navigate("profile")}
         )
 
