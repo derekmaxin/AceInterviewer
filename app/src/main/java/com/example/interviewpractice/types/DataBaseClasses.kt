@@ -6,7 +6,10 @@ data class Question(
     val hasVoice: Boolean,
     val hasText: Boolean,
     val deprecated: Boolean
-)
+
+) {
+    constructor() : this("", emptyList(), false, false, false)
+}
 
 //Access Reviews from the Firestore with the same ID as the answered_question
 //We split it up to avoid nesting, which is inefficient. (SEE: https://firebase.google.com/docs/database/web/structure-data#avoid_nesting_data)

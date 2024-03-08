@@ -23,6 +23,7 @@ import java.time.YearMonth
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -80,6 +81,7 @@ fun RegisterScreen(viewModel: RegisterViewModel, controller: AuthController) {
                     keyboardType = KeyboardType.Text,
                     imeAction = ImeAction.Done
                 ),
+                visualTransformation = PasswordVisualTransformation(),
                 textStyle = TextStyle(fontSize = 28.sp)
             )
             TextField(
@@ -94,6 +96,7 @@ fun RegisterScreen(viewModel: RegisterViewModel, controller: AuthController) {
                     keyboardType = KeyboardType.Text,
                     imeAction = ImeAction.Done
                 ),
+                visualTransformation = PasswordVisualTransformation(),
                 textStyle = TextStyle(fontSize = 28.sp)
 
             )
@@ -116,7 +119,7 @@ fun RegisterScreen(viewModel: RegisterViewModel, controller: AuthController) {
             FieldsOfInterest()
             Spacer(modifier = Modifier.height(8.dp))
             Button(
-                onClick = {c.verifyRegister(username = vm.username, password = vm.password, email = vm.email) },
+                onClick = {c.verifyRegister(username = vm.username.trim(), password = vm.password.trim(), email = vm.email.trim()) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(70.dp)
