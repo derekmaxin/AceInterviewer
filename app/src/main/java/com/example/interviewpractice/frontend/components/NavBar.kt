@@ -11,7 +11,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 //@Preview
-fun NavBar(goToReviews: () -> Unit, goToSearch: () -> Unit, goToHome: () -> Unit, goToProfile: () -> Unit) {
+fun NavBar(goToReviews: () -> Unit, goToSearch: () -> Unit, goToHome: () -> Unit, goToProfile: () -> Unit, goToNotifications: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize(),
@@ -34,7 +34,7 @@ fun NavBar(goToReviews: () -> Unit, goToSearch: () -> Unit, goToHome: () -> Unit
                     IconButton(onClick = goToHome) {
                         Icon(Icons.Default.Home, contentDescription = "Home")
                     }
-                    IconButton(onClick = { /* Handle navigation action */ }) {
+                    IconButton(onClick = goToNotifications) {
                         Icon(Icons.Default.Notifications, contentDescription = "Notifications")
                     }
                     IconButton(onClick = goToProfile) {
