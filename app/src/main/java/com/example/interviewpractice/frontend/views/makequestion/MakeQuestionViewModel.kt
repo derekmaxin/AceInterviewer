@@ -10,8 +10,15 @@ class MakeQuestionViewModel(model: MainModel) {
     var textAnswer by mutableStateOf(false)
     var voiceAnswer by mutableStateOf(false)
 
-    var selectedTag1 by mutableStateOf(false)
-    var selectedTag2 by mutableStateOf(false)
+    var biologyTag by mutableStateOf(false)
+    var englishTag by mutableStateOf(false)
+    var chemistryTag by mutableStateOf(false)
+    var artTag by mutableStateOf(false)
+    var computerScienceTag by mutableStateOf(false)
+    var mathTag by mutableStateOf(false)
+    var financeTag by mutableStateOf(false)
+    var physicsTag by mutableStateOf(false)
+    var businessTag by mutableStateOf(false)
 }
 
 
