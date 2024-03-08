@@ -16,6 +16,7 @@ import com.example.interviewpractice.frontend.components.question.Question
 import com.example.interviewpractice.frontend.components.playbar.PlayBar
 import com.example.interviewpractice.frontend.components.question.QuestionViewModel
 import com.example.interviewpractice.frontend.components.playbar.PlayBarViewModel
+import com.example.interviewpractice.frontend.components.question.DummyQuestion
 import com.example.interviewpractice.model.AuthModel
 
 @Composable
@@ -48,7 +49,8 @@ fun HomeScreen(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center
             ) {
-                Question(questionVM)
+                DummyQuestion("What is the speed of light", listOf<String>("Physics", "Science"))
+                //Question(questionVM)
             }
             Text(
                 text = "My answered",

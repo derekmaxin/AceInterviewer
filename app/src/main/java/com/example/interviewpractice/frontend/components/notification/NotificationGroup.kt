@@ -22,7 +22,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.interviewpractice.frontend.components.review.NotificationGroupViewModel
 
 @Composable
 fun NotificationGroup(viewModel: NotificationGroupViewModel) {
@@ -52,7 +51,7 @@ fun NotificationGroup(viewModel: NotificationGroupViewModel) {
                         horizontalArrangement = Arrangement.Start
                     ) {
                         Text(
-                            text = "default text",
+                            text = viewModel.defaultText.value,
                             style = MaterialTheme.typography.bodyLarge,
                         )
                     }
