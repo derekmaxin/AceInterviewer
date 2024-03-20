@@ -4,6 +4,7 @@ import android.util.Log
 import com.example.interviewpractice.types.Question
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
+import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.tasks.await
 
@@ -19,6 +20,11 @@ class MainModel: Presenter() {
         notifySubscribers()
     }
 
+    var searchResults = mutableListOf<Question>()
+
+
+>>>>>>> app/src/main/java/com/example/interviewpractice/model/MainModel.kt
+
     suspend fun addQuestion(question: Question) {
         db.collection("questions").add(question).await()
         Log.d(TAG,"addQuestion:success")
@@ -31,10 +37,12 @@ class MainModel: Presenter() {
             .whereGreaterThanOrEqualTo("questionText", queryText)
             .whereLessThanOrEqualTo("questionText", queryText + "\uf8ff")
             .get().await()
-
+        searchResults.clear()
         for (question in query) {
             Log.d(TAG, "QUERY ${question.id} => ${question.data}")
+            searchResults.add(question.toObject(Question::class.java))
         }
+        notifySubscribers()
     }
 
 

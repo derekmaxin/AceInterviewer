@@ -17,6 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.example.interviewpractice.types.Tag
 
 @Composable
 fun Tag(text: String) {
@@ -91,6 +92,36 @@ fun DummyQuestion(qText: String, tags: List<String>) {
                 ) {
                     for (tag in tags) {
                         Tag(tag)
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun DummyQuestion2(qText: String, tags: List<Tag>) {
+    Card() {
+        Column(
+            modifier = Modifier
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(6.dp)
+        ) {
+            Text(
+                text = qText,
+                modifier = Modifier
+                    .padding(4.dp, 0.dp, 4.dp, 0.dp),
+                textAlign = TextAlign.Left,
+                style = MaterialTheme.typography.bodyLarge,
+            )
+            if (tags.isNotEmpty()) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    for (tag in tags) {
+                        Tag(tag.toString())
                     }
                 }
             }

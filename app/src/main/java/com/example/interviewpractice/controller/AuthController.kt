@@ -25,7 +25,7 @@ class AuthController(private val model: AuthModel) {
             verifyPasswordFormat(password)
             verifyEmailFormat(email)
 
-            model.createAccount(username = username.trim(), email = email.trim(), password = password.trim())
+            model.createAccount(username = username, email = email, password = password)
             //User should now be authenticated, and data stored in the Firestore
 
             Log.d(TAG,"verifyRegister:success")

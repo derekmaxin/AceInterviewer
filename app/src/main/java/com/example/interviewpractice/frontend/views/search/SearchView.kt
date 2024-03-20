@@ -1,5 +1,6 @@
 package com.example.interviewpractice.frontend.views.search
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -32,10 +33,13 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.interviewpractice.controller.QuestionController
+import com.example.interviewpractice.frontend.components.question.DummyQuestion
+import com.example.interviewpractice.frontend.components.question.DummyQuestion2
+import com.example.interviewpractice.frontend.components.question.Question
 
 @Composable
 //@Preview
-fun SearchView(c: QuestionController, searchVM: SearchViewModel) {
+fun SearchView(c: QuestionController, searchVM: SearchViewModel, goToMakeQuestion: () -> Unit) {
 
     val vm by remember { mutableStateOf(searchVM) }
     Surface() {
@@ -50,7 +54,10 @@ fun SearchView(c: QuestionController, searchVM: SearchViewModel) {
         ) {
             Button(
                 onClick = {c.dummyData() },
-                modifier = Modifier.fillMaxWidth().height(50.dp).padding(vertical = 4.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp)
+                    .padding(vertical = 4.dp)
             ) {
                 Text("Dummy Data Dump",
                     style = TextStyle(
@@ -68,7 +75,10 @@ fun SearchView(c: QuestionController, searchVM: SearchViewModel) {
                 ) {
                     IconButton(
                         onClick = { c.search(vm.search) },
-                        modifier = Modifier.width(45.dp).height(70.dp).padding(vertical = 8.dp),
+                        modifier = Modifier
+                            .width(45.dp)
+                            .height(70.dp)
+                            .padding(vertical = 8.dp),
                         content = {
                             Icon(
                                 imageVector = Icons.Filled.Search,
@@ -103,7 +113,10 @@ fun SearchView(c: QuestionController, searchVM: SearchViewModel) {
             ) {
                 Button(
                     onClick = { },
-                    modifier = Modifier.weight(1f).height(50.dp).padding(vertical = 4.dp)
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(50.dp)
+                        .padding(vertical = 4.dp)
                 ) {
                     Text("Filter",
                         style = TextStyle(
@@ -115,7 +128,10 @@ fun SearchView(c: QuestionController, searchVM: SearchViewModel) {
                 Spacer(modifier = Modifier.width(16.dp))
                 Button(
                     onClick = { },
-                    modifier = Modifier.weight(1f).height(50.dp).padding(vertical = 4.dp)
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(50.dp)
+                        .padding(vertical = 4.dp)
                 ) {
                     Text("Completed",
                         style = TextStyle(
@@ -127,8 +143,10 @@ fun SearchView(c: QuestionController, searchVM: SearchViewModel) {
             }
             Text(text = "Not here?")
             Button(
-                onClick = { },
-                modifier = Modifier.height(50.dp).padding(vertical = 4.dp)
+                onClick = { goToMakeQuestion() },
+                modifier = Modifier
+                    .height(50.dp)
+                    .padding(vertical = 4.dp)
             ) {
                 Text("Add new",
                     style = TextStyle(
@@ -139,6 +157,10 @@ fun SearchView(c: QuestionController, searchVM: SearchViewModel) {
             }
             // TODO: Render clickable questions components on search, collab with ryan,
             // also remove "dummy data dump" button
+            for (question in vm.searchResults) {
+                DummyQuestion2(qText = question.questionText , tags = question.tags)
+                Spacer(modifier = Modifier.padding(4.dp))
+            }
         }
     }
 }
