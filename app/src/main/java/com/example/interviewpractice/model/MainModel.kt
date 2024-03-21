@@ -2,7 +2,6 @@ package com.example.interviewpractice.model
 
 import android.util.Log
 import com.example.interviewpractice.types.Question
-import com.example.interviewpractice.types.User
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.QuerySnapshot
@@ -14,10 +13,17 @@ class MainModel: Presenter() {
     private val auth = Firebase.auth
     private val db = Firebase.firestore
 
-    //BUSINESS DATA
+    val reviewScores: MutableList<Pair<String, Int>> = mutableListOf()
+
+    fun updateReviewScore(index: Int, score: Int) {
+        reviewScores[index] = Pair(reviewScores[index].first, score)
+        notifySubscribers()
+    }
+
     var searchResults = mutableListOf<Question>()
 
 
+>>>>>>> app/src/main/java/com/example/interviewpractice/model/MainModel.kt
 
     suspend fun addQuestion(question: Question) {
         db.collection("questions").add(question).await()

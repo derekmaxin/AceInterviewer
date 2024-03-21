@@ -1,5 +1,7 @@
 package com.example.interviewpractice
 
+import android.annotation.SuppressLint
+import android.content.pm.ActivityInfo
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -44,9 +46,11 @@ class MainActivity : ComponentActivity() {
 
     private lateinit var questionVM: QuestionViewModel
     private lateinit var makeQuestionVM: MakeQuestionViewModel
+    @SuppressLint("SourceLockedOrientationActivity")
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
         //Initialize views and models
         authModel = AuthModel()

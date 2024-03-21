@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.interviewpractice.frontend.components.question.Question
 import com.example.interviewpractice.frontend.components.question.QuestionViewModel
+import com.example.interviewpractice.frontend.components.starselection.StarSelection
 
 
 @Composable
@@ -31,6 +32,8 @@ fun ReviewView(questionVM: QuestionViewModel){
         ) {
             Question(questionVM)
         }
+
+        StarSelection("Sample")
         //TODO: Add Marcus' tiered feedback review component
     }
 }
