@@ -29,7 +29,6 @@ fun PlayBar(playBarViewModel: PlayBarViewModel) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(12.dp)
     ) {
         Row(
             modifier = Modifier
