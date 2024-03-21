@@ -1,12 +1,10 @@
 package com.example.interviewpractice.frontend.views.makequestion
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
@@ -28,10 +26,11 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.interviewpractice.controller.QuestionController
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun MakeQuestionScreen(viewModel: MakeQuestionViewModel, goToHome: () -> Unit)
+fun MakeQuestionScreen(viewModel: MakeQuestionViewModel, questionController: QuestionController, goToHome: () -> Unit)
 {
     val vm by remember { mutableStateOf(viewModel) }
 //    val tagList = listOf("Biology", "English", "Chemistry", "Art", "Computer Science", "Math"
@@ -67,8 +66,8 @@ fun MakeQuestionScreen(viewModel: MakeQuestionViewModel, goToHome: () -> Unit)
 
                 ) {
                     Checkbox(
-                        checked = vm.textAnswer,
-                        onCheckedChange = { vm.textAnswer = it }
+                        checked = vm.hasText,
+                        onCheckedChange = { vm.hasText = it }
                     )
                     Text(
                         text = "Accept text answers",
@@ -79,8 +78,8 @@ fun MakeQuestionScreen(viewModel: MakeQuestionViewModel, goToHome: () -> Unit)
 
                 ) {
                     Checkbox(
-                        checked = vm.voiceAnswer,
-                        onCheckedChange = { vm.voiceAnswer = it }
+                        checked = vm.hasVoice,
+                        onCheckedChange = { vm.hasVoice = it }
                     )
                     Text(
                         text = "Accept audio answers",
@@ -164,12 +163,18 @@ fun MakeQuestionScreen(viewModel: MakeQuestionViewModel, goToHome: () -> Unit)
             }
 
             Button(
-                onClick = {},
+                onClick = {
+                    questionController.verifyNewQuestion(
+                        vm.questionText,
+                        vm.hasVoice,
+                        vm.hasText,
+                        vm.makeTagList(),
+                        goToHome)
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp)
                     .padding(vertical = 4.dp)
-                    .background(Color.Green)
             ) {
                 Text("Submit Question",
                     style = TextStyle(
