@@ -15,6 +15,21 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
 class QuestionController(private val mm: MainModel, private val am: AuthModel) {
+
+    fun verifyNewQuestion(questionText: String, hasVoice: Boolean, hasText: Boolean,
+                 tagList: List<Tag>, onSuccess: () -> Unit) {
+
+        handler("verifyQuestion") {
+            verifyQuestionText(questionText)
+            verifyAnswerFormat(hasVoice, hasText)
+            verifyTags(tagList)
+
+            Log.d(TAG, "verifyQuestion:success")
+            onSuccess()
+        }
+
+    }
+
     fun dummyData() {
         handler("dummyData") {
             val t1 = listOf<Tag>(Tag.ART)
@@ -72,6 +87,25 @@ class QuestionController(private val mm: MainModel, private val am: AuthModel) {
             }
         }
     }
+
+    private fun verifyQuestionText(questionText: String) {
+        if (questionText.isEmpty()) {
+            throw UserException("Question text is empty")
+        }
+    }
+
+    private fun verifyAnswerFormat(hasVoice: Boolean, hasText: Boolean) {
+        if (!hasText && !hasVoice) {
+            throw UserException("Must select at least one answer format")
+        }
+    }
+
+    private fun verifyTags(tagList: List<Tag>) {
+        if (tagList.isEmpty()) {
+            throw UserException("Must select at least one tag")
+        }
+    }
+
     companion object {
         private const val TAG = "QuestionController"
     }

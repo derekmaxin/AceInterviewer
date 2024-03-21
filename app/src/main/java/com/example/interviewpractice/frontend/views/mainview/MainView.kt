@@ -83,7 +83,7 @@ fun MainView(
                 LeaderboardView()
             }
             composable("make question") {
-                MakeQuestionScreen(viewModel = makeQuestionViewModel,
+                MakeQuestionScreen(viewModel = makeQuestionViewModel, questionController = questionController,
                     goToHome = { anc.navigate("home") })
             }
             composable("home") {
