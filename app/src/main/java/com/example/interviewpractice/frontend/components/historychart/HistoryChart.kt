@@ -24,17 +24,18 @@ import androidx.compose.ui.unit.dp
 import java.time.*
 import kotlin.random.Random
 
+
 @RequiresApi(Build.VERSION_CODES.O)
 fun getDayOfWeek(utcDate: LocalDate): Int {
-    when (utcDate.dayOfWeek) {
-        DayOfWeek.SUNDAY -> return 0
-        DayOfWeek.MONDAY -> return 1
-        DayOfWeek.TUESDAY -> return 2
-        DayOfWeek.WEDNESDAY -> return 3
-        DayOfWeek.THURSDAY -> return 4
-        DayOfWeek.FRIDAY -> return 5
-        DayOfWeek.SATURDAY -> return 6
-        else -> { return -1 }
+    return when (utcDate.dayOfWeek) {
+        DayOfWeek.SUNDAY -> 0
+        DayOfWeek.MONDAY -> 1
+        DayOfWeek.TUESDAY -> 2
+        DayOfWeek.WEDNESDAY -> 3
+        DayOfWeek.THURSDAY -> 4
+        DayOfWeek.FRIDAY -> 5
+        DayOfWeek.SATURDAY -> 6
+        else -> { -1 }
     }
 }
 
@@ -43,7 +44,7 @@ fun getDayOfWeek(utcDate: LocalDate): Int {
 @Preview
 fun HistoryChart() {
 
-    var calendar = mutableListOf<Pair<LocalDate, Int>>()
+    val calendar = mutableListOf<Pair<LocalDate, Int>>()
     val oneYearAgo = LocalDate.now().minusDays(365)
     for (date in 0..365) {
         calendar.add(Pair(LocalDate.now().minusDays(date.toLong()), Random.nextInt(5)))

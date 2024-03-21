@@ -70,6 +70,7 @@ fun ProfileView(profileViewModel: ProfileViewModel, goToLeaderboard: () -> Unit)
                     .background(Color.Gray),
                 contentAlignment = Alignment.Center
             ){}
+
             //END OF PLACEHOLDER
             Spacer(modifier = Modifier.height(16.dp))
             Button(
