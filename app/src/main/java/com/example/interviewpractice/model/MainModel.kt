@@ -23,8 +23,6 @@ class MainModel: Presenter() {
     var searchResults = mutableListOf<Question>()
 
 
->>>>>>> app/src/main/java/com/example/interviewpractice/model/MainModel.kt
-
     suspend fun addQuestion(question: Question) {
         db.collection("questions").add(question).await()
         Log.d(TAG,"addQuestion:success")

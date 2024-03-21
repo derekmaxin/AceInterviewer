@@ -33,7 +33,7 @@ fun ReviewView(questionVM: QuestionViewModel){
             Question(questionVM)
         }
 
-        StarSelection("Sample")
+        //StarSelection("Sample")
         //TODO: Add Marcus' tiered feedback review component
     }
 }
