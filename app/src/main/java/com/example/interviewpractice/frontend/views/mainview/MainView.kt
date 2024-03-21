@@ -27,6 +27,7 @@ import com.example.interviewpractice.frontend.views.makequestion.MakeQuestionVie
 import com.example.interviewpractice.frontend.views.notifications.Notifications
 import com.example.interviewpractice.frontend.views.notifications.NotificationsViewModel
 import com.example.interviewpractice.frontend.views.profile.ProfileView
+import com.example.interviewpractice.frontend.views.profile.ProfileViewModel
 import com.example.interviewpractice.frontend.views.review.ReviewView
 import com.example.interviewpractice.frontend.views.search.SearchView
 import com.example.interviewpractice.frontend.views.search.SearchViewModel
@@ -44,12 +45,12 @@ fun MainView(
     questionController: QuestionController,
     makeQuestionViewModel: MakeQuestionViewModel,
     notificationsViewModel: NotificationsViewModel,
+    profileViewModel: ProfileViewModel,
     clearError: () -> Unit)
 {
     val registerVM by remember { mutableStateOf(registerViewModel) }
     val loginVM by remember { mutableStateOf(loginViewModel) }
     val mainVM by remember { mutableStateOf(mainViewModel) }
-    val notifVM by remember { mutableStateOf(notificationsViewModel)}
 
 
     // NavController //////////////////////////////////////////////////////////
@@ -96,7 +97,7 @@ fun MainView(
                 SearchView(c = questionController, searchVM = searchViewModel, goToMakeQuestion = { anc.navigate("make question") })
             }
             composable("profile") {
-                ProfileView(goToLeaderboard = { anc.navigate("leaderboard") })
+                ProfileView(profileViewModel = profileViewModel, goToLeaderboard = { anc.navigate("leaderboard") })
             }
         }
         NavBar(

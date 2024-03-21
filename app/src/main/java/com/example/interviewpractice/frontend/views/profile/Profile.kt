@@ -15,7 +15,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.example.interviewpractice.R
 import androidx.compose.foundation.background
@@ -23,11 +22,13 @@ import androidx.compose.foundation.clickable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.Done
+import com.example.interviewpractice.frontend.components.userbadge.UserBadgeDisplay
+
 
 
 @Composable
 //@Preview
-fun ProfileView(goToLeaderboard: () -> Unit) {
+fun ProfileView(profileViewModel: ProfileViewModel, goToLeaderboard: () -> Unit) {
     Surface() {
         Column(
             modifier = Modifier
@@ -58,59 +59,8 @@ fun ProfileView(goToLeaderboard: () -> Unit) {
                 ProgressButton()
             }
             Spacer(modifier = Modifier.height(16.dp))
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(85.dp)
-                    .background(Color.Gray)
-                    .padding(horizontal = 8.dp)
-                    .padding(vertical = 4.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxSize(),
-                ) {
-                    ProfileBadge(
-                        painter = painterResource(id = R.drawable.klee),
-                        contentDescription = "Badge", modifier = Modifier.weight(1f))
-                    Spacer(modifier = Modifier.width(8.dp))
-                    ProfileBadge(
-                        painter = painterResource(id = R.drawable.klee),
-                        contentDescription = "Badge", modifier = Modifier.weight(1f))
-                    Spacer(modifier = Modifier.width(8.dp))
-                    ProfileBadge(
-                        painter = painterResource(id = R.drawable.klee),
-                        contentDescription = "Badge", modifier = Modifier.weight(1f))
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = "badge display"
-                    )
-                }
-            }
-            Spacer(modifier = Modifier.height(8.dp))
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(35.dp)
-                    .padding(horizontal = 8.dp)
-                    .padding(vertical = 4.dp)
-                    .clickable { /* Handle button click */ },
-                contentAlignment = Alignment.Center
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center,
-                    modifier = Modifier.fillMaxSize(),
-                    ) {
-                    HorizontalDivider(modifier = Modifier.width(75.dp))
-                    Text(
-                        text = "Click to expand",
-                        modifier = Modifier.padding(horizontal = 8.dp)
-                    )
-                    HorizontalDivider(modifier = Modifier.width(75.dp))
-                }
-            }
+            UserBadgeDisplay(profileViewModel.badgeInfo)
+
             //PLACEHOLDER
             Spacer(modifier = Modifier.height(8.dp))
             Box(
@@ -210,24 +160,3 @@ fun ProgressButton() {
     }
 }
 
-@Composable
-fun ProfileBadge(
-    painter: Painter,
-    contentDescription: String?,
-    modifier: Modifier = Modifier
-) {
-    Box(
-        modifier = modifier
-            .size(120.dp)
-            .padding(16.dp)
-            .clip(CircleShape),
-        contentAlignment = Alignment.Center
-    ) {
-        Image(
-            painter = painter,
-            contentDescription = contentDescription,
-            modifier = Modifier.size(100.dp),
-            contentScale = ContentScale.Crop
-        )
-    }
-}

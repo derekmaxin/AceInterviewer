@@ -25,6 +25,7 @@ import com.example.interviewpractice.frontend.views.mainview.MainView
 import com.example.interviewpractice.frontend.views.mainview.MainViewModel
 import com.example.interviewpractice.frontend.views.makequestion.MakeQuestionViewModel
 import com.example.interviewpractice.frontend.views.notifications.NotificationsViewModel
+import com.example.interviewpractice.frontend.views.profile.ProfileViewModel
 import com.example.interviewpractice.frontend.views.search.SearchViewModel
 import com.example.interviewpractice.model.MainModel
 
@@ -41,6 +42,7 @@ class MainActivity : ComponentActivity() {
     private lateinit var mainVM: MainViewModel
     private lateinit var searchVM: SearchViewModel
     private lateinit var notificationVM: NotificationsViewModel
+    private lateinit var profileVM: ProfileViewModel
 
     private lateinit var questionVM: QuestionViewModel
     private lateinit var makeQuestionVM: MakeQuestionViewModel
@@ -62,6 +64,7 @@ class MainActivity : ComponentActivity() {
         mainVM = MainViewModel(authModel)
         searchVM = SearchViewModel(mainModel)
         notificationVM = NotificationsViewModel(mainModel)
+        profileVM = ProfileViewModel(mainModel)
 
         questionVM = QuestionViewModel(mainModel)
         makeQuestionVM = MakeQuestionViewModel(mainModel)
@@ -81,7 +84,8 @@ class MainActivity : ComponentActivity() {
                         questionViewModel = questionVM,
                         questionController=questionController,
                         makeQuestionViewModel = makeQuestionVM,
-                        notificationsViewModel = notificationVM
+                        notificationsViewModel = notificationVM,
+                        profileViewModel = profileVM,
                         )
                     {authModel.clearError()}
                 }
