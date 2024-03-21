@@ -1,13 +1,16 @@
 package com.example.interviewpractice.frontend.components.starselection
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import com.example.interviewpractice.frontend.Subscriber
 import com.example.interviewpractice.model.MainModel
 
-class StarSelectionViewModel(private val model: MainModel, private val reviewScoreID: Int): Subscriber {
+class StarSelectionViewModel(private val model: MainModel): Subscriber {
 
-    var name = mutableStateOf("")
-    private var intScore = 0
+    var name by mutableStateOf("")
+    var intScore by mutableIntStateOf(0)
     var score = listOf(
         mutableStateOf(false),
         mutableStateOf(false),
@@ -16,12 +19,6 @@ class StarSelectionViewModel(private val model: MainModel, private val reviewSco
         mutableStateOf(false))
 
     override fun update() {
-        val newScore = model.reviewScores[reviewScoreID].second
-        if (intScore != newScore) {
-            intScore = newScore
-            for ((index) in score.withIndex()) {
-                score[index].value = index <= intScore
-            }
-        }
+
     }
 }

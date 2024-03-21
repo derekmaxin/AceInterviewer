@@ -29,6 +29,7 @@ import com.example.interviewpractice.frontend.views.notifications.NotificationsV
 import com.example.interviewpractice.frontend.views.profile.ProfileView
 import com.example.interviewpractice.frontend.views.profile.ProfileViewModel
 import com.example.interviewpractice.frontend.views.review.ReviewView
+import com.example.interviewpractice.frontend.views.review.ReviewViewViewModel
 import com.example.interviewpractice.frontend.views.search.SearchView
 import com.example.interviewpractice.frontend.views.search.SearchViewModel
 
@@ -46,10 +47,12 @@ fun MainView(
     makeQuestionViewModel: MakeQuestionViewModel,
     notificationsViewModel: NotificationsViewModel,
     profileViewModel: ProfileViewModel,
+    reviewViewModel: ReviewViewViewModel,
     clearError: () -> Unit)
 {
     val registerVM by remember { mutableStateOf(registerViewModel) }
     val loginVM by remember { mutableStateOf(loginViewModel) }
+    val reviewVM by remember {mutableStateOf(reviewViewModel)}
     val mainVM by remember { mutableStateOf(mainViewModel) }
 
 
@@ -77,7 +80,7 @@ fun MainView(
 
         NavHost(navController = anc, startDestination = "home") {
             composable("reviews") {
-                ReviewView(questionVM = questionViewModel)
+                ReviewView(reviewVM)
             }
             composable("leaderboard") {
                 LeaderboardView()

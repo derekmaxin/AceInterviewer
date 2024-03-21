@@ -9,6 +9,7 @@ import java.time.LocalDate
 class HistoryChartViewModel(private val model: AuthModel): Subscriber {
 
     var calendar = mutableStateOf(emptyList<Pair<LocalDate, List<String>>>())
+
     /*
     The calendar contains a Pair<LocalDate, List<String>>.
 

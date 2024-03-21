@@ -26,6 +26,7 @@ import com.example.interviewpractice.frontend.views.mainview.MainViewModel
 import com.example.interviewpractice.frontend.views.makequestion.MakeQuestionViewModel
 import com.example.interviewpractice.frontend.views.notifications.NotificationsViewModel
 import com.example.interviewpractice.frontend.views.profile.ProfileViewModel
+import com.example.interviewpractice.frontend.views.review.ReviewViewViewModel
 import com.example.interviewpractice.frontend.views.search.SearchViewModel
 import com.example.interviewpractice.model.MainModel
 
@@ -43,6 +44,7 @@ class MainActivity : ComponentActivity() {
     private lateinit var searchVM: SearchViewModel
     private lateinit var notificationVM: NotificationsViewModel
     private lateinit var profileVM: ProfileViewModel
+    private lateinit var reviewVM: ReviewViewViewModel
 
     private lateinit var questionVM: QuestionViewModel
     private lateinit var makeQuestionVM: MakeQuestionViewModel
@@ -65,6 +67,7 @@ class MainActivity : ComponentActivity() {
         searchVM = SearchViewModel(mainModel)
         notificationVM = NotificationsViewModel(mainModel)
         profileVM = ProfileViewModel(mainModel)
+        reviewVM = ReviewViewViewModel(mainModel)
 
         questionVM = QuestionViewModel(mainModel)
         makeQuestionVM = MakeQuestionViewModel(mainModel)
@@ -79,13 +82,14 @@ class MainActivity : ComponentActivity() {
                     MainView(registerViewModel = registerVM,
                         loginViewModel = loginVM,
                         mainViewModel = mainVM,
-                        authController=authController,
+                        authController= authController,
                         searchViewModel = searchVM,
                         questionViewModel = questionVM,
-                        questionController=questionController,
+                        questionController= questionController,
                         makeQuestionViewModel = makeQuestionVM,
                         notificationsViewModel = notificationVM,
                         profileViewModel = profileVM,
+                        reviewViewModel = reviewVM
                         )
                     {authModel.clearError()}
                 }
