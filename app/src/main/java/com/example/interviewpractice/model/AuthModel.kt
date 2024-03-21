@@ -101,6 +101,15 @@ class AuthModel: Presenter() {
             notifySubscribers()
         }
     }
+
+    fun getUserID(): String {
+        user = auth.currentUser
+        if (user != null) {
+            return user!!.uid
+        }
+        return "no user id found"
+    }
+
     companion object {
         private const val TAG = "AuthModel"
     }

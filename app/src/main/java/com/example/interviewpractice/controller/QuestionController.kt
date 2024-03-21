@@ -24,6 +24,10 @@ class QuestionController(private val mm: MainModel, private val am: AuthModel) {
             verifyAnswerFormat(hasVoice, hasText)
             verifyTags(tagList)
 
+            val newQuestion = Question(questionText, tagList,
+                hasVoice, hasText, false, am.getUserID())
+            mm.addQuestion(newQuestion)
+
             Log.d(TAG, "verifyQuestion:success")
             onSuccess()
         }
@@ -37,11 +41,11 @@ class QuestionController(private val mm: MainModel, private val am: AuthModel) {
             val t3 = listOf<Tag>(Tag.CS)
             val t4 = listOf<Tag>(Tag.CHEMISTRY)
             val t5 = listOf<Tag>(Tag.PHYSICS, Tag.MATH)
-            val q1 = Question("What is the rule of thirds?", t1, false, true, false)
-            val q2 = Question("Name the three most influential art galleries", t2, false, true, false)
-            val q3 = Question("Describe MVVM architecture", t3, false, true, false)
-            val q4 = Question("Name the 20 essential amino acids", t4, false, true, false)
-            val q5 = Question("Describe how the Fourier transform works", t5, false, true, false)
+            val q1 = Question("What is the rule of thirds?", t1, false, true, false, "randomUser")
+            val q2 = Question("Name the three most influential art galleries", t2, false, true, false, "randomUser")
+            val q3 = Question("Describe MVVM architecture", t3, false, true, false, "randomUser")
+            val q4 = Question("Name the 20 essential amino acids", t4, false, true, false, "randomUser")
+            val q5 = Question("Describe how the Fourier transform works", t5, false, true, false, "randomUser")
             mm.addQuestion(q1)
             mm.addQuestion(q2)
             mm.addQuestion(q3)

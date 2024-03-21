@@ -2,8 +2,6 @@ package com.example.interviewpractice.frontend.views.makequestion
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -22,7 +20,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -33,8 +30,6 @@ import com.example.interviewpractice.controller.QuestionController
 fun MakeQuestionScreen(viewModel: MakeQuestionViewModel, questionController: QuestionController, goToHome: () -> Unit)
 {
     val vm by remember { mutableStateOf(viewModel) }
-//    val tagList = listOf("Biology", "English", "Chemistry", "Art", "Computer Science", "Math"
-//        , "Finance", "Physics", "Business")
 
     Surface {
         Column(
@@ -145,7 +140,10 @@ fun MakeQuestionScreen(viewModel: MakeQuestionViewModel, questionController: Que
             }
 
             Button(
-                onClick = goToHome,
+                onClick = {
+                    vm.clearFields()
+                    goToHome()
+                },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Transparent)
             ) {
