@@ -27,6 +27,7 @@ import com.example.interviewpractice.frontend.views.notifications.Notifications
 import com.example.interviewpractice.frontend.views.notifications.NotificationsViewModel
 import com.example.interviewpractice.frontend.views.profile.ProfileView
 import com.example.interviewpractice.frontend.views.profile.bestquestions.BestQuestionsView
+import com.example.interviewpractice.frontend.views.profile.bestquestions.BestQuestionsViewModel
 import com.example.interviewpractice.frontend.views.review.ReviewView
 import com.example.interviewpractice.frontend.views.review.ReviewViewViewModel
 import com.example.interviewpractice.frontend.views.search.SearchView
@@ -43,7 +44,8 @@ fun MainView(
     ac: AuthController,
     qc: QuestionController,
     am: AuthModel,
-    mm: MainModel
+    mm: MainModel,
+    bestQuestionsViewModel: BestQuestionsViewModel
     )
 {
     LaunchedEffect(Unit){
@@ -78,9 +80,9 @@ fun MainView(
             composable("leaderboard") {
                 LeaderboardView(mm=mm,c=uc)
             }
-//            composable("best questions") {
-//                BestQuestionsView(vm = bestQuestionsViewModel)
-//            }
+            composable("best questions") {
+                BestQuestionsView(vm= bestQuestionsViewModel)
+            }
             composable("make question") {
                 MakeQuestionScreen(mm=mm, questionController = qc,
                     goToHome = { anc.navigate("home") })

@@ -27,6 +27,7 @@ import com.example.interviewpractice.frontend.views.mainview.MainViewModel
 import com.example.interviewpractice.frontend.views.makequestion.MakeQuestionViewModel
 import com.example.interviewpractice.frontend.views.notifications.NotificationsViewModel
 import com.example.interviewpractice.frontend.views.profile.ProfileViewModel
+import com.example.interviewpractice.frontend.views.profile.bestquestions.BestQuestionsViewModel
 import com.example.interviewpractice.frontend.views.review.ReviewViewViewModel
 import com.example.interviewpractice.frontend.views.search.SearchViewModel
 import com.example.interviewpractice.model.MainModel
@@ -40,6 +41,8 @@ class MainActivity : ComponentActivity() {
     private lateinit var ac: AuthController
     private lateinit var uc: UserController
     private lateinit var qc: QuestionController
+
+    private lateinit var aaa: BestQuestionsViewModel
 
     @SuppressLint("SourceLockedOrientationActivity")
     @RequiresApi(Build.VERSION_CODES.O)
@@ -59,6 +62,8 @@ class MainActivity : ComponentActivity() {
         uc = UserController(mainModel,authModel)
         qc = QuestionController(mainModel,authModel)
 
+        aaa = BestQuestionsViewModel(mainModel)
+
 
 
         setContent {
@@ -71,7 +76,8 @@ class MainActivity : ComponentActivity() {
                         vm = mainVM,
                         ac=ac,
                         uc=uc,
-                        qc=qc
+                        qc=qc,
+                        bestQuestionsViewModel = aaa
                     )
                 }
             }

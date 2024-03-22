@@ -13,7 +13,7 @@ interface NotificationGroupViewModel: Subscriber {
     var defaultText: MutableState<String>
 }
 
-class ConcreteNotificationGroupViewModel(model: MainModel): MMViewModel() {
+class ConcreteNotificationGroupViewModel(): MMViewModel() {
 
     var expanded = mutableStateOf(false)
     var notifications = mutableStateOf(listOf<String>(""))
