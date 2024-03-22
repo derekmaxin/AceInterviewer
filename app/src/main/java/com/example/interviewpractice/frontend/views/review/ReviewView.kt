@@ -52,6 +52,7 @@ fun ReviewView(mm: MainModel, /* */){
     understandingVM.addModel(mm)
     val playBarViewModel: PlayBarViewModel = viewModel()
     playBarViewModel.addModel(mm)
+
     clarityVM.name = "Clarity"
     understandingVM.name = "Understanding"
 
@@ -81,7 +82,7 @@ fun ReviewView(mm: MainModel, /* */){
          */
 
         StarSelection(understandingVM)
-        StarSelection(clarityVM)
+//        StarSelection(clarityVM)
 
         SimpleOutlinedTextField()
 
