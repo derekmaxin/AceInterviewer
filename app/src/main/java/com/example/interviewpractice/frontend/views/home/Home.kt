@@ -11,6 +11,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.interviewpractice.controller.AuthController
 import com.example.interviewpractice.frontend.components.question.Question
 import com.example.interviewpractice.frontend.components.playbar.PlayBar
@@ -24,9 +25,11 @@ import com.example.interviewpractice.model.MainModel
 //@Preview
 fun HomeScreen(
     c: AuthController,
-    questionVM: QuestionViewModel,
+    mm: MainModel,
     goToMakeQuestion: () -> Unit) {
 
+    val playBarVM: PlayBarViewModel = viewModel()
+    playBarVM.addModel(mm)
     Surface() {
         Column(
             modifier = Modifier
@@ -65,15 +68,20 @@ fun HomeScreen(
 
             for (i in 0..2) {
                 Row(
-                    modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp),
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    QuestionAnswered()
+                    QuestionAnswered(playBarVM)
                 }
             }
             Button(
                 onClick = goToMakeQuestion,
-                modifier = Modifier.fillMaxWidth().height(50.dp).padding(vertical = 4.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp)
+                    .padding(vertical = 4.dp)
             ) {
                 Text("Add a question",
                     style = TextStyle(
@@ -84,7 +92,10 @@ fun HomeScreen(
             }
             Button(
                 onClick = {c.verifyLogout() },
-                modifier = Modifier.fillMaxWidth().height(50.dp).padding(vertical = 4.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp)
+                    .padding(vertical = 4.dp)
             ) {
                 Text("Log out",
                     style = TextStyle(
@@ -98,12 +109,12 @@ fun HomeScreen(
 }
 
 @Composable
-fun QuestionAnswered() {
-    val model = MainModel()
-    val playBarVM = PlayBarViewModel(model)
+fun QuestionAnswered(playBarVM: PlayBarViewModel) {
 
     Card(
-        modifier = Modifier.fillMaxWidth().height(125.dp)
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(125.dp)
     ) {
         Box() {// Needed to align notification number in top-right
             Button(

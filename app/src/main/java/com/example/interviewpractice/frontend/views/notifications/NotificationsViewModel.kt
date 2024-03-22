@@ -2,13 +2,13 @@ package com.example.interviewpractice.frontend.views.notifications
 
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
-import com.example.interviewpractice.frontend.Subscriber
+import com.example.interviewpractice.frontend.MMViewModel
 import com.example.interviewpractice.frontend.components.notification.NotificationGroup
 import com.example.interviewpractice.frontend.components.notification.DummyNotificationGroupViewModel
 import com.example.interviewpractice.frontend.components.notification.NotificationGroupViewModel
 import com.example.interviewpractice.model.MainModel
 
-class NotificationsViewModel(private val model: MainModel): Subscriber {
+class NotificationsViewModel(): MMViewModel() {
 
     var notifications = mutableStateOf(
         listOf<NotificationGroupViewModel>(
@@ -17,9 +17,6 @@ class NotificationsViewModel(private val model: MainModel): Subscriber {
         )
     )
 
-    init {
-        model.subscribe(this)
-    }
 
     override fun update() {
         Log.d("NOTIFSCREEN VIEW MODEL", "Updated")

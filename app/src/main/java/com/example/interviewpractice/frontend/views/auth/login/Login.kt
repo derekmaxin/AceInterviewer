@@ -5,9 +5,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
@@ -18,16 +15,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.interviewpractice.R
 import com.example.interviewpractice.controller.AuthController
+import com.example.interviewpractice.model.AuthModel
+
 
 @Composable
 fun LoginScreen(
-    vm: LoginViewModel,
+    am: AuthModel,
     c: AuthController,
     goToRegister: () -> Unit)
 {
-
+    val vm: LoginViewModel = viewModel()
+    vm.addModel(am)
     Surface {
         Column(
             modifier = Modifier

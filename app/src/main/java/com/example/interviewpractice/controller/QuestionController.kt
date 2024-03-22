@@ -18,7 +18,7 @@ class QuestionController(mm: MainModel, am: AuthModel): Controller(mm,am, TAG) {
     fun verifyNewQuestion(questionText: String, hasVoice: Boolean, hasText: Boolean,
                  tagList: List<Tag>, onSuccess: () -> Unit) {
 
-        handler("verifyQuestion") {
+        handler("verifyQuestion",false) {
             verifyQuestionText(questionText)
             verifyAnswerFormat(hasVoice, hasText)
             verifyTags(tagList)
@@ -34,7 +34,7 @@ class QuestionController(mm: MainModel, am: AuthModel): Controller(mm,am, TAG) {
     }
 
     fun dummyData() {
-        handler("dummyData") {
+        handler("dummyData",false) {
             val t1 = listOf<Tag>(Tag.ART)
             val t2 = listOf<Tag>(Tag.ART, Tag.BUSINESS)
             val t3 = listOf<Tag>(Tag.CS)
@@ -55,7 +55,7 @@ class QuestionController(mm: MainModel, am: AuthModel): Controller(mm,am, TAG) {
     }
 
     fun search(queryText: String) {
-        handler("search") {
+        handler("search",false) {
             mm.searchQuestion(queryText)
             Log.d(TAG,"search:success")
         }

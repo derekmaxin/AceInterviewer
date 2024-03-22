@@ -6,24 +6,26 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import com.example.interviewpractice.frontend.Subscriber
+import androidx.lifecycle.ViewModel
+import com.example.interviewpractice.frontend.LoaderMMViewModel
+import com.example.interviewpractice.frontend.MMViewModel
 import com.example.interviewpractice.frontend.views.mainview.MainViewModel
 import com.example.interviewpractice.model.MainModel
 import com.example.interviewpractice.types.Question
 
 
 
-class SearchViewModel(private val model: MainModel): Subscriber {
+class SearchViewModel(): LoaderMMViewModel() {
     var search by mutableStateOf("")
+
+    //DATA FROM BACKEND
     var searchResults by mutableStateOf<List<Question>>(emptyList())
 
-    init {
-        model.subscribe(this)
-    }
-
     override fun update() {
-        searchResults = model.searchResults
-        Log.d(TAG,"updated search results on frontend")
+        if (searchResults != model.searchResults) {
+            searchResults = model.searchResults
+            Log.d(TAG, "updated search results on frontend: ${searchResults.toString()}")
+        }
     }
     companion object {
         private const val TAG = "SearchViewModel"

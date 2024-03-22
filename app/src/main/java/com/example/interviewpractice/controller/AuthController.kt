@@ -5,6 +5,7 @@ import com.example.interviewpractice.helpers.EH
 import com.example.interviewpractice.model.AuthModel
 import com.example.interviewpractice.model.MainModel
 import com.example.interviewpractice.types.ErrorType
+import com.example.interviewpractice.types.FetchType
 import com.example.interviewpractice.types.UIError
 import com.example.interviewpractice.types.UserException
 import com.google.firebase.FirebaseException
@@ -20,8 +21,12 @@ import kotlinx.coroutines.launch
 
 
 class AuthController(mm: MainModel, am: AuthModel): Controller(mm,am,TAG) {
+
+//    override fun fetchData(ft: FetchType) {
+//        am.refresh()
+//    }
     fun verifyRegister(username: String, password:String,email:String) {
-        handler("verifyRegister") {
+        handler("verifyRegister",true) {
             verifyUsernameFormat(username)
             verifyPasswordFormat(password)
             verifyEmailFormat(email)
@@ -33,7 +38,7 @@ class AuthController(mm: MainModel, am: AuthModel): Controller(mm,am,TAG) {
         }
     }
     fun verifySignIn(password:String,email:String) {
-        handler("verifySignIn") {
+        handler("verifySignIn",true) {
             verifyPasswordFormat(password)
             verifyEmailFormat(email)
             am.signIn(email = email, password = password)
@@ -50,7 +55,7 @@ class AuthController(mm: MainModel, am: AuthModel): Controller(mm,am,TAG) {
     }
 
     fun verifyForgotPassword(email: String) {
-        handler("verifyForgotPassword") {
+        handler("verifyForgotPassword",true) {
             verifyEmailFormat(email)
 
             am.resetPassword(email)

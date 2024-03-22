@@ -1,6 +1,5 @@
 package com.example.interviewpractice.frontend.views.profile
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -24,16 +23,26 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.runtime.LaunchedEffect
-import com.example.interviewpractice.controller.ProfileController
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import com.example.interviewpractice.controller.UserController
 import com.example.interviewpractice.frontend.components.userbadge.UserBadgeDisplay
-
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.interviewpractice.frontend.views.leaderboard.LeaderboardViewModel
+import com.example.interviewpractice.model.MainModel
+import com.example.interviewpractice.types.FetchType
 
 
 @Composable
 //@Preview
-fun ProfileView(vm: ProfileViewModel, c: ProfileController, goToLeaderboard: () -> Unit) {
+fun ProfileView(mm: MainModel, c: UserController, goToLeaderboard: () -> Unit) {
+
+    val vm: ProfileViewModel = viewModel()
+    vm.addModel(mm)
+
     LaunchedEffect(Unit){
-        c.fetchData()
+        c.fetchData(FetchType.PROFILE)
     }
     Surface() {
         Column(
@@ -54,10 +63,10 @@ fun ProfileView(vm: ProfileViewModel, c: ProfileController, goToLeaderboard: () 
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Column {
-                    Text(text = "Chadley", style = TextStyle(fontSize = 15.sp, fontWeight = FontWeight.Bold))
+                    Text(text = vm.user?.username ?: "", style = TextStyle(fontSize = 15.sp, fontWeight = FontWeight.Bold))
                     Spacer(modifier = Modifier.height(8.dp))
-                    Text(text = "@dmaxin", style = TextStyle(fontSize = 10.sp))
-                    Text(text = "dmaxin@uwaterloo.ca", style = TextStyle(fontSize = 10.sp))
+                    Text(text = "@${vm.user?.username ?: ""}", style = TextStyle(fontSize = 10.sp))
+                    Text(text = vm.user?.email ?: "", style = TextStyle(fontSize = 10.sp))
                 }
                 Spacer(modifier = Modifier.width(36.dp))
                 HistoryButton()

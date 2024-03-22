@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import com.example.interviewpractice.frontend.MMViewModel
 import com.example.interviewpractice.frontend.Subscriber
 import com.example.interviewpractice.model.MainModel
 
@@ -12,7 +13,7 @@ enum class PlayState {
     PAUSE // If paused, show play icon
 }
 
-class PlayBarViewModel(private val model: MainModel): Subscriber {
+class PlayBarViewModel(): MMViewModel() {
 
     var playState = mutableStateOf(PlayState.PAUSE)
     var audioLengthSeconds = mutableIntStateOf(0)
@@ -24,10 +25,6 @@ class PlayBarViewModel(private val model: MainModel): Subscriber {
         } else {
             PlayState.PLAY
         }
-    }
-
-    init {
-        model.subscribe(this)
     }
 
     override fun update() {

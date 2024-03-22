@@ -4,11 +4,11 @@ import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import com.example.interviewpractice.frontend.AMViewModel
 import com.example.interviewpractice.model.AuthModel
-import com.example.interviewpractice.frontend.Subscriber
 import com.example.interviewpractice.types.UIError
 
-class RegisterViewModel(private val m: AuthModel) {
+class RegisterViewModel(): AMViewModel() {
     //View specific
     var username by mutableStateOf("")
     var password by mutableStateOf("")

@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.interviewpractice.controller.AuthController
 import com.example.interviewpractice.controller.QuestionController
+import com.example.interviewpractice.controller.UserController
 import com.example.interviewpractice.frontend.components.question.QuestionViewModel
 import com.example.interviewpractice.model.AuthModel
 import com.example.interviewpractice.ui.theme.InterviewPracticeTheme
@@ -34,20 +35,12 @@ class MainActivity : ComponentActivity() {
 
     private lateinit var authModel: AuthModel
     private lateinit var mainModel: MainModel
-
-    private lateinit var authController: AuthController
-    private lateinit var questionController: QuestionController
-
-    private lateinit var registerVM: RegisterViewModel
-    private lateinit var loginVM: LoginViewModel
     private lateinit var mainVM: MainViewModel
-    private lateinit var searchVM: SearchViewModel
-    private lateinit var notificationVM: NotificationsViewModel
-    private lateinit var profileVM: ProfileViewModel
-    private lateinit var reviewVM: ReviewViewViewModel
 
-    private lateinit var questionVM: QuestionViewModel
-    private lateinit var makeQuestionVM: MakeQuestionViewModel
+    private lateinit var ac: AuthController
+    private lateinit var uc: UserController
+    private lateinit var qc: QuestionController
+
     @SuppressLint("SourceLockedOrientationActivity")
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,17 +51,28 @@ class MainActivity : ComponentActivity() {
         authModel = AuthModel()
         mainModel = MainModel()
 
-        authController = AuthController(mainModel, authModel)
-        questionController = QuestionController(mm = mainModel, am = authModel)
-
+        mainVM = MainViewModel()
+        mainVM.addModel(authModel)
         authModel.initAuth()
+
+        ac = AuthController(mainModel,authModel)
+        uc = UserController(mainModel,authModel)
+        qc = QuestionController(mainModel,authModel)
+
 
 
         setContent {
             InterviewPracticeTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    MainView(am = authModel, mm = mainModel, vm = MainViewModel(authModel))
+                    MainView(
+                        am = authModel,
+                        mm = mainModel,
+                        vm = mainVM,
+                        ac=ac,
+                        uc=uc,
+                        qc=qc
+                    )
                 }
             }
         }

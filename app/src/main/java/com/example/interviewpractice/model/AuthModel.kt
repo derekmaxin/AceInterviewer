@@ -43,7 +43,9 @@ class AuthModel: Presenter() {
         error = null
     }
 
-
+    fun refresh() {
+        notifySubscribers()
+    }
     suspend fun createAccount(username: String, email: String, password: String){
         auth.createUserWithEmailAndPassword(email, password).await()
         updateCurrentUser(email = email, username = username)

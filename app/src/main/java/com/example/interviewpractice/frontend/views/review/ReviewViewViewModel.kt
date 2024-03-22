@@ -1,19 +1,19 @@
 package com.example.interviewpractice.frontend.views.review
 
 import androidx.compose.runtime.mutableStateOf
-import com.example.interviewpractice.frontend.Subscriber
+import com.example.interviewpractice.frontend.MMViewModel
 import com.example.interviewpractice.frontend.components.playbar.PlayBarViewModel
 import com.example.interviewpractice.frontend.components.question.QuestionViewModel
 import com.example.interviewpractice.frontend.components.starselection.StarSelectionViewModel
 import com.example.interviewpractice.model.MainModel
 
-class ReviewViewViewModel(private val model: MainModel): Subscriber {
+class ReviewViewViewModel(): MMViewModel() {
 
-    val questionVM = mutableStateOf(QuestionViewModel(model))
-    val playBarViewModel = mutableStateOf(PlayBarViewModel(model))
-
-    val reviewOneVM = mutableStateOf(StarSelectionViewModel(model))
-    val reviewTwoVM = mutableStateOf(StarSelectionViewModel(model))
+//    val questionVM = mutableStateOf(QuestionViewModel(model))
+//    val playBarViewModel = mutableStateOf(PlayBarViewModel(model))
+//
+//    val reviewOneVM = mutableStateOf(StarSelectionViewModel(model))
+//    val reviewTwoVM = mutableStateOf(StarSelectionViewModel(model))
 
 
     override fun update() {

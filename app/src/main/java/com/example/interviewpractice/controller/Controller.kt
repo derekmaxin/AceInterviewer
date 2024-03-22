@@ -4,6 +4,7 @@ import android.util.Log
 import com.example.interviewpractice.model.AuthModel
 import com.example.interviewpractice.model.MainModel
 import com.example.interviewpractice.types.ErrorType
+import com.example.interviewpractice.types.FetchType
 import com.example.interviewpractice.types.UIError
 import com.example.interviewpractice.types.UserException
 import com.google.firebase.FirebaseException
@@ -14,11 +15,19 @@ import kotlinx.coroutines.launch
 
 open class Controller(protected val mm: MainModel, protected val am: AuthModel, protected val TAG: String) {
 
-    protected open fun fetchData() {}
-    protected fun handler(functionName: String, func: suspend () -> Unit) {
+    fun fetchData(ft: FetchType) {
+        handler("fetchData.${ft}",mm.noCache(ft)) {
+            when (ft) {
+                FetchType.PROFILE->mm.getCurrentUserData()
+                FetchType.LEADERBOARD->mm.getLeaderBoardData()
+                FetchType.SEARCH->mm.refresh()
+            }
+        }
+    }
+    protected fun handler(functionName: String, requiresLoad: Boolean = false, func: suspend () -> Unit) {
         MainScope().launch {
             try {
-                am.loading = true
+                if (requiresLoad) am.loading = true else mm.localLoading = true
                 func()
             } catch (ex: FirebaseAuthException) {
                 //Represents user errors that are caught by Firebase Auth
@@ -49,7 +58,8 @@ open class Controller(protected val mm: MainModel, protected val am: AuthModel, 
 
             } finally {
                 //Stop loading after we finished our task
-                am.loading = false
+                if (requiresLoad) am.loading = false else mm.localLoading = false
+
             }
         }
     }

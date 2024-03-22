@@ -3,10 +3,12 @@ package com.example.interviewpractice.frontend.views.makequestion
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import com.example.interviewpractice.frontend.MMViewModel
+import com.example.interviewpractice.frontend.Subscriber
 import com.example.interviewpractice.model.MainModel
 import com.example.interviewpractice.types.Tag
 
-class MakeQuestionViewModel(model: MainModel) {
+class MakeQuestionViewModel(): MMViewModel() {
     var questionText by mutableStateOf("")
 
     var hasText by mutableStateOf(false)

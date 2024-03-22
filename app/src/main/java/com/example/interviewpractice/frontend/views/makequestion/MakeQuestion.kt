@@ -23,14 +23,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.interviewpractice.controller.QuestionController
+import com.example.interviewpractice.frontend.components.question.QuestionViewModel
+import com.example.interviewpractice.frontend.views.leaderboard.LeaderboardViewModel
+import com.example.interviewpractice.model.MainModel
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun MakeQuestionScreen(viewModel: MakeQuestionViewModel, questionController: QuestionController, goToHome: () -> Unit)
+fun MakeQuestionScreen(mm: MainModel, questionController: QuestionController, goToHome: () -> Unit)
 {
-    val vm by remember { mutableStateOf(viewModel) }
-
+    val vm: MakeQuestionViewModel = viewModel()
+    vm.addModel(mm)
     Surface {
         Column(
             modifier = Modifier

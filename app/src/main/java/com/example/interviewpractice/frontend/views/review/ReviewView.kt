@@ -17,10 +17,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.interviewpractice.frontend.components.playbar.PlayBar
+import com.example.interviewpractice.frontend.components.playbar.PlayBarViewModel
 import com.example.interviewpractice.frontend.components.question.DummyQuestion
 import com.example.interviewpractice.frontend.components.question.Question
+import com.example.interviewpractice.frontend.components.question.QuestionViewModel
 import com.example.interviewpractice.frontend.components.starselection.StarSelection
+import com.example.interviewpractice.frontend.components.starselection.StarSelectionViewModel
+import com.example.interviewpractice.frontend.views.leaderboard.LeaderboardViewModel
+import com.example.interviewpractice.model.MainModel
 
 @Composable
 fun SimpleOutlinedTextField() {
@@ -36,7 +42,19 @@ fun SimpleOutlinedTextField() {
 }
 
 @Composable
-fun ReviewView(rvvm: ReviewViewViewModel, /* */){
+fun ReviewView(mm: MainModel, /* */){
+
+    val rvvm: ReviewViewViewModel = viewModel()
+    rvvm.addModel(mm)
+    val clarityVM: StarSelectionViewModel = viewModel()
+    clarityVM.addModel(mm)
+    val understandingVM: StarSelectionViewModel = viewModel()
+    understandingVM.addModel(mm)
+    val playBarViewModel: PlayBarViewModel = viewModel()
+    playBarViewModel.addModel(mm)
+    clarityVM.name = "Clarity"
+    understandingVM.name = "Understanding"
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -51,7 +69,7 @@ fun ReviewView(rvvm: ReviewViewViewModel, /* */){
             tags = listOf("C++", "Programming")
         )
         
-        PlayBar(rvvm.playBarViewModel.value)
+        PlayBar(playBarViewModel)
 
         /*
         Row(
@@ -62,11 +80,8 @@ fun ReviewView(rvvm: ReviewViewViewModel, /* */){
         }
          */
 
-        rvvm.reviewOneVM.value.name = "Understanding"
-        rvvm.reviewTwoVM.value.name = "Clarity"
-
-        StarSelection(rvvm.reviewOneVM.value)
-        StarSelection(rvvm.reviewTwoVM.value)
+        StarSelection(understandingVM)
+        StarSelection(clarityVM)
 
         SimpleOutlinedTextField()
 

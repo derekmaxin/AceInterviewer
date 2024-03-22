@@ -24,13 +24,16 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.interviewpractice.model.AuthModel
 
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 //@Preview
-fun RegisterScreen(vm: RegisterViewModel, c: AuthController) {
-
+fun RegisterScreen(am: AuthModel, c: AuthController) {
+    val vm: RegisterViewModel = viewModel()
+    vm.addModel(am)
     Surface {
         Column(
             modifier = Modifier

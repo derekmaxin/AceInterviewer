@@ -1,5 +1,6 @@
 package com.example.interviewpractice.frontend.views.search
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,9 +22,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -31,14 +30,23 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.interviewpractice.controller.QuestionController
+import com.example.interviewpractice.frontend.components.Loader
 import com.example.interviewpractice.frontend.components.question.DummyQuestion2
+import com.example.interviewpractice.frontend.views.leaderboard.LeaderboardViewModel
+import com.example.interviewpractice.model.MainModel
+import com.example.interviewpractice.types.FetchType
 
 @Composable
 //@Preview
-fun SearchView(c: QuestionController, searchVM: SearchViewModel, goToMakeQuestion: () -> Unit) {
-
-    val vm by remember { mutableStateOf(searchVM) }
+fun SearchView(c: QuestionController, mm: MainModel, goToMakeQuestion: () -> Unit) {
+    val vm: SearchViewModel = viewModel()
+    vm.addModel(mm)
+    LaunchedEffect(Unit){
+        c.fetchData(FetchType.SEARCH)
+        Log.d("SEARCHVIEW","RERENDERED SEARCH!!!")
+    }
     Surface() {
         Column(
             modifier = Modifier
@@ -154,6 +162,7 @@ fun SearchView(c: QuestionController, searchVM: SearchViewModel, goToMakeQuestio
             }
             // TODO: Render clickable questions components on search, collab with ryan,
             // also remove "dummy data dump" button
+            if (vm.localLoading) Loader()
             for (question in vm.searchResults) {
                 DummyQuestion2(qText = question.questionText , tags = question.tags)
                 Spacer(modifier = Modifier.padding(4.dp))
