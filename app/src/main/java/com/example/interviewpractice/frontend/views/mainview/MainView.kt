@@ -32,27 +32,17 @@ import com.example.interviewpractice.frontend.views.review.ReviewView
 import com.example.interviewpractice.frontend.views.review.ReviewViewViewModel
 import com.example.interviewpractice.frontend.views.search.SearchView
 import com.example.interviewpractice.frontend.views.search.SearchViewModel
+import com.example.interviewpractice.model.AuthModel
+import com.example.interviewpractice.model.MainModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 //@Preview
-fun MainView(
-    registerViewModel: RegisterViewModel,
-    loginViewModel: LoginViewModel,
-    mainViewModel: MainViewModel,
-    searchViewModel: SearchViewModel,
-    questionViewModel: QuestionViewModel,
-    authController: AuthController,
-    questionController: QuestionController,
-    makeQuestionViewModel: MakeQuestionViewModel,
-    notificationsViewModel: NotificationsViewModel,
-    profileViewModel: ProfileViewModel,
-    reviewViewModel: ReviewViewViewModel,
-    clearError: () -> Unit)
+fun MainView(authModel: AuthModel, mainModel: MainModel, mainViewModel: MainViewModel)
 {
-    val registerVM by remember { mutableStateOf(registerViewModel) }
-    val loginVM by remember { mutableStateOf(loginViewModel) }
-    val reviewVM by remember {mutableStateOf(reviewViewModel)}
+//    val registerVM by remember { mutableStateOf(registerViewModel) }
+//    val loginVM by remember { mutableStateOf(loginViewModel) }
+//    val reviewVM by remember {mutableStateOf(reviewViewModel)}
     val mainVM by remember { mutableStateOf(mainViewModel) }
 
 
@@ -69,7 +59,7 @@ fun MainView(
 
         val toast = Toast.makeText(LocalContext.current, text, duration) // in Activity
         toast.show()
-        clearError()
+        authModel.clearError()
     }
     if (mainVM.loading) {
         //Auth is loading
@@ -80,27 +70,29 @@ fun MainView(
 
         NavHost(navController = anc, startDestination = "home") {
             composable("reviews") {
-                ReviewView(reviewVM)
+                ReviewView(ReviewViewViewModel(mainModel))
             }
             composable("leaderboard") {
                 LeaderboardView()
             }
             composable("make question") {
-                MakeQuestionScreen(viewModel = makeQuestionViewModel, questionController = questionController,
+                MakeQuestionScreen(viewModel = MakeQuestionViewModel(mainModel), questionController = QuestionController(mainModel, authModel),
                     goToHome = { anc.navigate("home") })
             }
             composable("home") {
-                HomeScreen(c = authController, questionVM = questionViewModel,
+                HomeScreen(c = AuthController(authModel), questionVM = QuestionViewModel(mainModel),
                     goToMakeQuestion = { anc.navigate("make question") })
             }
             composable("notifications") {
-                Notifications(viewModel = notificationsViewModel)            }
+                Notifications(viewModel = NotificationsViewModel(mainModel))            }
 
             composable("search") {
-                SearchView(c = questionController, searchVM = searchViewModel, goToMakeQuestion = { anc.navigate("make question") })
+                SearchView(c = QuestionController(mainModel, authModel), searchVM = SearchViewModel(mainModel),
+                    goToMakeQuestion = { anc.navigate("make question") })
             }
             composable("profile") {
-                ProfileView(profileViewModel = profileViewModel, goToLeaderboard = { anc.navigate("leaderboard") })
+                ProfileView(profileViewModel = ProfileViewModel(mainModel),
+                    goToLeaderboard = { anc.navigate("leaderboard") })
             }
         }
         NavBar(
@@ -114,8 +106,13 @@ fun MainView(
     }
     else {
         NavHost(navController = unc, startDestination = "login") {
-            composable("login") { LoginScreen(controller = authController, viewModel = loginVM, onNavigateToRegister ={unc.navigate("register")}) }
-            composable("register") { RegisterScreen(viewModel = registerVM, controller = authController) }
+            composable("login") {
+                LoginScreen(controller = AuthController(authModel), viewModel = LoginViewModel(authModel),
+                    goToRegister ={unc.navigate("register")})
+            }
+            composable("register") {
+                RegisterScreen(viewModel = RegisterViewModel(authModel), controller = AuthController(authModel))
+            }
         }
     }
 }

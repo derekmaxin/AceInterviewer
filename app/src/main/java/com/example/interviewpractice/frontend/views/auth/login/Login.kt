@@ -25,7 +25,7 @@ import com.example.interviewpractice.controller.AuthController
 fun LoginScreen(
     viewModel: LoginViewModel,
     controller: AuthController,
-    onNavigateToRegister: () -> Unit)
+    goToRegister: () -> Unit)
 {
     val vm by remember { mutableStateOf(viewModel) }
     val c by remember { mutableStateOf(controller) }
@@ -104,7 +104,7 @@ fun LoginScreen(
             }
             Button(
                 //onClick = onSwitch,
-                onClick = onNavigateToRegister,
+                onClick = goToRegister,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 0.dp),

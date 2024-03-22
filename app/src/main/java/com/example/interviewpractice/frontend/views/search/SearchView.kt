@@ -1,6 +1,5 @@
 package com.example.interviewpractice.frontend.views.search
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -33,9 +32,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.interviewpractice.controller.QuestionController
-import com.example.interviewpractice.frontend.components.question.DummyQuestion
 import com.example.interviewpractice.frontend.components.question.DummyQuestion2
-import com.example.interviewpractice.frontend.components.question.Question
 
 @Composable
 //@Preview

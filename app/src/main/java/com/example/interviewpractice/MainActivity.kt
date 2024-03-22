@@ -79,19 +79,7 @@ class MainActivity : ComponentActivity() {
             InterviewPracticeTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    MainView(registerViewModel = registerVM,
-                        loginViewModel = loginVM,
-                        mainViewModel = mainVM,
-                        authController= authController,
-                        searchViewModel = searchVM,
-                        questionViewModel = questionVM,
-                        questionController= questionController,
-                        makeQuestionViewModel = makeQuestionVM,
-                        notificationsViewModel = notificationVM,
-                        profileViewModel = profileVM,
-                        reviewViewModel = reviewVM
-                        )
-                    {authModel.clearError()}
+                    MainView(authModel = authModel, mainModel = mainModel, mainViewModel = MainViewModel(authModel))
                 }
             }
         }

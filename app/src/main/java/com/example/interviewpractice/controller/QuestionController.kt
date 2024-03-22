@@ -9,7 +9,6 @@ import com.example.interviewpractice.types.Tag
 import com.example.interviewpractice.types.UIError
 import com.example.interviewpractice.types.UserException
 import com.google.firebase.FirebaseException
-import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.firestore.FirebaseFirestoreException
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
