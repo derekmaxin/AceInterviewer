@@ -17,6 +17,7 @@ import com.example.interviewpractice.types.Question
 
 class SearchViewModel(): LoaderMMViewModel() {
     var search by mutableStateOf("")
+    var filtering by mutableStateOf(false)
 
     //DATA FROM BACKEND
     var searchResults by mutableStateOf<List<Question>>(emptyList())

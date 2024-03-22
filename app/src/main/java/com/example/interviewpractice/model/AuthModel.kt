@@ -4,6 +4,7 @@ import android.util.Log
 import com.example.interviewpractice.types.User
 import com.example.interviewpractice.frontend.Subscriber
 import com.example.interviewpractice.types.CatastrophicException
+import com.example.interviewpractice.types.Tag
 import com.example.interviewpractice.types.UIError
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseUser
@@ -46,9 +47,9 @@ class AuthModel: Presenter() {
     fun refresh() {
         notifySubscribers()
     }
-    suspend fun createAccount(username: String, email: String, password: String){
+    suspend fun createAccount(username: String, email: String, password: String, foi: Set<Tag>){
         auth.createUserWithEmailAndPassword(email, password).await()
-        updateCurrentUser(email = email, username = username)
+        updateCurrentUser(email = email, username = username, foi=foi)
         Log.d(TAG, "createAccount:success")
     }
 
@@ -61,8 +62,9 @@ class AuthModel: Presenter() {
     fun logout() {
         auth.signOut()
         user = null
+        notifySubscribers()
+
         //Stop loading after we finished authentication
-        loading = false
     }
 
     suspend fun resetPassword(email: String) {
@@ -70,7 +72,7 @@ class AuthModel: Presenter() {
         Log.d(TAG, "resetPassword:success (sent email)")
     }
 
-    private suspend fun updateCurrentUser(username: String, email: String) {
+    private suspend fun updateCurrentUser(username: String, email: String, foi:Set<Tag>) {
         val current_user = auth.currentUser
         //throw if user is null
         current_user ?: throw CatastrophicException("User is not persistent")
@@ -83,7 +85,7 @@ class AuthModel: Presenter() {
         }
         current_user.updateProfile(profileUpdates)
 
-        val userData = User(username=username,email=email)
+        val userData = User(username=username,email=email, fieldsOfInterest = foi.toList())
         setUserData(userData,current_user.uid)
 
         user = current_user

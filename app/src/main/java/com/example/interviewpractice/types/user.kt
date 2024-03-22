@@ -6,5 +6,8 @@ import com.google.firebase.firestore.IgnoreExtraProperties
 data class User(
     val username: String = "",
     val email: String = "",
-    val questionsAnswered: Int = 0)
+    val questionsAnswered: Int = 0,
+    val fieldsOfInterest: List<Tag> = emptyList()
+)
+
 

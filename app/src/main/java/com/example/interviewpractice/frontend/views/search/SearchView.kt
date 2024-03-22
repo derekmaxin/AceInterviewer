@@ -33,10 +33,11 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.interviewpractice.controller.QuestionController
 import com.example.interviewpractice.frontend.components.Loader
-import com.example.interviewpractice.frontend.components.question.DummyQuestion2
+import com.example.interviewpractice.frontend.components.question.Question
 import com.example.interviewpractice.frontend.views.leaderboard.LeaderboardViewModel
 import com.example.interviewpractice.model.MainModel
 import com.example.interviewpractice.types.FetchType
+import com.example.interviewpractice.types.Tag
 
 @Composable
 //@Preview
@@ -58,7 +59,7 @@ fun SearchView(c: QuestionController, mm: MainModel, goToMakeQuestion: () -> Uni
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Button(
-                onClick = {c.dummyData() },
+                onClick = {/*c.dummyData()*/ },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp)
@@ -79,7 +80,11 @@ fun SearchView(c: QuestionController, mm: MainModel, goToMakeQuestion: () -> Uni
                     shape = RoundedCornerShape(topStart = 16.dp, bottomStart = 16.dp),
                 ) {
                     IconButton(
-                        onClick = { c.search(vm.search) },
+                        onClick = {
+                            if (vm.filtering)c.search(vm.search, setOf(Tag.MATH))
+                            else c.search(vm.search)
+
+                        },
                         modifier = Modifier
                             .width(45.dp)
                             .height(70.dp)
@@ -117,7 +122,7 @@ fun SearchView(c: QuestionController, mm: MainModel, goToMakeQuestion: () -> Uni
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Button(
-                    onClick = { },
+                    onClick = {vm.filtering = !vm.filtering },
                     modifier = Modifier
                         .weight(1f)
                         .height(50.dp)
@@ -164,7 +169,7 @@ fun SearchView(c: QuestionController, mm: MainModel, goToMakeQuestion: () -> Uni
             // also remove "dummy data dump" button
             if (vm.localLoading) Loader()
             for (question in vm.searchResults) {
-                DummyQuestion2(qText = question.questionText , tags = question.tags)
+                Question(question) { c.boost() }
                 Spacer(modifier = Modifier.padding(4.dp))
             }
         }

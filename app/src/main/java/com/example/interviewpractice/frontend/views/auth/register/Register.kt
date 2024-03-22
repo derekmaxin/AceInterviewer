@@ -25,7 +25,9 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.interviewpractice.frontend.MMViewModel
 import com.example.interviewpractice.model.AuthModel
+import com.example.interviewpractice.types.Tag
 
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -115,12 +117,16 @@ fun RegisterScreen(am: AuthModel, c: AuthController) {
                 ),
                 textStyle = TextStyle(fontSize = 28.sp)
             )
-            BirthdaySelect()
+            BirthdaySelect(vm)
             HorizontalDivider(modifier = Modifier.fillMaxWidth())
-            FieldsOfInterest()
+            FieldsOfInterest(vm)
             Spacer(modifier = Modifier.height(8.dp))
             Button(
-                onClick = {c.verifyRegister(username = vm.username.trim(), password = vm.password.trim(), email = vm.email.trim()) },
+                onClick = {c.verifyRegister(
+                    username = vm.username,
+                    password = vm.password,
+                    email = vm.email,
+                    foi = vm.selectedOptions) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(70.dp)
@@ -146,12 +152,12 @@ fun RegisterScreen(am: AuthModel, c: AuthController) {
 }
 
 //TODO: Move data to viewModel
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun FieldsOfInterest(){
-    val options = listOf("Biology", "English", "Chemistry", "Art", "Computer Science", "Math"
-        , "Finance", "Physics", "Business")
-    var selectedOptions by remember { mutableStateOf(setOf<String>()) }
-
+fun FieldsOfInterest(vm: RegisterViewModel){
+    val options = listOf(
+        Tag.BIOLOGY, Tag.ENGLISH, Tag.CHEMISTRY, Tag.CS, Tag.MATH, Tag.FINANCE, Tag.PHYSICS, Tag.BUSINESS
+    )
     Column {
         Text(
             text = "Select up to three interests:",
@@ -165,21 +171,21 @@ fun FieldsOfInterest(){
         rows.forEach { rowItems ->
             Row {
                 rowItems.forEach { option ->
-                    val isSelected = selectedOptions.contains(option)
+                    val isSelected = vm.selectedOptions.contains(option)
                     Checkbox(
                         checked = isSelected,
                         onCheckedChange = { isChecked ->
                             if (isChecked) {
-                                if (selectedOptions.size < 3) {
-                                    selectedOptions = selectedOptions.plus(option)
+                                if (vm.selectedOptions.size < 3) {
+                                    vm.selectedOptions = vm.selectedOptions.plus(option)
                                 }
                             } else {
-                                selectedOptions = selectedOptions.minus(option)
+                                vm.selectedOptions = vm.selectedOptions.minus(option)
                             }
                         }
                     )
                     Text(
-                        text = option,
+                        text = option.toString(),
                         modifier = Modifier
                             .padding(vertical = 8.dp),
                     )
@@ -191,15 +197,12 @@ fun FieldsOfInterest(){
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun BirthdaySelect() {
-    var selectedYear by remember { mutableIntStateOf(YearMonth.now().year) }
-    var selectedMonth by remember { mutableIntStateOf(YearMonth.now().monthValue) }
-    var selectedDay by remember { mutableIntStateOf(LocalDate.now().dayOfMonth) }
+fun BirthdaySelect(vm: RegisterViewModel) {
 
     val years = (1900..YearMonth.now().year).toList()
     val months = (1..12).toList()
-    val daysInMonth = remember(selectedYear, selectedMonth) {
-        YearMonth.of(selectedYear, selectedMonth).lengthOfMonth()
+    val daysInMonth = remember(vm.selectedYear, vm.selectedMonth) {
+        YearMonth.of(vm.selectedYear, vm.selectedMonth).lengthOfMonth()
     }
     val days = (1..daysInMonth).toList()
 
@@ -215,20 +218,20 @@ fun BirthdaySelect() {
         Row {
             YearDropdown(
                 years = years,
-                selectedYear = selectedYear,
-                onYearSelected = { selectedYear = it }
+                selectedYear = vm.selectedYear,
+                onYearSelected = { vm.selectedYear = it }
             )
             Spacer(modifier = Modifier.width(16.dp))
             MonthDropdown(
                 months = months,
-                selectedMonth = selectedMonth,
-                onMonthSelected = { selectedMonth = it }
+                selectedMonth = vm.selectedMonth,
+                onMonthSelected = { vm.selectedMonth = it }
             )
             Spacer(modifier = Modifier.width(16.dp))
             DayDropdown(
                 days = days,
-                selectedDay = selectedDay,
-                onDaySelected = { selectedDay = it }
+                selectedDay = vm.selectedDay,
+                onDaySelected = { vm.selectedDay = it }
             )
         }
         //Text("Selected Date: $selectedYear-$selectedMonth-$selectedDay")

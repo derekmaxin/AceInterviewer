@@ -1,9 +1,11 @@
 package com.example.interviewpractice.frontend.views.mainview
 
 import android.os.Build
+import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -29,6 +31,7 @@ import com.example.interviewpractice.frontend.views.review.ReviewViewViewModel
 import com.example.interviewpractice.frontend.views.search.SearchView
 import com.example.interviewpractice.model.AuthModel
 import com.example.interviewpractice.model.MainModel
+import com.example.interviewpractice.types.FetchType
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -42,6 +45,10 @@ fun MainView(
     mm: MainModel
     )
 {
+    LaunchedEffect(Unit){
+        ac.fetchData(FetchType.RESETUSER)
+        Log.d("SEARCHVIEW","RERENDERED HOME!!!")
+    }
     // NavController //////////////////////////////////////////////////////////
     val unc = rememberNavController()
     val anc = rememberNavController()

@@ -1,8 +1,10 @@
 package com.example.interviewpractice.frontend.views.home
 
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -13,6 +15,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.interviewpractice.controller.AuthController
+import com.example.interviewpractice.controller.QuestionController
+import com.example.interviewpractice.frontend.components.Loader
 import com.example.interviewpractice.frontend.components.question.Question
 import com.example.interviewpractice.frontend.components.playbar.PlayBar
 import com.example.interviewpractice.frontend.components.question.QuestionViewModel
@@ -20,6 +24,7 @@ import com.example.interviewpractice.frontend.components.playbar.PlayBarViewMode
 import com.example.interviewpractice.frontend.components.question.DummyQuestion
 import com.example.interviewpractice.model.AuthModel
 import com.example.interviewpractice.model.MainModel
+import com.example.interviewpractice.types.FetchType
 
 @Composable
 //@Preview
@@ -28,8 +33,14 @@ fun HomeScreen(
     mm: MainModel,
     goToMakeQuestion: () -> Unit) {
 
+    val vm: HomeViewModel = viewModel()
+    vm.addModel(mm)
     val playBarVM: PlayBarViewModel = viewModel()
     playBarVM.addModel(mm)
+    LaunchedEffect(Unit){
+        c.fetchData(FetchType.RECOMMENDATION)
+        Log.d("SEARCHVIEW","RERENDERED HOME!!!")
+    }
     Surface() {
         Column(
             modifier = Modifier
@@ -53,7 +64,8 @@ fun HomeScreen(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center
             ) {
-                DummyQuestion("What is the speed of light", listOf<String>("Physics", "Science"))
+                if (vm.algoResults != null) Question(q = vm.algoResults!!, {})
+
                 //Question(questionVM)
             }
             Text(

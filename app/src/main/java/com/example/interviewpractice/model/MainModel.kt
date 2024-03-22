@@ -4,9 +4,11 @@ import android.util.Log
 import com.example.interviewpractice.types.CatastrophicException
 import com.example.interviewpractice.types.FetchType
 import com.example.interviewpractice.types.Question
+import com.example.interviewpractice.types.Tag
 import com.example.interviewpractice.types.User
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.toObject
@@ -33,6 +35,7 @@ class MainModel: Presenter() {
 
     var searchResults = mutableListOf<Question>()
     var leaderBoardStandings = mutableListOf<User>()
+    var homePageRecommendations: Question? = null
 
     var user: User? = null
     suspend fun addQuestion(question: Question) {
@@ -40,33 +43,83 @@ class MainModel: Presenter() {
         Log.d(TAG,"addQuestion:success")
     }
 
-    suspend fun searchQuestion(queryText: String) {
+    suspend fun searchQuestion(queryText: String,filters: Set<Tag> = emptySet(),self:Boolean=false) {
         val questionsRef = db.collection("questions")
+        var filty = filters.toList()
 
-        val query = questionsRef
+        if (self) {
+            var currUser = user
+            if (currUser != null) {
+                filty = currUser.fieldsOfInterest
+            }
+            else {
+                getCurrentUserData()
+                currUser = user
+                if (currUser != null) {
+                    filty = currUser.fieldsOfInterest
+                }
+            }
+        }
+        Log.d(TAG,"THESE ARE THE USER TAGS: $filty, ${filty.isEmpty()}, qtext: $queryText")
+        var queryss = questionsRef
             .whereGreaterThanOrEqualTo("questionText", queryText)
             .whereLessThanOrEqualTo("questionText", queryText + "\uf8ff")
-            .get().await()
+
+        if (filty.isNotEmpty()) {
+            Log.d(TAG,"REASSIGNED")
+            queryss = questionsRef
+                .whereGreaterThanOrEqualTo("questionText", queryText)
+                .whereLessThanOrEqualTo("questionText", queryText + "\uf8ff")
+                .whereArrayContainsAny("tags", filty )
+        }
+        val query = queryss.get().await()
+
 
         searchResults.clear()
         for (question in query) {
             Log.d(TAG, "QUERY ${question.id} => ${question.data}")
             searchResults.add(question.toObject<Question>())
         }
+        if (self) {
+            if (searchResults.isNotEmpty()) {
+                homePageRecommendations = searchResults[0]
+            }
+            else {
+                homePageRecommendations = Question("We have no questions in your field of interest!",
+                    emptyList(),false,false,false,"")
+            }
+
+        }
         notifySubscribers()
+    }
+
+    //------------[TEST METHODS]------------
+    suspend fun boost() {
+        val uid = auth.currentUser?.uid
+        if (uid != null) {
+            val userRef = db.collection("users").document(uid)
+            // Atomically increment the population of the city by 50.
+            userRef.update("questionsAnswered", FieldValue.increment(1))
+
+            leaderBoardStandings.clear()
+            notifySubscribers()
+        }
+        else {
+            throw CatastrophicException("No uid for signed in user")
+        }
     }
 
     //------------[FETCH METHODS]------------
     suspend fun getCurrentUserData() {
         if (noCache(FetchType.PROFILE)) {
             val uid = auth.currentUser?.uid
+            Log.d(TAG,"APPARENT USER: ${auth.currentUser?.email}")
             if (uid != null) {
                 val userDoc = db.collection("users").document(uid)
                 val query = userDoc.get().await()
 
                 user = query.toObject<User>()
-
-                notifySubscribers()
+                Log.d(TAG,"APPARENT CURRENT USER: ${user.toString()}")
             }
             else {
                 throw CatastrophicException("No uid for signed in user")
@@ -97,12 +150,18 @@ class MainModel: Presenter() {
     fun refresh() {
         notifySubscribers()
     }
+    fun reset() {
+        user = null
+        notifySubscribers()
+    }
 
     fun noCache(ft: FetchType): Boolean {
         return when (ft) {
             FetchType.PROFILE-> (user == null)
             FetchType.LEADERBOARD-> (leaderBoardStandings.isEmpty())
             FetchType.SEARCH-> false
+            FetchType.RECOMMENDATION->(homePageRecommendations == null)
+            FetchType.RESETUSER->true
         }
     }
 

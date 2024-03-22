@@ -88,7 +88,7 @@ fun LoginScreen(
                 )
             }
             Button(
-                onClick = {c.verifySignIn(password = vm.password.trim(), email = vm.email.trim())},
+                onClick = {c.verifySignIn(password = vm.password, email = vm.email)},
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(100.dp)

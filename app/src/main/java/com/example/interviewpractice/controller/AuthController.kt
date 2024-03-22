@@ -6,6 +6,7 @@ import com.example.interviewpractice.model.AuthModel
 import com.example.interviewpractice.model.MainModel
 import com.example.interviewpractice.types.ErrorType
 import com.example.interviewpractice.types.FetchType
+import com.example.interviewpractice.types.Tag
 import com.example.interviewpractice.types.UIError
 import com.example.interviewpractice.types.UserException
 import com.google.firebase.FirebaseException
@@ -25,19 +26,21 @@ class AuthController(mm: MainModel, am: AuthModel): Controller(mm,am,TAG) {
 //    override fun fetchData(ft: FetchType) {
 //        am.refresh()
 //    }
-    fun verifyRegister(username: String, password:String,email:String) {
+    fun verifyRegister(username: String, password:String,email:String, foi: Set<Tag>,
+                       ) {
         handler("verifyRegister",true) {
             verifyUsernameFormat(username)
             verifyPasswordFormat(password)
             verifyEmailFormat(email)
 
-            am.createAccount(username = username, email = email, password = password)
+            am.createAccount(username = username, email = email, password = password, foi=foi)
             //User should now be authenticated, and data stored in the Firestore
 
             Log.d(TAG,"verifyRegister:success")
         }
     }
     fun verifySignIn(password:String,email:String) {
+        Log.d(TAG,"SIGNING IN AS: $email")
         handler("verifySignIn",true) {
             verifyPasswordFormat(password)
             verifyEmailFormat(email)
@@ -51,6 +54,7 @@ class AuthController(mm: MainModel, am: AuthModel): Controller(mm,am,TAG) {
     fun verifyLogout() {
         handler("verifyLogout") {
             am.logout()
+            mm.reset()
         }
     }
 

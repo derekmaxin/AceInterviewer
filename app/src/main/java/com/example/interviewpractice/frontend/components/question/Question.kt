@@ -16,7 +16,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.interviewpractice.types.Question
 import com.example.interviewpractice.types.Tag
 
 @Composable
@@ -36,32 +38,29 @@ fun Tag(text: String) {
     }
 }
 @Composable
-fun Question(questionViewModel: QuestionViewModel) {
-    val viewModel by remember { mutableStateOf(questionViewModel) }
+fun Question(q: Question, boost: ()->Unit) {
 
-    Card() {
+    Card(onClick = {boost()} ) {
         Column(
             modifier = Modifier
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(6.dp)
         ) {
-            viewModel.questionText.value.let {
-                Text(
-                    text = it,
-                    modifier = Modifier
-                        .padding(4.dp,0.dp,4.dp,0.dp),
-                    textAlign = TextAlign.Left,
-                    style = MaterialTheme.typography.bodyLarge,
-                )
-            }
-            if (viewModel.showTags.value) {
+            Text(
+                text = q.questionText,
+                modifier = Modifier
+                    .padding(4.dp,0.dp,4.dp,0.dp),
+                textAlign = TextAlign.Left,
+                style = MaterialTheme.typography.bodyLarge,
+            )
+            if (q.tags.isNotEmpty()) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
-                    for (tag in viewModel.tags.value) {
-                        Tag(tag)
+                    for (tag in q.tags) {
+                        Tag(tag.toString())
                     }
                 }
             }

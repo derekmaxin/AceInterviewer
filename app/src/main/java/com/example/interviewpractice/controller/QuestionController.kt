@@ -15,6 +15,11 @@ import kotlinx.coroutines.launch
 
 class QuestionController(mm: MainModel, am: AuthModel): Controller(mm,am, TAG) {
 
+    fun boost() {
+        handler("boost",false) {
+            mm.boost()
+        }
+    }
     fun verifyNewQuestion(questionText: String, hasVoice: Boolean, hasText: Boolean,
                  tagList: List<Tag>, onSuccess: () -> Unit) {
 
@@ -54,9 +59,9 @@ class QuestionController(mm: MainModel, am: AuthModel): Controller(mm,am, TAG) {
         }
     }
 
-    fun search(queryText: String) {
+    fun search(queryText: String, filters: Set<Tag> = emptySet()) {
         handler("search",false) {
-            mm.searchQuestion(queryText)
+            mm.searchQuestion(queryText,filters)
             Log.d(TAG,"search:success")
         }
     }
