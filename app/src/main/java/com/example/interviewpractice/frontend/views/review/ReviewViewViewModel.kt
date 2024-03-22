@@ -13,6 +13,8 @@ class ReviewViewViewModel(private val model: MainModel): Subscriber {
     val reviewOneVM = mutableStateOf(StarSelectionViewModel(model))
     val reviewTwoVM = mutableStateOf(StarSelectionViewModel(model))
 
+    val username = mutableStateOf("")
+
     override fun update() {
         TODO("Not yet implemented")
     }
