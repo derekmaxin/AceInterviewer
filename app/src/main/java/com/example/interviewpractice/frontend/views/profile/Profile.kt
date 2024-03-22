@@ -1,7 +1,5 @@
 package com.example.interviewpractice.frontend.views.profile
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -24,7 +22,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.Done
-import com.example.interviewpractice.frontend.components.historychart.HistoryChart
 import com.example.interviewpractice.frontend.components.userbadge.UserBadgeDisplay
 
 
@@ -65,16 +62,15 @@ fun ProfileView(profileViewModel: ProfileViewModel, goToLeaderboard: () -> Unit)
             UserBadgeDisplay(profileViewModel.badgeInfo)
 
             //PLACEHOLDER
+            Spacer(modifier = Modifier.height(8.dp))
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(150.dp)
+                    .background(Color.Gray),
+                contentAlignment = Alignment.Center
+            ){}
 
-//            Spacer(modifier = Modifier.height(8.dp))
-//            Box(
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .height(150.dp)
-//                    .background(Color.Gray),
-//                contentAlignment = Alignment.Center
-//            ){}
-            HistoryChart()
             //END OF PLACEHOLDER
             Spacer(modifier = Modifier.height(16.dp))
             Button(

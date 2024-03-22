@@ -35,15 +35,15 @@ fun StarSelection(viewModel: StarSelectionViewModel) {
         Row(
             horizontalArrangement = Arrangement.End,
         ) {
-            for ((index, star) in viewModel.score.withIndex()) {
+            for (index in 0..4) {
                 IconButton(
                     onClick = {
-                        viewModel.score[index].value = index <= viewModel.intScore
+                        viewModel.intScore = index
                     }
                 ) {
                     // Render filled star if score[index] is true, else outlined star
                     Icon(
-                        if (star.value) Icons.Filled.Star else Icons.Outlined.StarOutline,
+                        if (index <= viewModel.intScore) Icons.Filled.Star else Icons.Outlined.StarOutline,
                         contentDescription = "Star"
                     )
                 }

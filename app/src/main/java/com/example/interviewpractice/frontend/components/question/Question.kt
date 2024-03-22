@@ -45,7 +45,7 @@ fun Question(questionViewModel: QuestionViewModel) {
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(6.dp)
         ) {
-            viewModel?.questionText?.value?.let {
+            viewModel.questionText.value.let {
                 Text(
                     text = it,
                     modifier = Modifier
@@ -54,13 +54,13 @@ fun Question(questionViewModel: QuestionViewModel) {
                     style = MaterialTheme.typography.bodyLarge,
                 )
             }
-            if (viewModel?.showTags?.value == true) {
+            if (viewModel.showTags.value) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
-                    for (tag in viewModel?.tags?.value!!) {
+                    for (tag in viewModel.tags.value) {
                         Tag(tag)
                     }
                 }
