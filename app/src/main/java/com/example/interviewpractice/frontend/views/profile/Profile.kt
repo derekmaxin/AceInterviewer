@@ -23,12 +23,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.Done
 import com.example.interviewpractice.frontend.components.userbadge.UserBadgeDisplay
+import com.example.interviewpractice.controller.QuestionController
 
 
 
 @Composable
 //@Preview
-fun ProfileView(profileViewModel: ProfileViewModel, goToLeaderboard: () -> Unit) {
+fun ProfileView(c: QuestionController, profileViewModel: ProfileViewModel, goToLeaderboard: () -> Unit,
+                goToBestQuestions: () -> Unit) {
     Surface() {
         Column(
             modifier = Modifier
@@ -87,7 +89,10 @@ fun ProfileView(profileViewModel: ProfileViewModel, goToLeaderboard: () -> Unit)
             }
             Button(
                 modifier = Modifier.fillMaxWidth(),
-                onClick = {  }
+                onClick = {
+                    c.searchBestQuestions()
+                    goToBestQuestions()
+                }
             ) {
                 Text(text = "Your Best Asked Questions")
             }

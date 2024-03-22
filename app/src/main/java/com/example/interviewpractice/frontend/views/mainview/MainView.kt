@@ -28,6 +28,8 @@ import com.example.interviewpractice.frontend.views.notifications.Notifications
 import com.example.interviewpractice.frontend.views.notifications.NotificationsViewModel
 import com.example.interviewpractice.frontend.views.profile.ProfileView
 import com.example.interviewpractice.frontend.views.profile.ProfileViewModel
+import com.example.interviewpractice.frontend.views.profile.bestquestions.BestQuestionsView
+import com.example.interviewpractice.frontend.views.profile.bestquestions.BestQuestionsViewModel
 import com.example.interviewpractice.frontend.views.review.ReviewView
 import com.example.interviewpractice.frontend.views.review.ReviewViewViewModel
 import com.example.interviewpractice.frontend.views.search.SearchView
@@ -47,6 +49,7 @@ fun MainView(
     makeQuestionViewModel: MakeQuestionViewModel,
     notificationsViewModel: NotificationsViewModel,
     profileViewModel: ProfileViewModel,
+    bestQuestionsViewModel: BestQuestionsViewModel,
     reviewViewModel: ReviewViewViewModel,
     clearError: () -> Unit)
 {
@@ -85,6 +88,9 @@ fun MainView(
             composable("leaderboard") {
                 LeaderboardView()
             }
+            composable("best questions") {
+                BestQuestionsView(vm = bestQuestionsViewModel)
+            }
             composable("make question") {
                 MakeQuestionScreen(viewModel = makeQuestionViewModel, questionController = questionController,
                     goToHome = { anc.navigate("home") })
@@ -100,7 +106,8 @@ fun MainView(
                 SearchView(c = questionController, searchVM = searchViewModel, goToMakeQuestion = { anc.navigate("make question") })
             }
             composable("profile") {
-                ProfileView(profileViewModel = profileViewModel, goToLeaderboard = { anc.navigate("leaderboard") })
+                ProfileView(c = questionController, profileViewModel = profileViewModel, goToLeaderboard = { anc.navigate("leaderboard") },
+                    goToBestQuestions = {anc.navigate("best questions")})
             }
         }
         NavBar(
