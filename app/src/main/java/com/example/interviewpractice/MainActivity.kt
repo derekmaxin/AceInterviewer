@@ -92,7 +92,7 @@ class MainActivity : ComponentActivity() {
                         makeQuestionViewModel = makeQuestionVM,
                         notificationsViewModel = notificationVM,
                         profileViewModel = profileVM,
-                        bestQuestionsViewModel = bestQuestionVM
+                        bestQuestionsViewModel = bestQuestionVM,
                         reviewViewModel = reviewVM
                         )
                     {authModel.clearError()}
