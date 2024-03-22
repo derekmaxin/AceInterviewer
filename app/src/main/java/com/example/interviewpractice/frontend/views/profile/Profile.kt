@@ -1,5 +1,7 @@
 package com.example.interviewpractice.frontend.views.profile
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -28,6 +30,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import com.example.interviewpractice.controller.UserController
+import com.example.interviewpractice.frontend.components.historychart.HistoryChart
 import com.example.interviewpractice.frontend.components.userbadge.UserBadgeDisplay
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -38,6 +41,7 @@ import com.example.interviewpractice.controller.QuestionController
 
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 //@Preview
 fun ProfileView(mm: MainModel, c: QuestionController, goToLeaderboard: () -> Unit,
@@ -86,15 +90,9 @@ fun ProfileView(mm: MainModel, c: QuestionController, goToLeaderboard: () -> Uni
 
             //PLACEHOLDER
             Spacer(modifier = Modifier.height(8.dp))
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(150.dp)
-                    .background(Color.Gray),
-                contentAlignment = Alignment.Center
-            ){}
 
-            //END OF PLACEHOLDER
+            HistoryChart()
+
             Spacer(modifier = Modifier.height(16.dp))
             Button(
                 modifier = Modifier.fillMaxWidth(),
