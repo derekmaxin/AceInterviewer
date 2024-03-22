@@ -4,9 +4,10 @@ import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import com.example.interviewpractice.model.AuthModel
 import com.example.interviewpractice.frontend.Subscriber
+import com.example.interviewpractice.model.MainModel
 import java.time.LocalDate
 
-class HistoryChartViewModel(private val model: AuthModel): Subscriber {
+class HistoryChartViewModel(private val model: MainModel): Subscriber {
 
     var calendar = mutableStateOf(emptyList<Pair<LocalDate, List<String>>>())
 

@@ -43,6 +43,21 @@ class MainModel: Presenter() {
         notifySubscribers()
     }
 
+    val userQuestions = mutableListOf<Question>()
+
+    suspend fun searchUserQuestion() {
+        val questionsRef = db.collection("questions")
+
+        val query = questionsRef.whereEqualTo("userID", auth.currentUser?.uid)
+            .get()
+            .await()
+        userQuestions.clear()
+        for (question in query) {
+            Log.d(TAG, "QUERY ${question.id} => ${question.data}")
+            userQuestions.add(question.toObject(Question::class.java))
+        }
+        notifySubscribers()
+    }
 
     companion object {
         private const val TAG = "MainModel"

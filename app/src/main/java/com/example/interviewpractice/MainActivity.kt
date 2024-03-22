@@ -26,6 +26,7 @@ import com.example.interviewpractice.frontend.views.mainview.MainViewModel
 import com.example.interviewpractice.frontend.views.makequestion.MakeQuestionViewModel
 import com.example.interviewpractice.frontend.views.notifications.NotificationsViewModel
 import com.example.interviewpractice.frontend.views.profile.ProfileViewModel
+import com.example.interviewpractice.frontend.views.profile.bestquestions.BestQuestionsViewModel
 import com.example.interviewpractice.frontend.views.review.ReviewViewViewModel
 import com.example.interviewpractice.frontend.views.search.SearchViewModel
 import com.example.interviewpractice.model.MainModel
@@ -48,6 +49,7 @@ class MainActivity : ComponentActivity() {
 
     private lateinit var questionVM: QuestionViewModel
     private lateinit var makeQuestionVM: MakeQuestionViewModel
+    private lateinit var bestQuestionVM: BestQuestionsViewModel
     @SuppressLint("SourceLockedOrientationActivity")
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,6 +73,7 @@ class MainActivity : ComponentActivity() {
 
         questionVM = QuestionViewModel(mainModel)
         makeQuestionVM = MakeQuestionViewModel(mainModel)
+        bestQuestionVM = BestQuestionsViewModel(mainModel)
 
         authModel.initAuth()
 
@@ -89,6 +92,7 @@ class MainActivity : ComponentActivity() {
                         makeQuestionViewModel = makeQuestionVM,
                         notificationsViewModel = notificationVM,
                         profileViewModel = profileVM,
+                        bestQuestionsViewModel = bestQuestionVM,
                         reviewViewModel = reviewVM
                         )
                     {authModel.clearError()}

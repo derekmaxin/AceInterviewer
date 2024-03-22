@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 
 class QuestionController(private val mm: MainModel, private val am: AuthModel) {
 
-    fun verifyNewQuestion(questionText: String, hasVoice: Boolean, hasText: Boolean,
+    fun verifyAndAddNewQuestion(questionText: String, hasVoice: Boolean, hasText: Boolean,
                  tagList: List<Tag>, onSuccess: () -> Unit) {
 
         handler("verifyQuestion") {
@@ -59,6 +59,13 @@ class QuestionController(private val mm: MainModel, private val am: AuthModel) {
         handler("search") {
             mm.searchQuestion(queryText)
             Log.d(TAG,"search:success")
+        }
+    }
+
+    fun searchBestQuestions() {
+        handler("best questions") {
+            mm.searchUserQuestion()
+            Log.d(TAG,"bestquestions:success")
         }
     }
 
