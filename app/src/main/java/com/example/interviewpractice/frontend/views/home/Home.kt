@@ -1,6 +1,8 @@
 package com.example.interviewpractice.frontend.views.home
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -25,14 +27,18 @@ import com.example.interviewpractice.model.MainModel
 fun HomeScreen(
     c: AuthController,
     questionVM: QuestionViewModel,
-    goToMakeQuestion: () -> Unit) {
+    goToMakeQuestion: () -> Unit)
+{
+    val scrollState = rememberScrollState()
 
     Surface() {
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = 16.dp)
-                .padding(vertical = 16.dp),
+                .padding(vertical = 16.dp)
+                .padding(bottom = 65.dp)
+                .verticalScroll(scrollState),
 
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.Start

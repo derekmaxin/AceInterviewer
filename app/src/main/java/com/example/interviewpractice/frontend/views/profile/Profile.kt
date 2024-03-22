@@ -19,6 +19,8 @@ import androidx.compose.ui.unit.sp
 import com.example.interviewpractice.R
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.Done
@@ -32,11 +34,14 @@ import com.example.interviewpractice.controller.QuestionController
 fun ProfileView(c: QuestionController, profileViewModel: ProfileViewModel, goToLeaderboard: () -> Unit,
                 goToBestQuestions: () -> Unit) {
     Surface() {
+        val scrollState = rememberScrollState()
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = 16.dp)
-                .padding(vertical = 16.dp),
+                .padding(vertical = 16.dp)
+                .padding(bottom = 65.dp)
+                .verticalScroll(scrollState),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.Start
         ) {
