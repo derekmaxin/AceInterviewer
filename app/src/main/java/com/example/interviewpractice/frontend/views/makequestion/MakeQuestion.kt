@@ -166,7 +166,7 @@ fun MakeQuestionScreen(mm: MainModel, questionController: QuestionController, go
 
             Button(
                 onClick = {
-                    questionController.verifyNewQuestion(
+                    questionController.verifyAndAddNewQuestion(
                         vm.questionText,
                         vm.hasVoice,
                         vm.hasText,

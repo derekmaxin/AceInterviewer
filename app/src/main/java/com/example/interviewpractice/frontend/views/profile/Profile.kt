@@ -19,6 +19,8 @@ import androidx.compose.ui.unit.sp
 import com.example.interviewpractice.R
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.Done
@@ -32,24 +34,30 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.interviewpractice.frontend.views.leaderboard.LeaderboardViewModel
 import com.example.interviewpractice.model.MainModel
 import com.example.interviewpractice.types.FetchType
+import com.example.interviewpractice.controller.QuestionController
+
 
 
 @Composable
 //@Preview
-fun ProfileView(mm: MainModel, c: UserController, goToLeaderboard: () -> Unit) {
-
+fun ProfileView(mm: MainModel, c: QuestionController, goToLeaderboard: () -> Unit,
+                goToBestQuestions: () -> Unit) {
     val vm: ProfileViewModel = viewModel()
     vm.addModel(mm)
 
     LaunchedEffect(Unit){
         c.fetchData(FetchType.PROFILE)
     }
+
     Surface() {
+        val scrollState = rememberScrollState()
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = 16.dp)
-                .padding(vertical = 16.dp),
+                .padding(vertical = 16.dp)
+                .padding(bottom = 65.dp)
+                .verticalScroll(scrollState),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.Start
         ) {
@@ -102,7 +110,10 @@ fun ProfileView(mm: MainModel, c: UserController, goToLeaderboard: () -> Unit) {
             }
             Button(
                 modifier = Modifier.fillMaxWidth(),
-                onClick = {  }
+                onClick = {
+                    c.searchBestQuestions()
+                    goToBestQuestions()
+                }
             ) {
                 Text(text = "Your Best Asked Questions")
             }

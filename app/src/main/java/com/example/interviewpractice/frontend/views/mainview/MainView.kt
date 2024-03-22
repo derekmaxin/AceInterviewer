@@ -26,6 +26,7 @@ import com.example.interviewpractice.frontend.views.makequestion.MakeQuestionVie
 import com.example.interviewpractice.frontend.views.notifications.Notifications
 import com.example.interviewpractice.frontend.views.notifications.NotificationsViewModel
 import com.example.interviewpractice.frontend.views.profile.ProfileView
+import com.example.interviewpractice.frontend.views.profile.bestquestions.BestQuestionsView
 import com.example.interviewpractice.frontend.views.review.ReviewView
 import com.example.interviewpractice.frontend.views.review.ReviewViewViewModel
 import com.example.interviewpractice.frontend.views.search.SearchView
@@ -77,6 +78,9 @@ fun MainView(
             composable("leaderboard") {
                 LeaderboardView(mm=mm,c=uc)
             }
+//            composable("best questions") {
+//                BestQuestionsView(vm = bestQuestionsViewModel)
+//            }
             composable("make question") {
                 MakeQuestionScreen(mm=mm, questionController = qc,
                     goToHome = { anc.navigate("home") })
@@ -95,8 +99,7 @@ fun MainView(
             }
             composable("profile") {
                 ProfileView(
-                    mm=mm, c = uc
-                ) { anc.navigate("leaderboard") }
+                    mm=mm, c = qc, goToLeaderboard = { anc.navigate("leaderboard")}, goToBestQuestions = {anc.navigate("best questions")})
             }
         }
         NavBar(
