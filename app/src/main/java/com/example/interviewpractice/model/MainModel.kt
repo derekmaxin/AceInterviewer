@@ -2,10 +2,12 @@ package com.example.interviewpractice.model
 
 import android.util.Log
 import com.example.interviewpractice.types.Question
+import com.example.interviewpractice.types.User
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.firestore
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.tasks.await
 
 class MainModel: Presenter() {
@@ -21,6 +23,8 @@ class MainModel: Presenter() {
     }
 
     var searchResults = mutableListOf<Question>()
+
+    var user: User? = null
 
 
     suspend fun addQuestion(question: Question) {
@@ -41,6 +45,26 @@ class MainModel: Presenter() {
             searchResults.add(question.toObject(Question::class.java))
         }
         notifySubscribers()
+    }
+
+    suspend fun getCurrentUserData() {
+        Log.d(TAG,"USER FOUND: ${user}")
+        user?.let {
+            Log.d(TAG,"Found saved value")
+            notifySubscribers()
+            return
+        } ?: run {
+            val uid = auth.currentUser?.uid
+            uid?.let {
+                val userDoc = db.collection("users").document(uid)
+                val query = userDoc.get().await()
+//                delay(1500)
+                user = query.toObject(User::class.java)
+
+                Log.d(TAG,"USER SET: $user")
+            }
+        }
+
     }
 
 

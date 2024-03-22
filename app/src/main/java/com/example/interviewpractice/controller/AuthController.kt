@@ -3,6 +3,7 @@ package com.example.interviewpractice.controller
 import android.util.Log
 import com.example.interviewpractice.helpers.EH
 import com.example.interviewpractice.model.AuthModel
+import com.example.interviewpractice.model.MainModel
 import com.example.interviewpractice.types.ErrorType
 import com.example.interviewpractice.types.UIError
 import com.example.interviewpractice.types.UserException
@@ -18,14 +19,14 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
-class AuthController(private val model: AuthModel) {
+class AuthController(mm: MainModel, am: AuthModel): Controller(mm,am,TAG) {
     fun verifyRegister(username: String, password:String,email:String) {
         handler("verifyRegister") {
             verifyUsernameFormat(username)
             verifyPasswordFormat(password)
             verifyEmailFormat(email)
 
-            model.createAccount(username = username, email = email, password = password)
+            am.createAccount(username = username, email = email, password = password)
             //User should now be authenticated, and data stored in the Firestore
 
             Log.d(TAG,"verifyRegister:success")
@@ -35,7 +36,7 @@ class AuthController(private val model: AuthModel) {
         handler("verifySignIn") {
             verifyPasswordFormat(password)
             verifyEmailFormat(email)
-            model.signIn(email = email, password = password)
+            am.signIn(email = email, password = password)
             //User should now be authenticated
             Log.d(TAG,"verifySignIn:success")
             }
@@ -44,7 +45,7 @@ class AuthController(private val model: AuthModel) {
 
     fun verifyLogout() {
         handler("verifyLogout") {
-            model.logout()
+            am.logout()
         }
     }
 
@@ -52,49 +53,8 @@ class AuthController(private val model: AuthModel) {
         handler("verifyForgotPassword") {
             verifyEmailFormat(email)
 
-            model.resetPassword(email)
-            Log.d(TAG,"verifyForgotPassword:success (sent email)")
-        }
-    }
-
-    private fun handler(functionName: String, func: suspend () -> Unit) {
-        MainScope().launch {
-            try {
-                model.loading = true
-                func()
-            }
-            catch (ex: FirebaseAuthException) {
-                //Represents user errors that are caught by Firebase Auth
-                model.error = UIError(ex.message!!,ErrorType.USER)
-                Log.w(TAG,"$functionName:userException[${ex.errorCode}] --> ${ex.message}")
-
-            }
-            catch (ex: FirebaseFirestoreException) {
-                //Represents user errors that are caught by Firestore
-                model.error = UIError(ex.message!!,ErrorType.USER)
-                Log.w(TAG,"$functionName:userException --> ${ex.message}")
-            }
-            catch (ex: FirebaseException) {
-                //Represents all remaining (system) errors that are caught by Firebase
-                model.error = UIError(ex.message!!,ErrorType.SYSTEM)
-                Log.e(TAG,"$functionName:systemException --> ${ex.message}")
-            }
-            catch(ex: UserException) {
-                //Represents all user errors that are caught by us
-                model.error = UIError(ex.message!!,ErrorType.USER)
-                Log.w(TAG, "$functionName:userException -> ${ex.message}")
-            }
-            catch(ex: Exception) {
-                //Represents all remaining errors that weren't caught by Firebase or us
-                //If we reach here, something very bad has happened
-                model.error = UIError(ex.toString(),ErrorType.CATASTROPHIC)
-                Log.wtf(TAG, "$functionName:catastrophicFailure", ex)
-
-            }
-            finally {
-                //Stop loading after we finished authentication
-                model.loading = false
-            }
+            am.resetPassword(email)
+            Log.d(TAG, "verifyForgotPassword:success (sent email)")
         }
     }
 

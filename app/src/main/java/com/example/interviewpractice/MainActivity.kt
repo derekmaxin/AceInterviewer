@@ -58,19 +58,8 @@ class MainActivity : ComponentActivity() {
         authModel = AuthModel()
         mainModel = MainModel()
 
-        authController = AuthController(authModel)
+        authController = AuthController(mainModel, authModel)
         questionController = QuestionController(mm = mainModel, am = authModel)
-
-        registerVM = RegisterViewModel(authModel)
-        loginVM = LoginViewModel(authModel)
-        mainVM = MainViewModel(authModel)
-        searchVM = SearchViewModel(mainModel)
-        notificationVM = NotificationsViewModel(mainModel)
-        profileVM = ProfileViewModel(mainModel)
-        reviewVM = ReviewViewViewModel(mainModel)
-
-        questionVM = QuestionViewModel(mainModel)
-        makeQuestionVM = MakeQuestionViewModel(mainModel)
 
         authModel.initAuth()
 
@@ -79,7 +68,7 @@ class MainActivity : ComponentActivity() {
             InterviewPracticeTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    MainView(authModel = authModel, mainModel = mainModel, mainViewModel = MainViewModel(authModel))
+                    MainView(am = authModel, mm = mainModel, vm = MainViewModel(authModel))
                 }
             }
         }

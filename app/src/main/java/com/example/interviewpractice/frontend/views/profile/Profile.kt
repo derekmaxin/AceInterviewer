@@ -1,5 +1,6 @@
 package com.example.interviewpractice.frontend.views.profile
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -22,13 +23,18 @@ import androidx.compose.foundation.clickable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.Done
+import androidx.compose.runtime.LaunchedEffect
+import com.example.interviewpractice.controller.ProfileController
 import com.example.interviewpractice.frontend.components.userbadge.UserBadgeDisplay
 
 
 
 @Composable
 //@Preview
-fun ProfileView(profileViewModel: ProfileViewModel, goToLeaderboard: () -> Unit) {
+fun ProfileView(vm: ProfileViewModel, c: ProfileController, goToLeaderboard: () -> Unit) {
+    LaunchedEffect(Unit){
+        c.fetchData()
+    }
     Surface() {
         Column(
             modifier = Modifier
@@ -48,7 +54,7 @@ fun ProfileView(profileViewModel: ProfileViewModel, goToLeaderboard: () -> Unit)
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Column {
-                    Text(text = "Derek Maxin", style = TextStyle(fontSize = 15.sp, fontWeight = FontWeight.Bold))
+                    Text(text = "Chadley", style = TextStyle(fontSize = 15.sp, fontWeight = FontWeight.Bold))
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(text = "@dmaxin", style = TextStyle(fontSize = 10.sp))
                     Text(text = "dmaxin@uwaterloo.ca", style = TextStyle(fontSize = 10.sp))
@@ -59,7 +65,7 @@ fun ProfileView(profileViewModel: ProfileViewModel, goToLeaderboard: () -> Unit)
                 ProgressButton()
             }
             Spacer(modifier = Modifier.height(16.dp))
-            UserBadgeDisplay(profileViewModel.badgeInfo)
+            UserBadgeDisplay(vm.badgeInfo)
 
             //PLACEHOLDER
             Spacer(modifier = Modifier.height(8.dp))

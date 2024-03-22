@@ -13,7 +13,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
-class QuestionController(private val mm: MainModel, private val am: AuthModel) {
+class QuestionController(mm: MainModel, am: AuthModel): Controller(mm,am, TAG) {
 
     fun verifyNewQuestion(questionText: String, hasVoice: Boolean, hasText: Boolean,
                  tagList: List<Tag>, onSuccess: () -> Unit) {
@@ -58,36 +58,6 @@ class QuestionController(private val mm: MainModel, private val am: AuthModel) {
         handler("search") {
             mm.searchQuestion(queryText)
             Log.d(TAG,"search:success")
-        }
-    }
-
-    private fun handler(functionName: String, func: suspend () -> Unit) {
-        MainScope().launch {
-            try {
-                am.loading = true
-                func()
-            } catch (ex: FirebaseFirestoreException) {
-                //Represents user errors that are caught by Firestore
-                am.error = UIError(ex.message!!, ErrorType.USER)
-                Log.w(TAG, "$functionName:userException --> ${ex.message}")
-            } catch (ex: FirebaseException) {
-                //Represents all remaining (system) errors that are caught by Firebase
-                am.error = UIError(ex.message!!, ErrorType.SYSTEM)
-                Log.e(TAG, "$functionName:systemException --> ${ex.message}")
-            } catch (ex: UserException) {
-                //Represents all user errors that are caught by us
-                am.error = UIError(ex.message!!, ErrorType.USER)
-                Log.w(TAG, "$functionName:userException -> ${ex.message}")
-            } catch (ex: Exception) {
-                //Represents all remaining errors that weren't caught by Firebase or us
-                //If we reach here, something very bad has happened
-                am.error = UIError(ex.toString(), ErrorType.CATASTROPHIC)
-                Log.wtf(TAG, "$functionName:catastrophicFailure", ex)
-
-            } finally {
-                //Stop loading after we finished our task
-                am.loading = false
-            }
         }
     }
 

@@ -29,9 +29,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 //@Preview
-fun RegisterScreen(viewModel: RegisterViewModel, controller: AuthController) {
-    val vm by remember { mutableStateOf(viewModel) }
-    val c by remember { mutableStateOf(controller) }
+fun RegisterScreen(vm: RegisterViewModel, c: AuthController) {
 
     Surface {
         Column(

@@ -23,12 +23,10 @@ import com.example.interviewpractice.controller.AuthController
 
 @Composable
 fun LoginScreen(
-    viewModel: LoginViewModel,
-    controller: AuthController,
+    vm: LoginViewModel,
+    c: AuthController,
     goToRegister: () -> Unit)
 {
-    val vm by remember { mutableStateOf(viewModel) }
-    val c by remember { mutableStateOf(controller) }
 
     Surface {
         Column(
