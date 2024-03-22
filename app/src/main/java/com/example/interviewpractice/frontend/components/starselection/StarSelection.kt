@@ -11,15 +11,11 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.example.interviewpractice.controller.StarSelectionController
 
 @Composable
-fun StarSelection(viewModel: StarSelectionViewModel, controller: StarSelectionController) {
+fun StarSelection(viewModel: StarSelectionViewModel) {
 
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -31,7 +27,7 @@ fun StarSelection(viewModel: StarSelectionViewModel, controller: StarSelectionCo
             horizontalArrangement = Arrangement.Start
         ) {
             Text(
-                text = viewModel.name.value,
+                text = viewModel.name,
                 style = MaterialTheme.typography.bodyMedium,
             )
         }
@@ -39,15 +35,15 @@ fun StarSelection(viewModel: StarSelectionViewModel, controller: StarSelectionCo
         Row(
             horizontalArrangement = Arrangement.End,
         ) {
-            for ((index, star) in viewModel.score.withIndex()) {
+            for (index in 0..4) {
                 IconButton(
                     onClick = {
-                        controller.updateStars(index)
+                        viewModel.intScore = index
                     }
                 ) {
                     // Render filled star if score[index] is true, else outlined star
                     Icon(
-                        if (star.value) Icons.Filled.Star else Icons.Outlined.StarOutline,
+                        if (index <= viewModel.intScore) Icons.Filled.Star else Icons.Outlined.StarOutline,
                         contentDescription = "Star"
                     )
                 }

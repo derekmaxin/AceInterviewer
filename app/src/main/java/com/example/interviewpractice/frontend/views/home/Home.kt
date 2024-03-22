@@ -18,6 +18,7 @@ import com.example.interviewpractice.frontend.components.question.QuestionViewMo
 import com.example.interviewpractice.frontend.components.playbar.PlayBarViewModel
 import com.example.interviewpractice.frontend.components.question.DummyQuestion
 import com.example.interviewpractice.model.AuthModel
+import com.example.interviewpractice.model.MainModel
 
 @Composable
 //@Preview
@@ -98,7 +99,7 @@ fun HomeScreen(
 
 @Composable
 fun QuestionAnswered() {
-    val model = AuthModel()
+    val model = MainModel()
     val playBarVM = PlayBarViewModel(model)
 
     Card(

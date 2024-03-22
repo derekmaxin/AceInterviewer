@@ -72,6 +72,7 @@ fun ProfileView(c: QuestionController, profileViewModel: ProfileViewModel, goToL
                     .background(Color.Gray),
                 contentAlignment = Alignment.Center
             ){}
+
             //END OF PLACEHOLDER
             Spacer(modifier = Modifier.height(16.dp))
             Button(
