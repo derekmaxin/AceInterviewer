@@ -162,7 +162,7 @@ fun MakeQuestionScreen(viewModel: MakeQuestionViewModel, questionController: Que
 
             Button(
                 onClick = {
-                    questionController.verifyNewQuestion(
+                    questionController.verifyAndAddNewQuestion(
                         vm.questionText,
                         vm.hasVoice,
                         vm.hasText,
