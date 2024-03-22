@@ -3,6 +3,7 @@ package com.example.interviewpractice.frontend.components.notification
 import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import com.example.interviewpractice.frontend.MMViewModel
 import com.example.interviewpractice.frontend.Subscriber
 import com.example.interviewpractice.model.MainModel
 
@@ -12,15 +13,11 @@ interface NotificationGroupViewModel: Subscriber {
     var defaultText: MutableState<String>
 }
 
-class ConcreteNotificationGroupViewModel(private val model: MainModel): NotificationGroupViewModel {
+class ConcreteNotificationGroupViewModel(model: MainModel): MMViewModel() {
 
-    override var expanded = mutableStateOf(false)
-    override var notifications = mutableStateOf(listOf<String>(""))
-    override var defaultText = mutableStateOf("")
-
-    init {
-        model.subscribe(this)
-    }
+    var expanded = mutableStateOf(false)
+    var notifications = mutableStateOf(listOf<String>(""))
+    var defaultText = mutableStateOf("")
 
     override fun update() {
         Log.d("NOTIFS VIEW MODEL", "Updated")

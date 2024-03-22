@@ -64,7 +64,13 @@ fun HomeScreen(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center
             ) {
-                if (vm.algoResults != null) Question(q = vm.algoResults!!, {})
+                if (vm.algoResults == null || vm.localLoading) {
+                    Loader()
+                } else {
+                    Question(q = vm.algoResults!!, {})
+                }
+
+
 
                 //Question(questionVM)
             }

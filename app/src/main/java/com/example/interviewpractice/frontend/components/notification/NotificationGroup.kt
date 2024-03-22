@@ -22,10 +22,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.interviewpractice.frontend.MMViewModel
+import com.example.interviewpractice.model.MainModel
 
 @Composable
 fun NotificationGroup(viewModel: NotificationGroupViewModel) {
-
     BadgedBox(
         badge = { Badge { Text(viewModel.notifications.value.size.toString()) } },
         modifier = Modifier

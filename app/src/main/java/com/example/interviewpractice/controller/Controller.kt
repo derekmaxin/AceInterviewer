@@ -21,7 +21,13 @@ open class Controller(protected val mm: MainModel, protected val am: AuthModel, 
                 FetchType.PROFILE->mm.getCurrentUserData()
                 FetchType.LEADERBOARD->mm.getLeaderBoardData()
                 FetchType.SEARCH->mm.refresh()
-                FetchType.RECOMMENDATION->mm.searchQuestion("",self=true)
+                FetchType.RECOMMENDATION-> {
+                    if (mm.homePageRecommendations == null) {
+                        mm.searchQuestion("",self=true)
+                    }
+
+                    mm.notifySubscribers()
+                }
                 FetchType.RESETUSER->mm.reset()
             }
         }

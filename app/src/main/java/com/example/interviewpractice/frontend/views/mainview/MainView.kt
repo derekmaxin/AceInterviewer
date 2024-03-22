@@ -85,8 +85,8 @@ fun MainView(
                 HomeScreen(c = ac, mm=mm,
                     goToMakeQuestion = { anc.navigate("make question") })
             }
-//            composable("notifications") {
-//                Notifications(viewModel = NotificationsViewModel(mm))            }
+            composable("notifications") {
+                Notifications(mm=mm)            }
 
             composable("search") {
                 SearchView(

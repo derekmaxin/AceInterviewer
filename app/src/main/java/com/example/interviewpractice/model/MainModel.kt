@@ -9,6 +9,7 @@ import com.example.interviewpractice.types.User
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.toObject
@@ -131,12 +132,13 @@ class MainModel: Presenter() {
     suspend fun getLeaderBoardData() {
         if (noCache(FetchType.LEADERBOARD)) {
             val usersRef = db.collection("users")
-            val query = usersRef.orderBy("questionsAnswered").limit(10).get().await()
+            val query = usersRef.orderBy("questionsAnswered", Query.Direction.DESCENDING).limit(10).get().await()
             leaderBoardStandings.clear()
             for (user in query) {
                 Log.d(TAG, "QUERY ${user.id} => ${user.data}")
                 leaderBoardStandings.add(user.toObject<User>())
             }
+            Log.d(TAG,"TOP QUERY: $leaderBoardStandings")
 
             val emptyUser = User(username="None", questionsAnswered = 0)
 
@@ -152,6 +154,9 @@ class MainModel: Presenter() {
     }
     fun reset() {
         user = null
+        searchResults.clear()
+        leaderBoardStandings.clear()
+        homePageRecommendations = null
         notifySubscribers()
     }
 
@@ -160,7 +165,7 @@ class MainModel: Presenter() {
             FetchType.PROFILE-> (user == null)
             FetchType.LEADERBOARD-> (leaderBoardStandings.isEmpty())
             FetchType.SEARCH-> false
-            FetchType.RECOMMENDATION->(homePageRecommendations == null)
+            FetchType.RECOMMENDATION->false
             FetchType.RESETUSER->true
         }
     }
