@@ -15,6 +15,22 @@ Type: Mobile App
 
 Click [here](https://git.uwaterloo.ca/kotlin-gang/team-101-5/-/wikis/Project-Proposal) for our Project Proposal. 
 
+# Release 3.0.0
+_March 22, 2024_
+* Added the screen meant for reviewing.
+* Added the components associated with reviewing (Star selection).
+* Added profile history chart.
+* Added badge feature with animations and expanded view to profile.
+* Added various scroll bars on necessary screens.
+* Added sample questions to database.
+* Questions users have authored are now attached to their profile.
+* Locked the screen orientation to portrait mode. 
+* Connected profile screen to database.
+* Connected leaderboards screen to database.
+* Added the option to filter search items by tag.
+* Added a reccomended question to the home page.
+* Refactored architecture
+
 # Release 2.0.0
 _March 8, 2024_
 * Added Search Screen and associated functionality
