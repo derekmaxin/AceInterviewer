@@ -92,8 +92,8 @@ fun MainView(
                     goToMakeQuestion = { anc.navigate("make question") })
             }
             composable("notifications") {
-                Notifications(mm=mm)            }
-
+                Notifications(mm=mm)
+            }
             composable("search") {
                 SearchView(
                     c = qc, mm=mm
