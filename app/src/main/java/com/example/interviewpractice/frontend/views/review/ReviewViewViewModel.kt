@@ -17,7 +17,7 @@ class ReviewViewViewModel(): MMViewModel() {
 
 
     override fun update() {
-        TODO("Not yet implemented")
+        //TODO("Not yet implemented")
     }
 
 }
