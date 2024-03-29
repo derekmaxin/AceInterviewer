@@ -101,7 +101,8 @@ fun MakeQuestionScreen(mm: MainModel, questionController: QuestionController, go
                         modifier = Modifier
                             .wrapContentHeight()
                             .fillMaxWidth()
-                            .padding(8.dp)
+                            .padding(8.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         FilterChip(
                             selected = vm.biologyTag,
