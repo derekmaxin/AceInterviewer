@@ -12,12 +12,16 @@ import com.example.interviewpractice.frontend.MMViewModel
 import com.example.interviewpractice.frontend.views.mainview.MainViewModel
 import com.example.interviewpractice.model.MainModel
 import com.example.interviewpractice.types.Question
-
+import com.example.interviewpractice.types.Tag
 
 
 class SearchViewModel(): LoaderMMViewModel() {
     var search by mutableStateOf("")
-    var filtering by mutableStateOf(false)
+
+    var isFilterOptionsVisible = mutableStateOf(false)
+    var currentlyFilteredBy = mutableSetOf<Tag>()
+
+    var isCompletedFilter = mutableStateOf(false)
 
     //DATA FROM BACKEND
     var searchResults by mutableStateOf<List<Question>>(emptyList())
