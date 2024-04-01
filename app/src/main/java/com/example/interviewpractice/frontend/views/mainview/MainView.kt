@@ -1,9 +1,6 @@
 package com.example.interviewpractice.frontend.views.mainview
 
-import android.os.Build
-import android.util.Log
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.compose.NavHost
@@ -15,27 +12,23 @@ import com.example.interviewpractice.frontend.views.auth.Loading
 import com.example.interviewpractice.frontend.views.auth.login.LoginScreen
 import com.example.interviewpractice.frontend.views.auth.register.RegisterScreen
 import androidx.compose.ui.platform.LocalContext
+import com.example.interviewpractice.controller.NotificationController
 import com.example.interviewpractice.controller.UserController
 import com.example.interviewpractice.controller.QuestionController
-import com.example.interviewpractice.frontend.components.NavBar
-import com.example.interviewpractice.frontend.components.question.QuestionViewModel
-import com.example.interviewpractice.frontend.views.leaderboard.LeaderboardView
-import com.example.interviewpractice.frontend.views.leaderboard.LeaderboardViewModel
-import com.example.interviewpractice.frontend.views.makequestion.MakeQuestionScreen
-import com.example.interviewpractice.frontend.views.makequestion.MakeQuestionViewModel
+import com.example.interviewpractice.controller.ReviewController
+import com.example.interviewpractice.frontend.components.navbar.NavBar
+import com.example.interviewpractice.frontend.views.profile.leaderboard.LeaderboardView
+import com.example.interviewpractice.frontend.views.search.makequestion.MakeQuestionScreen
 import com.example.interviewpractice.frontend.views.notifications.Notifications
-import com.example.interviewpractice.frontend.views.notifications.NotificationsViewModel
 import com.example.interviewpractice.frontend.views.profile.ProfileView
 import com.example.interviewpractice.frontend.views.profile.bestquestions.BestQuestionsView
 import com.example.interviewpractice.frontend.views.profile.bestquestions.BestQuestionsViewModel
 import com.example.interviewpractice.frontend.views.review.ReviewView
-import com.example.interviewpractice.frontend.views.review.ReviewViewViewModel
 import com.example.interviewpractice.frontend.views.search.SearchView
 import com.example.interviewpractice.model.AuthModel
 import com.example.interviewpractice.model.MainModel
 import com.example.interviewpractice.types.FetchType
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 //@Preview
 fun MainView(
@@ -43,6 +36,8 @@ fun MainView(
     uc: UserController,
     ac: AuthController,
     qc: QuestionController,
+    rc: ReviewController,
+    nc: NotificationController,
     am: AuthModel,
     mm: MainModel,
     bestQuestionsViewModel: BestQuestionsViewModel
@@ -50,7 +45,6 @@ fun MainView(
 {
     LaunchedEffect(Unit){
         ac.fetchData(FetchType.RESETUSER)
-        Log.d("SEARCHVIEW","RERENDERED HOME!!!")
     }
     // NavController //////////////////////////////////////////////////////////
     val unc = rememberNavController()
@@ -75,7 +69,7 @@ fun MainView(
 
         NavHost(navController = anc, startDestination = "home") {
             composable("reviews") {
-                ReviewView(mm=mm)
+                ReviewView(mm=mm,c=rc)
             }
             composable("leaderboard") {
                 LeaderboardView(mm=mm,c=uc)
@@ -88,11 +82,10 @@ fun MainView(
                     goToHome = { anc.navigate("home") })
             }
             composable("home") {
-                HomeScreen(c = ac, mm=mm,
-                    goToMakeQuestion = { anc.navigate("make question") })
+                HomeScreen(c = ac, mm=mm)
             }
             composable("notifications") {
-                Notifications(mm=mm)
+                Notifications(mm=mm, c=nc)
             }
             composable("search") {
                 SearchView(
@@ -110,8 +103,9 @@ fun MainView(
             goToSearch={anc.navigate("search")},
             goToHome={anc.navigate("home")},
             goToNotifications={anc.navigate("notifications")},
-            goToProfile={anc.navigate("profile")}
-        )
+            goToProfile={anc.navigate("profile")},
+            nc=nc,
+            mm=mm)
 
     }
     else {

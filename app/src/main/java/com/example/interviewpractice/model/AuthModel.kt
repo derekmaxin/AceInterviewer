@@ -4,6 +4,7 @@ import android.util.Log
 import com.example.interviewpractice.types.User
 import com.example.interviewpractice.frontend.Subscriber
 import com.example.interviewpractice.types.CatastrophicException
+import com.example.interviewpractice.types.SystemException
 import com.example.interviewpractice.types.Tag
 import com.example.interviewpractice.types.UIError
 import com.google.firebase.Firebase
@@ -115,10 +116,11 @@ class AuthModel: Presenter() {
 
     fun getUserID(): String {
         user = auth.currentUser
-        if (user != null) {
-            return user!!.uid
+        val currentUser = user
+        if (currentUser != null) {
+            return currentUser.uid
         }
-        return "no user id found"
+        throw SystemException("No user found")
     }
 
     companion object {

@@ -18,6 +18,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.interviewpractice.controller.AuthController
+import com.example.interviewpractice.controller.ReviewController
 import com.example.interviewpractice.frontend.components.playbar.PlayBar
 import com.example.interviewpractice.frontend.components.playbar.PlayBarViewModel
 import com.example.interviewpractice.frontend.components.question.DummyQuestion
@@ -25,24 +27,28 @@ import com.example.interviewpractice.frontend.components.question.Question
 import com.example.interviewpractice.frontend.components.question.QuestionViewModel
 import com.example.interviewpractice.frontend.components.starselection.StarSelection
 import com.example.interviewpractice.frontend.components.starselection.StarSelectionViewModel
-import com.example.interviewpractice.frontend.views.leaderboard.LeaderboardViewModel
+import com.example.interviewpractice.frontend.views.profile.leaderboard.LeaderboardViewModel
 import com.example.interviewpractice.model.MainModel
+import com.example.interviewpractice.types.AnsweredQuestion
+import com.example.interviewpractice.types.Question
+import com.example.interviewpractice.types.Tag
 
 @Composable
-fun SimpleOutlinedTextField() {
-    var text by remember { mutableStateOf("Write your review...") }
+fun SimpleOutlinedTextField(rvvm: ReviewViewViewModel) {
+//    var text by remember { mutableStateOf("Write your review...") }
+
 
     OutlinedTextField (
         modifier = Modifier
             .fillMaxWidth(),
-        value = text,
-        onValueChange = { text = it },
+        value = rvvm.reviewText,
+        onValueChange = { rvvm.reviewText = it },
         label = { Text("Review Text") }
     )
 }
 
 @Composable
-fun ReviewView(mm: MainModel){
+fun ReviewView(mm: MainModel, c: ReviewController){
 
     val rvvm: ReviewViewViewModel = viewModel()
     rvvm.addModel(mm)
@@ -55,6 +61,10 @@ fun ReviewView(mm: MainModel){
 
     clarityVM.name = "Clarity"
     understandingVM.name = "Understanding"
+
+    val dummyQuestion = AnsweredQuestion(
+        textResponse = "How do you manage the memory of an object in C++?",
+        userID = c.getUser())
 
     Column(
         modifier = Modifier
@@ -84,9 +94,9 @@ fun ReviewView(mm: MainModel){
         StarSelection(understandingVM)
         StarSelection(clarityVM)
 
-        SimpleOutlinedTextField()
+        SimpleOutlinedTextField(rvvm)
 
-        Button( onClick = {/* controller.sendReviewToDatabase(rvvm.reviewOneVM.value.intScore.value) */} ) {
+        Button( onClick = {c.verifyReview(rvvm.reviewText, clarityVM.intScore,understandingVM.intScore,dummyQuestion/*REPLACE WITH ACTUAL QUESTION ID*/)} ) {
             Text("Submit")
         }
 

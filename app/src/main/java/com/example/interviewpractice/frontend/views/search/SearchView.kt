@@ -62,7 +62,6 @@ fun SearchView(c: QuestionController, mm: MainModel, goToMakeQuestion: () -> Uni
     vm.addModel(mm)
     LaunchedEffect(Unit){
         c.fetchData(FetchType.SEARCH)
-        Log.d("SEARCHVIEW","RERENDERED SEARCH!!!")
     }
 
     Surface() {
