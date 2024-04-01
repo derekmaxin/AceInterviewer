@@ -42,13 +42,13 @@ fun SimpleOutlinedTextField() {
 }
 
 @Composable
-fun ReviewView(mm: MainModel, /* */){
+fun ReviewView(mm: MainModel){
 
     val rvvm: ReviewViewViewModel = viewModel()
     rvvm.addModel(mm)
-    val clarityVM: StarSelectionViewModel = viewModel()
+    val clarityVM: StarSelectionViewModel = viewModel(key="clarity")
     clarityVM.addModel(mm)
-    val understandingVM: StarSelectionViewModel = viewModel()
+    val understandingVM: StarSelectionViewModel = viewModel(key="understanding")
     understandingVM.addModel(mm)
     val playBarViewModel: PlayBarViewModel = viewModel()
     playBarViewModel.addModel(mm)
@@ -82,7 +82,7 @@ fun ReviewView(mm: MainModel, /* */){
          */
 
         StarSelection(understandingVM)
-//        StarSelection(clarityVM)
+        StarSelection(clarityVM)
 
         SimpleOutlinedTextField()
 
