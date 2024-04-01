@@ -19,6 +19,7 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.util.Date
 
 
 class AuthController(mm: MainModel, am: AuthModel): Controller(mm,am,TAG) {
@@ -26,14 +27,25 @@ class AuthController(mm: MainModel, am: AuthModel): Controller(mm,am,TAG) {
 //    override fun fetchData(ft: FetchType) {
 //        am.refresh()
 //    }
-    fun verifyRegister(username: String, password:String,email:String, foi: Set<Tag>,
-                       ) {
+    fun verifyRegister(
+        username: String,
+        password: String,
+        email: String,
+        foi: Set<Tag>,
+        birthday: Date
+    ) {
         handler("verifyRegister",true) {
             verifyUsernameFormat(username)
             verifyPasswordFormat(password)
             verifyEmailFormat(email)
 
-            am.createAccount(username = username, email = email, password = password, foi=foi)
+            am.createAccount(
+                username = username,
+                email = email,
+                password = password,
+                foi=foi,
+                birthday = birthday
+            )
             //User should now be authenticated, and data stored in the Firestore
 
             Log.d(TAG,"verifyRegister:success")

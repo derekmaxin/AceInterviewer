@@ -100,34 +100,6 @@ fun HomeScreen(
                     QuestionAnswered(playBarVM)
                 }
             }
-            Button(
-                onClick = goToMakeQuestion,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(50.dp)
-                    .padding(vertical = 4.dp)
-            ) {
-                Text("Add a question",
-                    style = TextStyle(
-                        fontSize = 16.sp,
-                        color = Color.White,
-                    )
-                )
-            }
-            Button(
-                onClick = {c.verifyLogout() },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(50.dp)
-                    .padding(vertical = 4.dp)
-            ) {
-                Text("Log out",
-                    style = TextStyle(
-                        fontSize = 16.sp,
-                        color = Color.White,
-                    )
-                )
-            }
         }
     }
 }
