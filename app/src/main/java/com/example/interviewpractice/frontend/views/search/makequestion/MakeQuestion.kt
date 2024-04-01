@@ -1,4 +1,4 @@
-package com.example.interviewpractice.frontend.views.makequestion
+package com.example.interviewpractice.frontend.views.search.makequestion
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.interviewpractice.controller.QuestionController
 import com.example.interviewpractice.frontend.components.question.QuestionViewModel
-import com.example.interviewpractice.frontend.views.leaderboard.LeaderboardViewModel
+import com.example.interviewpractice.frontend.views.profile.leaderboard.LeaderboardViewModel
 import com.example.interviewpractice.model.MainModel
 
 @OptIn(ExperimentalLayoutApi::class)

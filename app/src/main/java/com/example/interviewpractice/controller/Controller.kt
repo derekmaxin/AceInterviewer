@@ -29,6 +29,7 @@ open class Controller(protected val mm: MainModel, protected val am: AuthModel, 
                     mm.notifySubscribers()
                 }
                 FetchType.RESETUSER->mm.reset()
+                FetchType.NOTIFICATION->mm.getNotificationData()
             }
         }
     }

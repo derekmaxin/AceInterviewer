@@ -35,7 +35,7 @@ fun StarSelection(viewModel: StarSelectionViewModel) {
         Row(
             horizontalArrangement = Arrangement.End,
         ) {
-            for (index in 0..4) {
+            for (index in 1..5) {
                 IconButton(
                     onClick = {
                         viewModel.intScore = index

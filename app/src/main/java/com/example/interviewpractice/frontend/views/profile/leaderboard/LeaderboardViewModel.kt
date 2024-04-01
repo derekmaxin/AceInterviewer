@@ -1,4 +1,4 @@
-package com.example.interviewpractice.frontend.views.leaderboard
+package com.example.interviewpractice.frontend.views.profile.leaderboard
 
 import android.util.Log
 import androidx.compose.runtime.getValue

@@ -32,8 +32,8 @@ import com.example.interviewpractice.types.FetchType
 //@Preview
 fun HomeScreen(
     c: AuthController,
-    mm: MainModel,
-    goToMakeQuestion: () -> Unit, )
+    mm: MainModel
+)
 {
     val scrollState = rememberScrollState()
 

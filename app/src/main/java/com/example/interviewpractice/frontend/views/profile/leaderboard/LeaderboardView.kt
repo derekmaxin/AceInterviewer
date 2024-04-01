@@ -1,4 +1,4 @@
-package com.example.interviewpractice.frontend.views.leaderboard
+package com.example.interviewpractice.frontend.views.profile.leaderboard
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*

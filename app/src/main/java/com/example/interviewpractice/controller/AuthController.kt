@@ -1,7 +1,11 @@
 package com.example.interviewpractice.controller
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import com.example.interviewpractice.helpers.EH
+import com.example.interviewpractice.helpers.getCurrentDate
+import com.example.interviewpractice.helpers.verifyGenericString
 import com.example.interviewpractice.model.AuthModel
 import com.example.interviewpractice.model.MainModel
 import com.example.interviewpractice.types.ErrorType
@@ -90,12 +94,7 @@ class AuthController(mm: MainModel, am: AuthModel): Controller(mm,am,TAG) {
     private fun verifyPasswordFormat(password: String) {
         //Add more checks here as necessary
         verifyGenericString(password, "Password")
-    }
 
-    private fun verifyGenericString(str: String, field: String) {
-        if (str.isEmpty()) {
-            throw UserException("$field field is empty")
-        }
     }
 
     companion object {

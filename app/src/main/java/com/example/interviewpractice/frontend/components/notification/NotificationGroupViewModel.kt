@@ -8,9 +8,9 @@ import com.example.interviewpractice.frontend.Subscriber
 import com.example.interviewpractice.model.MainModel
 
 interface NotificationGroupViewModel: Subscriber {
-    var expanded: MutableState<Boolean>
-    var notifications: MutableState<List<String>>
-    var defaultText: MutableState<String>
+//    var expanded: MutableStateOf(false)
+//    var notifications: MutableState<List<String>>
+//    var defaultText: MutableState<String>
 }
 
 class ConcreteNotificationGroupViewModel(): MMViewModel() {
@@ -24,13 +24,13 @@ class ConcreteNotificationGroupViewModel(): MMViewModel() {
     }
 }
 
-class DummyNotificationGroupViewModel(notifications: List<String>, defaultText: String):
-    NotificationGroupViewModel {
-
-    override var expanded = mutableStateOf(false)
-    override var notifications = mutableStateOf(notifications)
-    override var defaultText = mutableStateOf(defaultText)
-    override fun update() {
-        Log.d("NOTIFS VIEW MODEL", "Updated")
-    }
-}
+//class DummyNotificationGroupViewModel(notifications: List<String>, defaultText: String):
+////    NotificationGroupViewModel {
+////
+////    override var expanded = mutableStateOf(false)
+////    override var notifications = mutableStateOf(notifications)
+////    override var defaultText = mutableStateOf(defaultText)
+////    override fun update() {
+////        Log.d("NOTIFS VIEW MODEL", "Updated")
+////    }
+//}

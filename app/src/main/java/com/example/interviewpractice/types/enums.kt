@@ -5,5 +5,19 @@ enum class FetchType {
     LEADERBOARD,
     SEARCH,
     RECOMMENDATION,
-    RESETUSER
+    RESETUSER,
+    NOTIFICATION,
+//    NAVBAR
+}
+
+enum class Collections {
+    reviews,
+    questions,
+    users,
+    notifications
+}
+
+//Add new notification types as needed
+enum class NotificationType {
+    NEWREVIEW,
 }

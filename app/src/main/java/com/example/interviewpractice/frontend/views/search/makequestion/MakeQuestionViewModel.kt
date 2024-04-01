@@ -1,4 +1,4 @@
-package com.example.interviewpractice.frontend.views.makequestion
+package com.example.interviewpractice.frontend.views.search.makequestion
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf

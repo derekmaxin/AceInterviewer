@@ -10,8 +10,10 @@ import com.example.interviewpractice.model.MainModel
 
 class StarSelectionViewModel(): MMViewModel() {
 
+    //Frontend data
+
     var name by mutableStateOf("")
-    var intScore by mutableIntStateOf(0)
+    var intScore by mutableIntStateOf(1)
     var score = listOf(
         mutableStateOf(false),
         mutableStateOf(false),
