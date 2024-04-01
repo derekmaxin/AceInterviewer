@@ -25,6 +25,7 @@ import com.example.interviewpractice.frontend.views.profile.bestquestions.BestQu
 import com.example.interviewpractice.frontend.views.profile.bestquestions.BestQuestionsViewModel
 import com.example.interviewpractice.frontend.views.review.ReviewView
 import com.example.interviewpractice.frontend.views.search.SearchView
+import com.example.interviewpractice.frontend.views.submitanswer.SubmitAnswer
 import com.example.interviewpractice.model.AuthModel
 import com.example.interviewpractice.model.MainModel
 import com.example.interviewpractice.types.FetchType
@@ -97,6 +98,9 @@ fun MainView(
                     mm=mm, c = qc, ac=ac, uc=uc, goToLeaderboard = { anc.navigate("leaderboard")},
                     goToBestQuestions = {anc.navigate("best questions")})
             }
+            composable("question") {
+                SubmitAnswer()
+            }
         }
         NavBar(
             goToReviews={anc.navigate("reviews")},
@@ -104,6 +108,7 @@ fun MainView(
             goToHome={anc.navigate("home")},
             goToNotifications={anc.navigate("notifications")},
             goToProfile={anc.navigate("profile")},
+            goToQuestion={anc.navigate("question")},
             nc=nc,
             mm=mm)
 
