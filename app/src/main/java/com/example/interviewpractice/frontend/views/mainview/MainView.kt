@@ -101,7 +101,8 @@ fun MainView(
             }
             composable("profile") {
                 ProfileView(
-                    mm=mm, c = qc, goToLeaderboard = { anc.navigate("leaderboard")}, goToBestQuestions = {anc.navigate("best questions")})
+                    mm=mm, c = qc, ac=ac, uc=uc, goToLeaderboard = { anc.navigate("leaderboard")},
+                    goToBestQuestions = {anc.navigate("best questions")})
             }
         }
         NavBar(
