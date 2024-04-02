@@ -18,7 +18,9 @@ data class Question(
     val hasVoice: Boolean = false,
     val hasText: Boolean = false,
     val deprecated: Boolean = false,
-    val userID: String = ""
+    val userID: String = "",
+    val date: String = "",
+    val answers: List<String> = emptyList()
 )
 
 //Access Reviews from the Firestore with the same ID as the answered_question

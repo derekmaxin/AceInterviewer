@@ -74,20 +74,20 @@ fun SearchView(c: QuestionController, mm: MainModel, goToMakeQuestion: () -> Uni
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Button(
-                onClick = {/*c.dummyData()*/ },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(50.dp)
-                    .padding(vertical = 4.dp)
-            ) {
-                Text("Dummy Data Dump",
-                    style = TextStyle(
-                        fontSize = 16.sp,
-                        color = Color.White,
-                    )
-                )
-            }
+//            Button(
+//                onClick = {/*c.dummyData()*/ },
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .height(50.dp)
+//                    .padding(vertical = 4.dp)
+//            ) {
+//                Text("Dummy Data Dump",
+//                    style = TextStyle(
+//                        fontSize = 16.sp,
+//                        color = Color.White,
+//                    )
+//                )
+//            }
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
