@@ -1,6 +1,8 @@
 package com.example.interviewpractice.frontend.views.mainview
 
+import android.os.Build
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.compose.NavHost
@@ -30,6 +32,7 @@ import com.example.interviewpractice.model.AuthModel
 import com.example.interviewpractice.model.MainModel
 import com.example.interviewpractice.types.FetchType
 
+@RequiresApi(Build.VERSION_CODES.S)
 @Composable
 //@Preview
 fun MainView(
@@ -99,7 +102,7 @@ fun MainView(
                     goToBestQuestions = {anc.navigate("best questions")})
             }
             composable("question") {
-                SubmitAnswer()
+                SubmitAnswer(qc = QuestionController(am = am, mm = mm))
             }
         }
         NavBar(

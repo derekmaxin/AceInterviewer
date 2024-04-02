@@ -1,5 +1,6 @@
 package com.example.interviewpractice.controller
 
+import android.content.Context
 import android.util.Log
 import com.example.interviewpractice.model.AuthModel
 import com.example.interviewpractice.model.MainModel
@@ -12,6 +13,7 @@ import com.google.firebase.FirebaseException
 import com.google.firebase.firestore.FirebaseFirestoreException
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
+import java.io.File
 
 class QuestionController(mm: MainModel, am: AuthModel): Controller(mm,am, TAG) {
 
@@ -119,6 +121,12 @@ class QuestionController(mm: MainModel, am: AuthModel): Controller(mm,am, TAG) {
     private fun verifyTags(tagList: List<Tag>) {
         if (tagList.isEmpty()) {
             throw UserException("Must select at least one tag")
+        }
+    }
+
+    fun uploadAudio(audioFile : File, context: Context){
+        handler("uploadAudio",false) {
+            mm.uploadAudio(audioFile, context)
         }
     }
 
