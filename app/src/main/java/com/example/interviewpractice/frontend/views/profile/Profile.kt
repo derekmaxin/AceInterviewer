@@ -1,6 +1,9 @@
 package com.example.interviewpractice.frontend.views.profile
 
 import android.os.Build
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -11,33 +14,30 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.example.interviewpractice.R
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.AccountBox
-import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import com.example.interviewpractice.controller.UserController
 import com.example.interviewpractice.frontend.components.historychart.HistoryChart
 import com.example.interviewpractice.frontend.components.userbadge.UserBadgeDisplay
-import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.interviewpractice.frontend.views.leaderboard.LeaderboardViewModel
+import com.example.interviewpractice.controller.AuthController
 import com.example.interviewpractice.model.MainModel
 import com.example.interviewpractice.types.FetchType
 import com.example.interviewpractice.controller.QuestionController
+import coil.compose.rememberImagePainter
 
 
 
@@ -45,7 +45,8 @@ import com.example.interviewpractice.controller.QuestionController
 @Composable
 //@Preview
 fun ProfileView(mm: MainModel, c: QuestionController, goToLeaderboard: () -> Unit,
-                goToBestQuestions: () -> Unit) {
+                goToBestQuestions: () -> Unit, ac: AuthController, uc: UserController
+) {
     val vm: ProfileViewModel = viewModel()
     vm.addModel(mm)
 
@@ -53,12 +54,20 @@ fun ProfileView(mm: MainModel, c: QuestionController, goToLeaderboard: () -> Uni
         c.fetchData(FetchType.PROFILE)
     }
 
+    //For the pfp
+    val context = LocalContext.current
+    val launcher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri ->
+        uri?.let {
+            uc.addUserPfp(it, context)
+        }
+    }
+
     Surface() {
         val scrollState = rememberScrollState()
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 16.dp)
+                .padding(horizontal = 8.dp)
                 .padding(vertical = 16.dp)
                 .padding(bottom = 65.dp)
                 .verticalScroll(scrollState),
@@ -70,8 +79,10 @@ fun ProfileView(mm: MainModel, c: QuestionController, goToLeaderboard: () -> Uni
                 modifier = Modifier.fillMaxWidth())
             {
                 ProfilePicture(
-                    painter = painterResource(id = R.drawable.klee),
-                    contentDescription = "Profile Picture"
+                    painter = vm.user?.pfpURL?.let { rememberImagePainter(data = it) },
+                    contentDescription = "Profile Picture",
+                    onClick = { launcher.launch("image/*") },
+                    hasNoPfp = vm.user?.pfpURL == ""
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Column {
@@ -79,16 +90,24 @@ fun ProfileView(mm: MainModel, c: QuestionController, goToLeaderboard: () -> Uni
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(text = "@${vm.user?.username ?: ""}", style = TextStyle(fontSize = 10.sp))
                     Text(text = vm.user?.email ?: "", style = TextStyle(fontSize = 10.sp))
+                    val birthdayText = vm.user?.birthday?.let {
+                        vm.formatDate(it)
+                    } ?: "unknown birthday"
+                    Text(
+                        text = birthdayText,
+                        style = TextStyle(fontSize = 10.sp)
+                    )
                 }
-                Spacer(modifier = Modifier.width(36.dp))
+                Spacer(modifier = Modifier.width(16.dp))
                 HistoryButton()
                 Spacer(modifier = Modifier.width(16.dp))
-                ProgressButton()
+                SettingsButton()
+                Spacer(modifier = Modifier.width(16.dp))
+                LogoutButton(ac)
             }
             Spacer(modifier = Modifier.height(16.dp))
             UserBadgeDisplay(vm.badgeInfo)
 
-            //PLACEHOLDER
             Spacer(modifier = Modifier.height(8.dp))
 
             HistoryChart()
@@ -102,21 +121,6 @@ fun ProfileView(mm: MainModel, c: QuestionController, goToLeaderboard: () -> Uni
             }
             Button(
                 modifier = Modifier.fillMaxWidth(),
-                onClick = {  }
-            ) {
-                Text(text = "Your Top Rated Answers")
-            }
-            Button(
-                modifier = Modifier.fillMaxWidth(),
-                onClick = {
-                    c.searchBestQuestions()
-                    goToBestQuestions()
-                }
-            ) {
-                Text(text = "Your Best Asked Questions")
-            }
-            Button(
-                modifier = Modifier.fillMaxWidth(),
                 onClick = goToLeaderboard
             ) {
                 Text(text = "Leaderboards")
@@ -127,23 +131,45 @@ fun ProfileView(mm: MainModel, c: QuestionController, goToLeaderboard: () -> Uni
 
 @Composable
 fun ProfilePicture(
-    painter: Painter,
+    painter: Painter?,
     contentDescription: String?,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit,
+    hasNoPfp: Boolean
 ) {
     Box(
         modifier = modifier
             .size(120.dp)
             .padding(16.dp)
-            .clip(CircleShape),
+            .clip(CircleShape)
+            .clickable(onClick = onClick),
         contentAlignment = Alignment.Center
     ) {
-        Image(
-            painter = painter,
-            contentDescription = contentDescription,
-            modifier = Modifier.size(100.dp),
-            contentScale = ContentScale.Crop
-        )
+        if (hasNoPfp) {
+            //default icon
+            Image(
+                painter = painterResource(id = R.drawable.defaultpfp),
+                contentDescription = "Add Photo",
+                modifier = Modifier.size(100.dp)
+            )
+            Text(text = "   add \n profile \n picture")
+        }
+        painter?.let {
+            Image(
+                painter = it,
+                contentDescription = contentDescription,
+                modifier = Modifier.size(100.dp),
+                contentScale = androidx.compose.ui.layout.ContentScale.Crop
+            )
+        } ?: run {
+            // If painter is null, show default icon
+            Image(
+                painter = painterResource(id = R.drawable.defaultpfp),
+                contentDescription = "Add Photo",
+                modifier = Modifier.size(100.dp)
+            )
+            Text(text = "   add \n profile \n picture")
+        }
     }
 }
 
@@ -167,20 +193,39 @@ fun HistoryButton() {
 }
 
 @Composable
-fun ProgressButton() {
+fun SettingsButton() {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.clickable { /* Handle button click */ }
     ) {
         Text(
-            text = "Progress",
+            text = "Settings",
             style = TextStyle(fontSize = 10.sp)
         )
         IconButton(
             onClick = { /* Handle button click */ },
             modifier = Modifier.size(30.dp)
         ) {
-            Icon(Icons.Default.Done, contentDescription = "Progress")
+            Icon(Icons.Default.Settings, contentDescription = "Settings")
+        }
+    }
+}
+
+@Composable
+fun LogoutButton(ac: AuthController) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.clickable { /* Handle button click */ }
+    ) {
+        Text(
+            text = "Log out",
+            style = TextStyle(fontSize = 10.sp)
+        )
+        IconButton(
+            onClick = { ac.verifyLogout() },
+            modifier = Modifier.size(30.dp)
+        ) {
+            Icon(Icons.AutoMirrored.Filled.Logout, contentDescription = "Log out")
         }
     }
 }

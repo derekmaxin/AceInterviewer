@@ -1,5 +1,6 @@
 package com.example.interviewpractice.frontend.views.auth.register
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.material3.*
@@ -21,6 +22,7 @@ import java.time.LocalDate
 import androidx.compose.runtime.*
 import java.time.YearMonth
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -28,6 +30,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.interviewpractice.frontend.MMViewModel
 import com.example.interviewpractice.model.AuthModel
 import com.example.interviewpractice.types.Tag
+import java.util.Calendar
+import java.util.Date
 
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -122,11 +126,15 @@ fun RegisterScreen(am: AuthModel, c: AuthController) {
             FieldsOfInterest(vm)
             Spacer(modifier = Modifier.height(8.dp))
             Button(
-                onClick = {c.verifyRegister(
-                    username = vm.username,
-                    password = vm.password,
-                    email = vm.email,
-                    foi = vm.selectedOptions) },
+                onClick = {
+                    c.verifyRegister(
+                        username = vm.username,
+                        password = vm.password,
+                        email = vm.email,
+                        foi = vm.selectedOptions,
+                        birthday = vm.getSelectedBirthday(),
+                    )
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(70.dp)

@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Card
@@ -19,17 +20,27 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.interviewpractice.frontend.MMViewModel
 import com.example.interviewpractice.model.MainModel
+import com.example.interviewpractice.types.Notification
+import com.example.interviewpractice.types.NotificationType
 
 @Composable
-fun NotificationGroup(viewModel: NotificationGroupViewModel) {
+fun NotificationGroup(type: String, notifications: List<Notification>) {
+//    var expanded by MutableState<Boolean>(false)
+    var expanded by remember {mutableStateOf(false)}
     BadgedBox(
-        badge = { Badge { Text(viewModel.notifications.value.size.toString()) } },
+        badge = { Badge { Text(notifications.size.toString()) } },
         modifier = Modifier
             .padding(16.dp)
     ) {
@@ -53,7 +64,7 @@ fun NotificationGroup(viewModel: NotificationGroupViewModel) {
                         horizontalArrangement = Arrangement.Start
                     ) {
                         Text(
-                            text = viewModel.defaultText.value,
+                            text = type,
                             style = MaterialTheme.typography.bodyLarge,
                         )
                     }
@@ -62,18 +73,18 @@ fun NotificationGroup(viewModel: NotificationGroupViewModel) {
                         horizontalArrangement = Arrangement.End,
                     ) {
                         IconButton(
-                            onClick = { viewModel.expanded.value = !viewModel.expanded.value },
+                            onClick = { expanded = !expanded },
                             content = {
-                                if (viewModel.expanded.value) { Icon(Icons.Filled.ExpandLess, contentDescription = null) }
-                                else { Icon(Icons.Filled.ExpandMore, contentDescription = null) }
+                                if (expanded) { Icon(Icons.Filled.ExpandLess, contentDescription = null) }
+                                else { Icon(Icons.Filled.Home, contentDescription = null) }
 
                             }
                         )
                     }
                 }
 
-                if (viewModel.expanded.value) {
-                    for (notification in viewModel.notifications.value) {
+                if (expanded) {
+                    for (notification in notifications) {
                         ElevatedCard(
                             modifier = Modifier
                                 .fillMaxWidth(),
@@ -84,7 +95,7 @@ fun NotificationGroup(viewModel: NotificationGroupViewModel) {
                             Text(
                                 modifier = Modifier
                                     .padding(6.dp),
-                                text = notification,
+                                text = notification.notificationText,
                                 style = MaterialTheme.typography.bodyLarge,
                             )
                         }

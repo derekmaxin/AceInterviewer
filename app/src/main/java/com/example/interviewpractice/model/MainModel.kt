@@ -1,25 +1,34 @@
 package com.example.interviewpractice.model
 
+import android.content.Context
+import android.net.Uri
 import android.util.Log
 import com.example.interviewpractice.types.CatastrophicException
+import com.example.interviewpractice.types.Collections
 import com.example.interviewpractice.types.FetchType
+import com.example.interviewpractice.types.Notification
+import com.example.interviewpractice.types.NotificationType
 import com.example.interviewpractice.types.Question
+import com.example.interviewpractice.types.Review
 import com.example.interviewpractice.types.Tag
 import com.example.interviewpractice.types.User
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
+import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.Query
-import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.toObject
-import kotlinx.coroutines.delay
+import com.google.firebase.storage.storage
 import kotlinx.coroutines.tasks.await
+import java.io.InputStream
+import java.util.UUID
 
-class MainModel: Presenter() {
+class MainModel() : Presenter() {
 
     private val auth = Firebase.auth
     private val db = Firebase.firestore
+    private val storage = Firebase.storage
 
     var localLoading: Boolean = false
         set(value) {
@@ -38,10 +47,64 @@ class MainModel: Presenter() {
     var leaderBoardStandings = mutableListOf<User>()
     var homePageRecommendations: Question? = null
 
+    var newReviewNotifications = mutableListOf<Notification>()
+    var notificationCount = 0
+
     var user: User? = null
+
+    //USER FUNCTIONS
+    suspend fun addUserPfp(userID: String, uri: Uri, context: Context){
+        val userRef = db.collection("users").document(userID)
+        val storageRef = storage.reference.child("profile_pictures")
+        val imageName = UUID.randomUUID().toString()
+        val imageRef = storageRef.child("$userID/$imageName")
+
+        // Open an input stream from the content URI
+        val inputStream = context.contentResolver?.openInputStream(uri)
+
+        // Upload file to Firebase Storage
+        inputStream?.let { stream : InputStream ->
+            val uploadTask = imageRef.putStream(stream)
+
+            // Register observers to listen for upload success or failure
+            uploadTask.addOnSuccessListener { taskSnapshot ->
+                // Image uploaded successfully
+                // Get the download URL of the image
+                imageRef.downloadUrl.addOnSuccessListener { downloadUri : Uri ->
+                    // Store the download URL in Firestore or Realtime Database
+                    userRef.update("pfpURL", downloadUri.toString())
+                }.addOnFailureListener { exception ->
+                    Log.e(TAG, "Failed to get download URL: $exception")
+                    // Handle any errors while getting download URL
+                }
+            }.addOnFailureListener { exception ->
+                // Handle unsuccessful uploads
+                Log.e(TAG, "Failed to upload image: $exception")
+            }
+        } ?: run {
+            Log.e(TAG, "Failed to open input stream for URI: $uri")
+        }
+    }
+
+
     suspend fun addQuestion(question: Question) {
         db.collection("questions").add(question).await()
         Log.d(TAG,"addQuestion:success")
+    }
+
+    suspend fun addReview(review: Review) {
+        //Add review itself
+        db.collection("reviews").add(review).await()
+        Log.d(TAG,"addReview::success")
+
+
+        //Add notification
+        val notification = Notification(
+            notificationText = "A new review was added for question ${review.answeredQuestionID}",
+            type = NotificationType.NEWREVIEW,
+            review.answeredQuestionID,
+            review.answeredQuestionAuthorID)
+        db.collection("notifications").add(notification).await()
     }
 
     suspend fun searchQuestion(queryText: String,filters: Set<Tag> = emptySet(),self:Boolean=false) {
@@ -95,6 +158,45 @@ class MainModel: Presenter() {
         notifySubscribers()
     }
 
+    fun addNotificationListener(currentUserID: String) {
+        //ASSUME ONLY NEW REVIEW NOTIFICATIONS (FOR NOW FOR SIMPLICITY)
+        val docRef = db.collection(Collections.notifications.toString()).whereEqualTo("userID",currentUserID)
+
+        docRef.addSnapshotListener { snapshots, e ->
+            if (e != null) {
+                Log.w(TAG, "Listen failed.", e)
+                return@addSnapshotListener
+            }
+
+            for (dc in snapshots!!.documentChanges) {
+                when (dc.type) {
+                    DocumentChange.Type.ADDED -> {
+                        //New review came in
+                        val review = dc.document.toObject<Review>()
+                        val notification = Notification(
+                            notificationText = "A new review was added for question ${review.answeredQuestionID}",
+                            type = NotificationType.NEWREVIEW,
+                            review.answeredQuestionID,
+                            currentUserID)
+                        newReviewNotifications.add(notification)
+                        if (notificationCount == -1) {
+                            notificationCount += 0
+                        }
+                        notificationCount += 1
+
+                        notifySubscribers()
+                        Log.d(TAG, "New Notification: ${dc.document.data}")
+                    }
+                    DocumentChange.Type.MODIFIED -> {
+                        //MIGHT NEED TO CHANGE
+                        Log.d(TAG, "Notification changed: ${dc.document.data}")
+                    }
+                    DocumentChange.Type.REMOVED -> Log.d(TAG, "Notification read: ${dc.document.data}")
+                }
+            }
+        }
+    }
+
     //------------[TEST METHODS]------------
     suspend fun boost() {
         val uid = auth.currentUser?.uid
@@ -141,10 +243,23 @@ class MainModel: Presenter() {
             }
             Log.d(TAG,"TOP QUERY: $leaderBoardStandings")
 
-            val emptyUser = User(username="None", questionsAnswered = 0)
+            val emptyUser = User(username ="None", questionsAnswered = 0)
 
             while(leaderBoardStandings.size < 10) {
                 leaderBoardStandings.add(emptyUser)
+            }
+        }
+        notifySubscribers()
+
+    }
+    suspend fun getNotificationData() {
+        if (noCache(FetchType.NOTIFICATION)) {
+            val notificationRef = db.collection("notifications")
+            val query = notificationRef.get().await()
+            for (notification in query) {
+                //ASSUME ONLY NEW REVIEW NOTIFICATIONS FOR NOW
+                newReviewNotifications.add(notification.toObject<Notification>())
+
             }
         }
         notifySubscribers()
@@ -158,6 +273,8 @@ class MainModel: Presenter() {
         searchResults.clear()
         leaderBoardStandings.clear()
         homePageRecommendations = null
+        notificationCount = 0
+        newReviewNotifications.clear()
         notifySubscribers()
     }
 
@@ -168,6 +285,7 @@ class MainModel: Presenter() {
             FetchType.SEARCH-> false
             FetchType.RECOMMENDATION->false
             FetchType.RESETUSER->true
+            FetchType.NOTIFICATION->false
         }
     }
     val userQuestions = mutableListOf<Question>()

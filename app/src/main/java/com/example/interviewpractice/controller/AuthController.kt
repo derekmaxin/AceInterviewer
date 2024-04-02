@@ -1,7 +1,11 @@
 package com.example.interviewpractice.controller
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import com.example.interviewpractice.helpers.EH
+import com.example.interviewpractice.helpers.getCurrentDate
+import com.example.interviewpractice.helpers.verifyGenericString
 import com.example.interviewpractice.model.AuthModel
 import com.example.interviewpractice.model.MainModel
 import com.example.interviewpractice.types.ErrorType
@@ -19,6 +23,7 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.util.Date
 
 
 class AuthController(mm: MainModel, am: AuthModel): Controller(mm,am,TAG) {
@@ -26,14 +31,25 @@ class AuthController(mm: MainModel, am: AuthModel): Controller(mm,am,TAG) {
 //    override fun fetchData(ft: FetchType) {
 //        am.refresh()
 //    }
-    fun verifyRegister(username: String, password:String,email:String, foi: Set<Tag>,
-                       ) {
+    fun verifyRegister(
+        username: String,
+        password: String,
+        email: String,
+        foi: Set<Tag>,
+        birthday: Date
+    ) {
         handler("verifyRegister",true) {
             verifyUsernameFormat(username)
             verifyPasswordFormat(password)
             verifyEmailFormat(email)
 
-            am.createAccount(username = username, email = email, password = password, foi=foi)
+            am.createAccount(
+                username = username,
+                email = email,
+                password = password,
+                foi=foi,
+                birthday = birthday
+            )
             //User should now be authenticated, and data stored in the Firestore
 
             Log.d(TAG,"verifyRegister:success")
@@ -78,12 +94,7 @@ class AuthController(mm: MainModel, am: AuthModel): Controller(mm,am,TAG) {
     private fun verifyPasswordFormat(password: String) {
         //Add more checks here as necessary
         verifyGenericString(password, "Password")
-    }
 
-    private fun verifyGenericString(str: String, field: String) {
-        if (str.isEmpty()) {
-            throw UserException("$field field is empty")
-        }
     }
 
     companion object {

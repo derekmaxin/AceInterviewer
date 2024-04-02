@@ -4,6 +4,7 @@ import android.util.Log
 import com.example.interviewpractice.types.User
 import com.example.interviewpractice.frontend.Subscriber
 import com.example.interviewpractice.types.CatastrophicException
+import com.example.interviewpractice.types.SystemException
 import com.example.interviewpractice.types.Tag
 import com.example.interviewpractice.types.UIError
 import com.google.firebase.Firebase
@@ -12,6 +13,7 @@ import com.google.firebase.auth.auth
 import com.google.firebase.auth.userProfileChangeRequest
 import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.tasks.await
+import java.util.Date
 
 class AuthModel: Presenter() {
     //Variables necessary to make the model work
@@ -47,9 +49,11 @@ class AuthModel: Presenter() {
     fun refresh() {
         notifySubscribers()
     }
-    suspend fun createAccount(username: String, email: String, password: String, foi: Set<Tag>){
+    suspend fun createAccount(
+        username: String, email: String, password: String, foi: Set<Tag>, birthday: Date
+    ){
         auth.createUserWithEmailAndPassword(email, password).await()
-        updateCurrentUser(email = email, username = username, foi=foi)
+        updateCurrentUser(email = email, username = username, foi=foi, birthday = birthday)
         Log.d(TAG, "createAccount:success")
     }
 
@@ -72,7 +76,9 @@ class AuthModel: Presenter() {
         Log.d(TAG, "resetPassword:success (sent email)")
     }
 
-    private suspend fun updateCurrentUser(username: String, email: String, foi:Set<Tag>) {
+    private suspend fun updateCurrentUser(
+        username: String, email: String, foi:Set<Tag>, birthday : Date
+    ) {
         val current_user = auth.currentUser
         //throw if user is null
         current_user ?: throw CatastrophicException("User is not persistent")
@@ -85,7 +91,9 @@ class AuthModel: Presenter() {
         }
         current_user.updateProfile(profileUpdates)
 
-        val userData = User(username=username,email=email, fieldsOfInterest = foi.toList())
+        val userData = User(
+            username =username,
+            email =email, fieldsOfInterest = foi.toList(), birthday =birthday)
         setUserData(userData,current_user.uid)
 
         user = current_user
@@ -108,10 +116,11 @@ class AuthModel: Presenter() {
 
     fun getUserID(): String {
         user = auth.currentUser
-        if (user != null) {
-            return user!!.uid
+        val currentUser = user
+        if (currentUser != null) {
+            return currentUser.uid
         }
-        return "no user id found"
+        throw SystemException("No user found")
     }
 
     companion object {
