@@ -6,9 +6,13 @@ data class Question(
     val hasVoice: Boolean,
     val hasText: Boolean,
     val deprecated: Boolean,
-    val userID: String
+    val userID: String,
+    val date: String,
+    val answers: List<String>
 ) {
-    constructor() : this("", emptyList(), false, false, false, "")
+    constructor() : this("", emptyList(), false, false, false,
+        "", "", emptyList()
+    )
 }
 
 //Access Reviews from the Firestore with the same ID as the answered_question

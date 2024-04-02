@@ -87,7 +87,8 @@ class MainModel: Presenter() {
             }
             else {
                 homePageRecommendations = Question("We have no questions in your field of interest!",
-                    emptyList(),false,false,false,"")
+                    emptyList(),false,false,false,"","", emptyList()
+                )
             }
 
         }
