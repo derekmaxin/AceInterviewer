@@ -9,7 +9,7 @@ import com.example.interviewpractice.model.MainModel
 class ReviewViewModel(): MMViewModel() {
 
     var reviewText = mutableStateOf("")
-    var reviewScores = mutableStateOf(listOf<Pair<String,Int>>())
+    var reviewScores = mutableListOf<Pair<String,Int>>()
 
     override fun update() {
         Log.d("REVIEW VIEW MODEL", "Updated")
