@@ -29,8 +29,7 @@ import com.example.interviewpractice.types.ReviewScore
 
 
 @Composable
-@Preview
-fun ViewReviewScores() {
+fun ViewReviewScores(viewModel: ViewReviewScoresViewModel) {
     Card(
         modifier = Modifier
             .fillMaxWidth(),
@@ -39,19 +38,19 @@ fun ViewReviewScores() {
             modifier = Modifier.padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            val playBarViewModel = PlayBarViewModel()
-            val questionViewModel = QuestionViewModel()
+
 
             Text(
                 text = "What is the square root of 289? Is this number prime?",
                 style = MaterialTheme.typography.bodyLarge,
             )
             HorizontalDivider(thickness = 1.dp, color = Color.LightGray)
-            PlayBar(playBarViewModel)
+            PlayBar(viewModel.playBarViewModel)
             HorizontalDivider(thickness = 1.dp, color = Color.LightGray)
 
-            ReviewScoreComponent("Understanding", 3)
-            ReviewScoreComponent("Clarity", 4)
+            for (scoreComponent in viewModel.reviewScores) {
+                ReviewScoreComponent(scoreComponent.first, scoreComponent.second)
+            }
         }
     }
 }
