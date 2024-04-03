@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.media.MediaRecorder
 import android.os.Build
-import android.os.Environment
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -17,26 +16,17 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.content.ContextCompat
 import com.example.interviewpractice.controller.QuestionController
 import java.io.File
 import java.io.IOException
+import java.util.UUID
 
 class AudioRecord(private val context: Context) {
 
-    private var fileName: String = "test"
     private var recorder: MediaRecorder? = null
-    private var audioDir: File = File(context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), "AudioMemos")
-    private var audioDirPath = audioDir.absolutePath
-    private var recordingFile = File("$audioDirPath/$fileName.m4a")
+    private val outputFile = File(context.getExternalFilesDir(null), "${UUID.randomUUID()}.3gp")
 
-    init {
-        audioDir.mkdirs()
-        Log.d("RECORDER", "Recording file location: $audioDirPath")
-        Log.d("RECORDER", "File location: ${recordingFile.absolutePath}")
-
-    }
 
     @RequiresApi(Build.VERSION_CODES.S)
     fun onRecord(start: Boolean, qc: QuestionController) = if (start) {
@@ -52,32 +42,47 @@ class AudioRecord(private val context: Context) {
         recorder = MediaRecorder(context).apply {
             setAudioSource(MediaRecorder.AudioSource.MIC)
             setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
-            setOutputFile(recordingFile.absolutePath)
-            setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
+            setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
+            setOutputFile(outputFile.absolutePath)
 
             try {
                 prepare()
+                Log.d("RECORDER", "Recording prepared")
             } catch (e: IOException) {
-                Log.e("RECORDER", "prepare() failed")
+                Log.e("RECORDER", "prepare() failed: ${e.message}")
             }
 
             start()
+            Log.d("RECORDER", "Recording started")
         }
     }
 
     private fun stopRecording(qc: QuestionController) {
         recorder?.apply {
-            stop()
-            release()
+            try {
+                stop()
+                Log.d("RECORDER", "Recording stopped")
+            } catch (e: IllegalStateException) {
+                Log.e("RECORDER", "Failed to stop recording: ${e.message}")
+            }
+            reset()
+            try {
+                release()
+                Log.d("RECORDER", "MediaRecorder released")
+            } catch (e: IllegalStateException) {
+                Log.e("RECORDER", "Failed to release MediaRecorder: ${e.message}")
+            }
         }
         recorder = null
 
-        val audioFile = File(recordingFile.absolutePath)
+        val audioFile = File(outputFile.absolutePath)
         if (audioFile.exists()) {
             qc.uploadAudio(audioFile, context)
+            Log.d("RECORDER", "Audio file exists and uploaded: ${audioFile.absolutePath}")
+        } else {
+            Log.e("RECORDER", "Audio file does not exist: ${audioFile.absolutePath}")
         }
     }
-
 }
 
 
