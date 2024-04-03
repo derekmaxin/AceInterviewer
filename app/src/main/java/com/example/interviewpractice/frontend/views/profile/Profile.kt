@@ -38,7 +38,7 @@ import com.example.interviewpractice.model.MainModel
 import com.example.interviewpractice.types.FetchType
 import com.example.interviewpractice.controller.QuestionController
 import coil.compose.rememberImagePainter
-
+import com.example.interviewpractice.frontend.components.history.History
 
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -111,6 +111,8 @@ fun ProfileView(mm: MainModel, c: QuestionController, goToLeaderboard: () -> Uni
             Spacer(modifier = Modifier.height(8.dp))
 
             HistoryChart()
+
+            History(vm.historyViewModel)
 
             Spacer(modifier = Modifier.height(16.dp))
             Button(
