@@ -10,6 +10,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import com.example.interviewpractice.frontend.MMViewModel
+import com.example.interviewpractice.frontend.components.history.HistoryViewModel
 import com.example.interviewpractice.frontend.components.historychart.HistoryChartViewModel
 import com.example.interviewpractice.model.MainModel
 import com.example.interviewpractice.types.User
@@ -22,6 +23,7 @@ class ProfileViewModel(): MMViewModel(){
 //    val hcVM = HistoryChartViewModel(model)
 
     val badgeInfo = mutableMapOf<String, Int>()
+    val historyViewModel = HistoryViewModel()
 
     fun formatDate(date: Date): String {
         val formatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
