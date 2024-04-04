@@ -66,10 +66,12 @@ fun ProfileView(mm: MainModel,
         vm.addModel(mm)
         historyViewModel.addModel(mm)
         c.fetchData(FetchType.PROFILE)
+        hc.fetchData(FetchType.HISTORY)
     }
     DisposableEffect(Unit) {
         onDispose {
             vm.unsubscribe()
+            historyViewModel.unsubscribe()
             historyViewModel.unsubscribe()
         }
     }
