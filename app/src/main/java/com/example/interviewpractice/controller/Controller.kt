@@ -34,7 +34,10 @@ open class Controller(protected val mm: MainModel, protected val am: AuthModel, 
                 FetchType.NOTIFICATION->mm.getNotificationData()
                 FetchType.HISTORY->{
                     val calendar = Calendar.getInstance()
-                    calendar.set(Calendar.DATE, 1,1)
+                    calendar.set(Calendar.DATE, 1)
+                    calendar.set(Calendar.HOUR_OF_DAY, 0);
+                    calendar.set(Calendar.MINUTE, 0);
+                    calendar.set(Calendar.SECOND, 0);
 
                     val from: Date = calendar.time
                     Log.d(TAG,"1 Month AGO? $from")
