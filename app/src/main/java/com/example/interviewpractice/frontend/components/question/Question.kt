@@ -1,5 +1,6 @@
 package com.example.interviewpractice.frontend.components.question
 
+import androidx.compose.foundation.gestures.anchoredDraggable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -72,7 +73,7 @@ fun Question(q: Question, boost: ()->Unit) {
 
 @Composable
 fun DummyQuestion(qText: String, tags: List<String>) {
-    Card() {
+    Card {
         Column(
             modifier = Modifier
                 .padding(16.dp),

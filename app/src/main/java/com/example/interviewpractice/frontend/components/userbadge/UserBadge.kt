@@ -33,15 +33,17 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.interviewpractice.R
 import kotlinx.coroutines.delay
+import java.time.format.TextStyle
 
 @Composable
-fun UserBadgeDisplay(badgeInfo: MutableMap<String, Int>){
+fun UserBadgeDisplay(questionsAnswered: Int){
     var isExpanded by remember { mutableStateOf(false) }
 
     Column() {
@@ -56,7 +58,8 @@ fun UserBadgeDisplay(badgeInfo: MutableMap<String, Int>){
                     .height(110.dp)
                     .padding(horizontal = 8.dp)
                     .padding(vertical = 4.dp)
-                    .clip(CircleShape).background(Color.White)
+                    .clip(CircleShape)
+                    .background(Color.White)
                     .border(
                         BorderStroke(width = 4.dp, color = Color.Gray),
                         shape = CircleShape
@@ -67,41 +70,58 @@ fun UserBadgeDisplay(badgeInfo: MutableMap<String, Int>){
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.fillMaxSize(),
                 ) {
-                    if ((badgeInfo["questionsAnswered"] ?: 0) >= 10) {
+                    if ((questionsAnswered ?: 0) >= 10) {
                         UserBadgePreview(
                             painter = painterResource(id = R.drawable.ten),
                             contentDescription = "Badge", modifier = Modifier.weight(1f),
                             flair = Color(0xFFCD7F32)
                         )
                         Spacer(modifier = Modifier.width(8.dp))
+                    } else {
+                        LockedUserBadgePreview(
+                            painter = painterResource(id = R.drawable.ten),
+                            contentDescription = "Badge", modifier = Modifier.weight(1f)
+                        )
                     }
-                    if ((badgeInfo["questionsAnswered"] ?: 0) >= 25) {
+                    if ((questionsAnswered ?: 0) >= 25) {
                         UserBadgePreview(
                             painter = painterResource(id = R.drawable.twentyfive),
                             contentDescription = "Badge", modifier = Modifier.weight(1f),
                             flair = Color(0xFFC0C0C0)
                         )
                         Spacer(modifier = Modifier.width(8.dp))
+                    } else {
+                        LockedUserBadgePreview(
+                            painter = painterResource(id = R.drawable.twentyfive),
+                            contentDescription = "Badge", modifier = Modifier.weight(1f)
+                        )
                     }
-                    if ((badgeInfo["questionsAnswered"] ?: 0) >= 100) {
+                    if ((questionsAnswered ?: 0) >= 100) {
                         UserBadgePreview(
                             painter = painterResource(id = R.drawable.onehundred),
                             contentDescription = "Badge", modifier = Modifier.weight(1f),
                             flair = Color(0xFFFFD700)
                         )
                         Spacer(modifier = Modifier.width(8.dp))
+                    } else {
+                        LockedUserBadgePreview(
+                            painter = painterResource(id = R.drawable.onehundred),
+                            contentDescription = "Badge", modifier = Modifier.weight(1f)
+                        )
                     }
                 }
             }
         } else {
             Column(
-                modifier = Modifier.clip(RoundedCornerShape(64.dp)).background(Color.White)
+                modifier = Modifier
+                    .clip(RoundedCornerShape(64.dp))
+                    .background(Color.White)
                     .border(
                         BorderStroke(width = 4.dp, color = Color.Gray),
                         shape = RoundedCornerShape(64.dp)
                     )
             ){
-                if ((badgeInfo["questionsAnswered"] ?: 0) >= 10) {
+                if ((questionsAnswered ?: 0) >= 10) {
                     UserBadge(
                         painter = painterResource(id = R.drawable.ten),
                         contentDescription = "Badge",
@@ -109,8 +129,15 @@ fun UserBadgeDisplay(badgeInfo: MutableMap<String, Int>){
                         description = "You have answered 10 questions!"
                     )
                     HorizontalDivider(modifier = Modifier.fillMaxWidth())
+                } else {
+                    LockedUserBadge(
+                        painter = painterResource(id = R.drawable.ten),
+                        contentDescription = "Badge",
+                        description = "To unlock this badge, answer 10 questions! " +
+                                "Current: $questionsAnswered /10"
+                    )
                 }
-                if ((badgeInfo["questionsAnswered"] ?: 0) >= 25) {
+                if ((questionsAnswered ?: 0) >= 25) {
                     UserBadge(
                         painter = painterResource(id = R.drawable.twentyfive),
                         contentDescription = "Badge",
@@ -118,8 +145,15 @@ fun UserBadgeDisplay(badgeInfo: MutableMap<String, Int>){
                         description = "You have answered 25 questions!"
                     )
                     HorizontalDivider(modifier = Modifier.fillMaxWidth())
+                } else {
+                    LockedUserBadge(
+                        painter = painterResource(id = R.drawable.twentyfive),
+                        contentDescription = "Badge",
+                        description = "To unlock this badge, answer 25 questions! " +
+                                "Current: $questionsAnswered /25"
+                    )
                 }
-                if ((badgeInfo["questionsAnswered"] ?: 0) >= 100) {
+                if ((questionsAnswered ?: 0) >= 100) {
                     UserBadge(
                         painter = painterResource(id = R.drawable.onehundred),
                         contentDescription = "Badge",
@@ -127,6 +161,13 @@ fun UserBadgeDisplay(badgeInfo: MutableMap<String, Int>){
                         description = "You have answered 100 questions!"
                     )
                     Spacer(modifier = Modifier.width(8.dp))
+                } else {
+                    LockedUserBadge(
+                        painter = painterResource(id = R.drawable.onehundred),
+                        contentDescription = "Badge",
+                        description = "To unlock this badge, answer 100 questions! " +
+                                "Current: $questionsAnswered /100"
+                    )
                 }
             }
         }
@@ -169,8 +210,9 @@ fun UserBadge(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Box(
-            modifier = Modifier.weight(1f)
-            .size(150.dp),
+            modifier = Modifier
+                .weight(1f)
+                .size(150.dp),
             contentAlignment = Alignment.Center)
         {
             ParticleCanvas(flair = flair, longer = true)
@@ -228,7 +270,8 @@ fun UserBadgePreview(
             modifier = modifier
                 .size(120.dp)
                 .padding(16.dp)
-                .clip(CircleShape).background(color = Color.LightGray)
+                .clip(CircleShape)
+                .background(color = Color.LightGray)
                 .border(
                     BorderStroke(width = 4.dp, color = flair),
                     shape = CircleShape
@@ -238,8 +281,115 @@ fun UserBadgePreview(
             Image(
                 painter = painter,
                 contentDescription = contentDescription,
-                modifier = Modifier.size(100.dp).clip(CircleShape),
+                modifier = Modifier
+                    .size(100.dp)
+                    .clip(CircleShape),
             )
+        }
+    }
+}
+
+@Composable
+fun LockedUserBadge(
+    painter: Painter,
+    contentDescription: String?,
+    description: String
+){
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(
+            modifier = Modifier
+                .weight(1f)
+                .size(150.dp),
+            contentAlignment = Alignment.Center)
+        {
+            Box(
+                modifier = Modifier
+                    .size(125.dp)
+                    .padding(16.dp)
+                    .clip(CircleShape)
+                    .background(color = Color.LightGray)
+                    .border(
+                        width = 4.dp,
+                        color = Color.Gray,
+                        shape = CircleShape
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                Image(
+                    painter = painter,
+                    contentDescription = contentDescription,
+                    modifier = Modifier
+                        .size(100.dp)
+                        .clip(CircleShape)
+                )
+                // Overlay with dimming effect
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .graphicsLayer(alpha = 0.5F)
+                        .background(color = Color.Black)
+                )
+                Text(text = "Locked", color = Color.White)
+            }
+        }
+        Column(
+            modifier = Modifier
+                .padding(horizontal = 4.dp)
+                .weight(1f)
+        ) {
+            Text(
+                text = description,
+                modifier = Modifier
+                    .fillMaxWidth(),
+                maxLines = 5,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+    }
+}
+
+@Composable
+fun LockedUserBadgePreview(
+    painter: Painter,
+    contentDescription: String?,
+    modifier: Modifier = Modifier
+) {
+
+    Box(modifier = modifier
+        .size(200.dp),
+        contentAlignment = Alignment.Center)
+    {
+        Box(
+            modifier = modifier
+                .size(120.dp)
+                .padding(16.dp)
+                .clip(CircleShape)
+                .background(color = Color.LightGray)
+                .border(
+                    BorderStroke(width = 4.dp, color = Color.Gray),
+                    shape = CircleShape
+                ),
+            contentAlignment = Alignment.Center
+        ) {
+            Image(
+                painter = painter,
+                contentDescription = contentDescription,
+                modifier = Modifier
+                    .size(100.dp)
+                    .clip(CircleShape),
+            )
+            // Overlay with dimming effect
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .graphicsLayer(alpha = 0.5F)
+                    .background(color = Color.Black)
+            )
+            Text(text = "Locked", color = Color.White)
         }
     }
 }
