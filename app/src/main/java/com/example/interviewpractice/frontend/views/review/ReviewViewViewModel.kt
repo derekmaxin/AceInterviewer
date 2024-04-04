@@ -5,13 +5,6 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.example.interviewpractice.frontend.MMViewModel
-import com.example.interviewpractice.frontend.components.playbar.PlayBarViewModel
-import com.example.interviewpractice.frontend.components.question.QuestionViewModel
-import com.example.interviewpractice.frontend.components.starselection.StarSelectionViewModel
-import com.example.interviewpractice.model.MainModel
-import com.example.interviewpractice.types.Tag
-import java.time.LocalDate
-import java.time.YearMonth
 
 class ReviewViewViewModel(): MMViewModel() {
 

@@ -34,6 +34,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.AbsoluteAlignment
 import androidx.compose.ui.Alignment
@@ -59,9 +60,15 @@ import com.example.interviewpractice.types.Tag
 //@Preview
 fun SearchView(c: QuestionController, mm: MainModel, goToMakeQuestion: () -> Unit) {
     val vm: SearchViewModel = viewModel()
-    vm.addModel(mm)
+
     LaunchedEffect(Unit){
+        vm.addModel(mm)
         c.fetchData(FetchType.SEARCH)
+    }
+    DisposableEffect(Unit) {
+        onDispose {
+            vm.unsubscribe()
+        }
     }
 
     Surface() {
@@ -208,7 +215,7 @@ fun SearchView(c: QuestionController, mm: MainModel, goToMakeQuestion: () -> Uni
             // TODO: Render clickable questions components on search, collab with ryan,
             // also remove "dummy data dump" button
             val scrollState = rememberScrollState()
-
+            Spacer(modifier = Modifier.height(8.dp))
             Column(modifier = Modifier.verticalScroll(scrollState)) {
                 if (vm.localLoading) Loader()
                 for (question in vm.searchResults) {

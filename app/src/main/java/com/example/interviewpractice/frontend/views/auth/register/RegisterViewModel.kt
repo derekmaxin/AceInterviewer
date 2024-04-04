@@ -12,6 +12,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import com.example.interviewpractice.frontend.AMViewModel
+import com.example.interviewpractice.frontend.MMViewModel
 import com.example.interviewpractice.model.AuthModel
 import com.example.interviewpractice.types.Tag
 import com.example.interviewpractice.types.UIError
@@ -20,7 +21,6 @@ import java.time.YearMonth
 import java.util.Calendar
 import java.util.Date
 
-@RequiresApi(Build.VERSION_CODES.O)
 class RegisterViewModel(): AMViewModel() {
     //View specific
     var username by mutableStateOf("")

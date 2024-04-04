@@ -3,8 +3,6 @@ package com.example.interviewpractice.frontend.components.review
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import com.example.interviewpractice.frontend.MMViewModel
-import com.example.interviewpractice.frontend.Subscriber
-import com.example.interviewpractice.model.MainModel
 
 class ReviewViewModel(): MMViewModel() {
 

@@ -8,6 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
@@ -27,9 +28,15 @@ import com.example.interviewpractice.types.User
 fun LeaderboardView(mm: MainModel, c: UserController)
 {
     val vm: LeaderboardViewModel = viewModel()
-    vm.addModel(mm)
+
     LaunchedEffect(Unit){
+        vm.addModel(mm)
         c.fetchData(FetchType.LEADERBOARD)
+    }
+    DisposableEffect(Unit) {
+        onDispose {
+            vm.unsubscribe()
+        }
     }
     Column(
         modifier = Modifier

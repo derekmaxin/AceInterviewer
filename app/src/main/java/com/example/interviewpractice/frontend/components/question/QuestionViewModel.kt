@@ -1,10 +1,7 @@
 package com.example.interviewpractice.frontend.components.question
 
-import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import com.example.interviewpractice.frontend.MMViewModel
-import com.example.interviewpractice.frontend.Subscriber
-import com.example.interviewpractice.model.MainModel
 
 class QuestionViewModel(): MMViewModel() {
 

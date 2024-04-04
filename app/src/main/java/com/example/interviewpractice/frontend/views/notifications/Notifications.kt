@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -22,10 +23,16 @@ import com.example.interviewpractice.types.NotificationType
 
 fun Notifications(mm: MainModel, c: NotificationController) {
     val vm: NotificationsViewModel = viewModel()
-    vm.addModel(mm)
+
 
     LaunchedEffect(Unit){
+        vm.addModel(mm)
         c.fetchData(FetchType.NOTIFICATION)
+    }
+    DisposableEffect(Unit) {
+        onDispose {
+            vm.unsubscribe()
+        }
     }
 
     Surface() {

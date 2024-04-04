@@ -5,7 +5,7 @@ enum class FetchType {
     LEADERBOARD,
     SEARCH,
     RECOMMENDATION,
-    RESETUSER,
+    INIT,
     NOTIFICATION,
     HISTORY
 //    NAVBAR

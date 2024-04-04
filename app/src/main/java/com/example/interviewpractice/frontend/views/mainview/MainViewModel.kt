@@ -29,7 +29,6 @@ class MainViewModel( ): AMViewModel() {
         }
         if (loading != m.loading) {
             loading = m.loading
-            Log.d(TAG,"Updated loading state: loading -> $loading")
         }
     }
     companion object {

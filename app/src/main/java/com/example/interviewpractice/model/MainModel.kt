@@ -25,6 +25,7 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.toObject
 import com.google.firebase.storage.storage
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.tasks.await
 import java.io.InputStream
 import java.util.Date
@@ -39,6 +40,7 @@ class MainModel() : Presenter() {
     var localLoading: Boolean = false
         set(value) {
             field = value
+            Log.d(TAG, "Updated LOCAL loading state: $localLoading")
             notifySubscribers()
         }
 
@@ -49,15 +51,48 @@ class MainModel() : Presenter() {
 //        notifySubscribers()
 //    }
 
+    var isCached = mutableMapOf<FetchType,Boolean>()
+
+    fun invalidateAll() {
+
+        FetchType.entries.forEach {
+            if (it == FetchType.SEARCH) {
+                isCached[it] = true
+            } else {
+                isCached[it] = false
+            }
+
+        }
+    }
+
+    fun invalidate(ft: FetchType) {
+        isCached[ft] = false
+    }
+
+    fun check(ft: FetchType): Boolean {
+        return isCached.getValue(ft)
+    }
+
+    //FetchType:
+
+    //SEARCH
     var searchResults = mutableListOf<Question>()
+
+    //LEADERBOARD
     var leaderBoardStandings = mutableListOf<User>()
+
+    //RECOMMENDATION
     var homePageRecommendations: Question? = null
+
+    //HISTORY
     var historyHeatData = mutableMapOf<Date,Int>()
     var historyChartData = mutableListOf<History>()
 
+    //NOTIFICATION
     var newReviewNotifications = mutableListOf<Notification>()
     var notificationCount = 0
 
+    //PROFILE
     var user: User? = null
 
     //USER FUNCTIONS
@@ -108,6 +143,7 @@ class MainModel() : Presenter() {
     suspend fun addReview(review: Review) {
         //Add review itself
         db.collection("reviews").add(review).await()
+        //TODO: invalidate reviews
         Log.d(TAG,"addReview::success")
 
 
@@ -118,6 +154,7 @@ class MainModel() : Presenter() {
             review.answeredQuestionID,
             review.answeredQuestionAuthorID)
         db.collection("notifications").add(notification).await()
+        invalidate(FetchType.NOTIFICATION)
     }
 
     suspend fun searchQuestion(queryText: String,filters: Set<Tag> = emptySet(),self:Boolean=false) {
@@ -209,6 +246,21 @@ class MainModel() : Presenter() {
             }
         }
     }
+    val userQuestions = mutableListOf<Question>()
+
+    suspend fun searchUserQuestion() {
+        val questionsRef = db.collection("questions")
+
+        val query = questionsRef.whereEqualTo("userID", auth.currentUser?.uid)
+            .get()
+            .await()
+        userQuestions.clear()
+        for (question in query) {
+            Log.d(TAG, "QUERY ${question.id} => ${question.data}")
+            userQuestions.add(question.toObject(Question::class.java))
+        }
+        notifySubscribers()
+    }
 
     //------------[TEST METHODS]------------
     suspend fun boost() {
@@ -220,66 +272,60 @@ class MainModel() : Presenter() {
 
             leaderBoardStandings.clear()
             notifySubscribers()
+            invalidate(FetchType.LEADERBOARD)
         }
         else {
             throw CatastrophicException("No uid for signed in user")
         }
     }
 
+
+
     //------------[FETCH METHODS]------------
     suspend fun getCurrentUserData() {
-        if (noCache(FetchType.PROFILE)) {
+        fetch(FetchType.PROFILE) {
             val uid = auth.currentUser?.uid
-            Log.d(TAG,"APPARENT USER: ${auth.currentUser?.email}")
             if (uid != null) {
                 val userDoc = db.collection("users").document(uid)
                 val query = userDoc.get().await()
 
                 user = query.toObject<User>()
-                Log.d(TAG,"APPARENT CURRENT USER: ${user.toString()}")
             }
             else {
                 throw CatastrophicException("No uid for signed in user")
             }
         }
-        notifySubscribers()
     }
 
-    suspend fun getLeaderBoardData() {
-        if (noCache(FetchType.LEADERBOARD)) {
+    suspend fun getLeaderboardData() {
+        fetch(FetchType.LEADERBOARD) {
             val usersRef = db.collection("users")
             val query = usersRef.orderBy("questionsAnswered", Query.Direction.DESCENDING).limit(10).get().await()
             leaderBoardStandings.clear()
             for (user in query) {
-                Log.d(TAG, "QUERY ${user.id} => ${user.data}")
                 leaderBoardStandings.add(user.toObject<User>())
             }
-            Log.d(TAG,"TOP QUERY: $leaderBoardStandings")
 
+            //If there are not enough users
             val emptyUser = User(username ="None", questionsAnswered = 0)
 
             while(leaderBoardStandings.size < 10) {
                 leaderBoardStandings.add(emptyUser)
             }
         }
-        notifySubscribers()
-
     }
     suspend fun getNotificationData() {
-        if (noCache(FetchType.NOTIFICATION)) {
+        fetch(FetchType.NOTIFICATION) {
             val notificationRef = db.collection("notifications")
             val query = notificationRef.get().await()
             for (notification in query) {
                 //ASSUME ONLY NEW REVIEW NOTIFICATIONS FOR NOW
                 newReviewNotifications.add(notification.toObject<Notification>())
-
             }
         }
-        notifySubscribers()
-
     }
     suspend fun getHistoryData(from: Date, to: Date, currentUser: String) {
-        if (noCache(FetchType.HISTORY)) {
+        fetch(FetchType.HISTORY) {
             val questionRef = db.collection("answered")
                 .whereEqualTo("userID", currentUser )
                 .whereGreaterThanOrEqualTo("date",from)
@@ -287,9 +333,10 @@ class MainModel() : Presenter() {
                 .orderBy("date",Query.Direction.DESCENDING)
 
             val query = questionRef.get().await()
-            Log.d(TAG,"History data: $query")
+
             historyHeatData.clear()
             historyChartData.clear()
+
             for (document in query) {
                 val entry: AnsweredQuestion = document.toObject<AnsweredQuestion>()
 
@@ -318,49 +365,38 @@ class MainModel() : Presenter() {
                 }
             }
         }
-        Log.d(TAG,"this is the historyChartData: $historyChartData")
+    }
+
+    private suspend fun fetch(ft: FetchType, func: suspend () -> Unit) {
+        delay(500)
+        if (!isCached.getValue(ft)) {
+            Log.d(TAG,"No cache found for ${ft}, fetching now...")
+            func()
+        }
+        else {
+            Log.d(TAG, "Found cache for $ft")
+        }
+        isCached[ft] = true
         notifySubscribers()
 
-    }
-    fun refresh() {
-        notifySubscribers()
     }
     fun reset() {
-        user = null
-        searchResults.clear()
-        leaderBoardStandings.clear()
-        homePageRecommendations = null
-        notificationCount = 0
-        newReviewNotifications.clear()
+        invalidateAll()
         notifySubscribers()
     }
 
-    fun noCache(ft: FetchType): Boolean {
-        return when (ft) {
-            FetchType.PROFILE-> (user == null)
-            FetchType.LEADERBOARD-> (leaderBoardStandings.isEmpty())
-            FetchType.SEARCH-> false
-            FetchType.RECOMMENDATION->false
-            FetchType.RESETUSER->true
-            FetchType.NOTIFICATION->(notificationCount == 0)
-            FetchType.HISTORY -> true
-        }
-    }
-    val userQuestions = mutableListOf<Question>()
+//    fun isCached.getValue(ft: FetchType): Boolean {
+//        return when (ft) {
+//            FetchType.PROFILE-> (user == null)
+//            FetchType.LEADERBOARD-> (leaderBoardStandings.isEmpty())
+//            FetchType.SEARCH-> false
+//            FetchType.RECOMMENDATION->false
+//            FetchType.RESETUSER->true
+//            FetchType.NOTIFICATION->(notificationCount == 0)
+//            FetchType.HISTORY -> true
+//        }
+//    }
 
-    suspend fun searchUserQuestion() {
-        val questionsRef = db.collection("questions")
-
-        val query = questionsRef.whereEqualTo("userID", auth.currentUser?.uid)
-            .get()
-            .await()
-        userQuestions.clear()
-        for (question in query) {
-            Log.d(TAG, "QUERY ${question.id} => ${question.data}")
-            userQuestions.add(question.toObject(Question::class.java))
-        }
-        notifySubscribers()
-    }
 
     companion object {
         private const val TAG = "MainModel"

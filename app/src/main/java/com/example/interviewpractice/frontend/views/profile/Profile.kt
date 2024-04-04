@@ -27,12 +27,16 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import com.example.interviewpractice.controller.UserController
 import com.example.interviewpractice.frontend.components.historychart.HistoryChart
 import com.example.interviewpractice.frontend.components.userbadge.UserBadgeDisplay
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.example.interviewpractice.controller.AuthController
 import com.example.interviewpractice.model.MainModel
 import com.example.interviewpractice.types.FetchType
@@ -41,9 +45,9 @@ import coil.compose.rememberImagePainter
 import com.example.interviewpractice.controller.HistoryController
 import com.example.interviewpractice.frontend.components.history.History
 import com.example.interviewpractice.frontend.components.history.HistoryViewModel
+import com.example.interviewpractice.helpers.Lifecycle
 
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 //@Preview
 fun ProfileView(mm: MainModel,
@@ -51,27 +55,32 @@ fun ProfileView(mm: MainModel,
                 goToLeaderboard: () -> Unit,
                 ac: AuthController,
                 uc: UserController,
-                hc: HistoryController
+                hc: HistoryController,
 ) {
     val vm: ProfileViewModel = viewModel()
-    vm.addModel(mm)
     val historyViewModel: HistoryViewModel = viewModel()
     historyViewModel.addModel(mm)
 
 
-
-    LaunchedEffect(Unit){
+    LaunchedEffect(Unit) {
+        vm.addModel(mm)
+        historyViewModel.addModel(mm)
         c.fetchData(FetchType.PROFILE)
     }
+    DisposableEffect(Unit) {
+        onDispose {
+            vm.unsubscribe()
+            historyViewModel.unsubscribe()
+        }
+    }
 
-    //For the pfp
+//    For the pfp
     val context = LocalContext.current
     val launcher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri ->
         uri?.let {
             uc.addUserPfp(it, context)
         }
     }
-
     Surface() {
         val scrollState = rememberScrollState()
         Column(
@@ -116,11 +125,11 @@ fun ProfileView(mm: MainModel,
                 LogoutButton(ac)
             }
             Spacer(modifier = Modifier.height(16.dp))
-            UserBadgeDisplay(vm.badgeInfo)
+//            UserBadgeDisplay(vm.badgeInfo)
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            HistoryChart()
+//            HistoryChart()
 
             History(historyViewModel, hc)
 

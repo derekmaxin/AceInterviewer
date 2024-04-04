@@ -4,10 +4,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.example.interviewpractice.frontend.MMViewModel
-import com.example.interviewpractice.frontend.components.viewreviewscores.ViewReviewScoresViewModel
 import com.example.interviewpractice.types.History
 import java.util.Calendar
-import java.util.Date
 import java.util.Locale
 
 class HistoryViewModel: MMViewModel() {

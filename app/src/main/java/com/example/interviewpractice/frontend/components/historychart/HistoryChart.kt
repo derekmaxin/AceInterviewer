@@ -3,6 +3,7 @@ package com.example.interviewpractice.frontend.components.historychart
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -39,7 +40,6 @@ fun getDayOfWeek(utcDate: LocalDate): Int {
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 @Preview
 fun HistoryChart() {

@@ -18,11 +18,12 @@ import java.util.Date
 open class Controller(protected val mm: MainModel, protected val am: AuthModel, protected val TAG: String) {
 
     fun fetchData(ft: FetchType) {
-        handler("fetchData.${ft}",mm.noCache(ft)) {
+        if (ft == FetchType.LEADERBOARD) Log.d(TAG,"LEADERBOARD: ${mm.check(ft)}")
+        handler("fetchData.${ft}",!mm.check(ft)) {
             when (ft) {
                 FetchType.PROFILE->mm.getCurrentUserData()
-                FetchType.LEADERBOARD->mm.getLeaderBoardData()
-                FetchType.SEARCH->mm.refresh()
+                FetchType.LEADERBOARD->mm.getLeaderboardData()
+                FetchType.SEARCH->mm.notifySubscribers()
                 FetchType.RECOMMENDATION-> {
                     if (mm.homePageRecommendations == null) {
                         mm.searchQuestion("",self=true)
@@ -30,7 +31,7 @@ open class Controller(protected val mm: MainModel, protected val am: AuthModel, 
 
                     mm.notifySubscribers()
                 }
-                FetchType.RESETUSER->mm.reset()
+                FetchType.INIT->mm.reset()
                 FetchType.NOTIFICATION->mm.getNotificationData()
                 FetchType.HISTORY->{
                     val calendar = Calendar.getInstance()
@@ -40,7 +41,6 @@ open class Controller(protected val mm: MainModel, protected val am: AuthModel, 
                     calendar.set(Calendar.SECOND, 0);
 
                     val from: Date = calendar.time
-                    Log.d(TAG,"1 Month AGO? $from")
                     mm.getHistoryData(from,Date(),am.getUserID())
                 }
             }
@@ -75,13 +75,12 @@ open class Controller(protected val mm: MainModel, protected val am: AuthModel, 
                 am.error = UIError(ex.toString(), ErrorType.CATASTROPHIC)
                 Log.wtf(TAG, "$functionName:catastrophicFailure", ex)
 
-                //Log user out to prevent further damage
-                am.logout()
+                //Invalidate caches to prevent damage
+                mm.invalidateAll()
 
             } finally {
                 //Stop loading after we finished our task
                 if (requiresLoad) am.loading = false else mm.localLoading = false
-
             }
         }
     }

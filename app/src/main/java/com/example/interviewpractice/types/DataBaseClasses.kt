@@ -64,8 +64,8 @@ data class AnsweredQuestion(
 data class Notification(
     val notificationText: String = "",
     val type: NotificationType = NotificationType.NEWREVIEW,
-    val typeID: String,
-    val userID: String //Who the notification is for
+    val typeID: String = "",
+    val userID: String = "" //Who the notification is for
 )
 
 enum class Tag(val v: String) {
