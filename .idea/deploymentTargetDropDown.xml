@@ -2,16 +2,6 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
-<<<<<<< HEAD
-      <entry key="ReviewView">
-=======
-      <entry key="History">
-        <State />
-      </entry>
-      <entry key="Review">
->>>>>>> f55d7d6cf771a40d46c7c0d2de0b603bff5e3c8f
-        <State />
-      </entry>
       <entry key="app">
         <State />
       </entry>
