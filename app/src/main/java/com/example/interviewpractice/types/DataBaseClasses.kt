@@ -51,7 +51,7 @@ data class Review(
 data class AnsweredQuestion(
     val userID: String = "", //Who answered the question
     val textResponse: String = "",
-    val audioURI: Uri = Uri.parse(""), //Some sort of link to the Google Cloud storage
+    val audioURI: String = "", //Some sort of link to the Google Cloud storage
     val audioTime: Int = 0, //In seconds
     val isPrivate: Boolean = false,
     val questionID: String = "",

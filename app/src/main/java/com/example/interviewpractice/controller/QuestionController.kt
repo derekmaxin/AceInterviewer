@@ -46,12 +46,12 @@ class QuestionController(mm: MainModel, am: AuthModel): Controller(mm,am, TAG) {
             if (hasText) {
                 verifyGenericString(answerText, "Answer text")
             }
-            var fileUri: Uri = Uri.parse("")
+            var fileUri: String = ""
             if (hasVoice) {
                 if (audioFile == null || context == null) {
                     throw UserException("No audio submitted on a question which requires it")
                 }
-                fileUri = FileProvider.getUriForFile(context, context.packageName + ".provider", audioFile)
+                fileUri = FileProvider.getUriForFile(context, context.packageName + ".provider", audioFile).toString()
             }
 
             val uid = am.getUserID()
@@ -96,7 +96,7 @@ class QuestionController(mm: MainModel, am: AuthModel): Controller(mm,am, TAG) {
             val answered1: AnsweredQuestion = AnsweredQuestion(
                 am.getUserID(),
                 "Blah",
-                Uri.parse(""),
+                "",
                 0,
                 false,
                 questionID = "",
@@ -106,13 +106,17 @@ class QuestionController(mm: MainModel, am: AuthModel): Controller(mm,am, TAG) {
             val answered2: AnsweredQuestion = AnsweredQuestion(
                 am.getUserID(),
                 "Blah2",
-                Uri.parse(""),
+                "",
                 0,
                 false,
                 questionID = "",
                 getCurrentDate()
 
             )
+
+            mm.addAnsweredQuestion(answered1)
+            mm.addAnsweredQuestion(answered2)
+
             val review1: Review = Review(
                 am.getUserID(),
                 "ID2",
@@ -133,8 +137,7 @@ class QuestionController(mm: MainModel, am: AuthModel): Controller(mm,am, TAG) {
                 getCurrentDate()
 
             )
-            mm.addAnsweredQuestion(answered1)
-            mm.addAnsweredQuestion(answered2)
+
             mm.addReview(review1)
             mm.addReview(review2)
 
