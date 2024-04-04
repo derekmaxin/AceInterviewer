@@ -127,7 +127,7 @@ fun ProfileView(mm: MainModel,
                 LogoutButton(ac)
             }
             Spacer(modifier = Modifier.height(16.dp))
-//            UserBadgeDisplay(vm.badgeInfo)
+            vm.user?.let { UserBadgeDisplay(it.questionsAnswered) }
 
             Spacer(modifier = Modifier.height(8.dp))
 
