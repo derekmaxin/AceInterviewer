@@ -1,5 +1,7 @@
 package com.example.interviewpractice.frontend.views.answerquestion
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -33,6 +35,7 @@ import com.example.interviewpractice.controller.QuestionController
 import com.example.interviewpractice.frontend.components.Loader
 import com.example.interviewpractice.frontend.components.question.DummyQuestion
 import com.example.interviewpractice.frontend.components.question.Question
+import com.example.interviewpractice.frontend.views.submitanswer.SubmitAnswer
 import com.example.interviewpractice.model.MainModel
 import com.example.interviewpractice.types.FetchType
 
@@ -48,6 +51,7 @@ fun SimpleOutlinedTextField(vm: AnswerQuestionViewModel) {
     )
 }
 
+@RequiresApi(Build.VERSION_CODES.S)
 @Composable
 fun AnswerScreen(mm: MainModel, qc: QuestionController ) {
     val vm: AnswerQuestionViewModel = viewModel()
@@ -74,9 +78,20 @@ fun AnswerScreen(mm: MainModel, qc: QuestionController ) {
         ) {
             val question = vm.currentQuestion
             if (question == null || vm.localLoading) Loader()
-            else Question(question) {}
+            else {
+                Question(question) {}
+                if (question.hasText) {
+                    SimpleOutlinedTextField(vm)
+                }
 
-            SimpleOutlinedTextField(vm)
+
+                if (question.hasVoice) {
+                    SubmitAnswer(qc = qc, vm=vm)
+                }
+
+            }
+
+
         }
 
         Column (
@@ -103,8 +118,12 @@ fun AnswerScreen(mm: MainModel, qc: QuestionController ) {
         Button(
             onClick = {
                 val question = vm.currentQuestion
-                if (question != null)
-                    qc.verifySubmitAnswer(answerText = vm.textAnswer,question.questionID)
+                val file = vm.audioFile
+                val context = vm.context
+                if (question != null) {
+                    qc.verifySubmitAnswer(answerText = vm.textAnswer,question.questionID, file, context ,question.hasVoice,question.hasText)
+                }
+
                       },
             modifier = Modifier
                 .height(50.dp)

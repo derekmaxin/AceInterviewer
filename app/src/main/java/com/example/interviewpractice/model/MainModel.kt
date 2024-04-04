@@ -142,8 +142,11 @@ class MainModel() : Presenter() {
     }
 
     suspend fun addAnsweredQuestion(question: AnsweredQuestion) {
-        db.collection("answered").add(question).await()
+        val document = db.collection("answered").add(question).await()
+        if (question.audioURI != "") uploadAudio(question.audioURI,document.id)
+        invalidate(FetchType.HISTORY)
         Log.d(TAG,"addAnsweredQuestion:success")
+
     }
 
 
@@ -152,7 +155,6 @@ class MainModel() : Presenter() {
         //Add review itself
         db.collection("reviews").add(review).await()
         //TODO: invalidate reviews
-        Log.d(TAG,"addReview::success")
 
 
         //Add notification
@@ -163,6 +165,8 @@ class MainModel() : Presenter() {
             review.answeredQuestionAuthorID)
         db.collection("notifications").add(notification).await()
         invalidate(FetchType.NOTIFICATION)
+        invalidate(FetchType.HISTORY)
+        Log.d(TAG,"addReview::success")
     }
 
     suspend fun searchQuestion(queryText: String,filters: List<Tag> = emptyList(),self:Boolean=false) {
@@ -275,6 +279,22 @@ class MainModel() : Presenter() {
         notifySubscribers()
     }
 
+    suspend fun uploadAudio(audioURI: String,aqid:String){
+        val storageRef = storage.reference.child("audio_recordings/${aqid}")
+        val uploadTask = storageRef.putFile(Uri.parse(audioURI))
+        uploadTask.addOnSuccessListener {
+            // Audio uploaded successfully
+            // You can get the download URL here and save it to Firestore or Realtime Database
+            storageRef.downloadUrl.addOnSuccessListener { uri ->
+                val downloadUrl = uri.toString()
+                // Save downloadUrl to Firestore or Realtime Database
+                Log.d("AUDIO URL", "$downloadUrl")
+            }
+        }.addOnFailureListener {
+            // Handle failure
+        }
+    }
+
     //------------[TEST METHODS]------------
     suspend fun boost() {
         val uid = auth.currentUser?.uid
@@ -359,6 +379,7 @@ class MainModel() : Presenter() {
             for (document in query) {
                 val entry: AnsweredQuestion = document.toObject<AnsweredQuestion>()
 
+
                 //GET CLARITY
                 val reviewRef = db.collection("reviews")
                     .whereEqualTo("answeredQuestionID", document.id)
@@ -415,24 +436,6 @@ class MainModel() : Presenter() {
 //        }
 //    }
 
-
-    suspend fun uploadAudio(audioFile: File, context: Context){
-        val storageRef = storage.reference.child("audio_recordings/${audioFile.name}")
-
-        val fileUri = FileProvider.getUriForFile(context, context.packageName + ".provider", audioFile)
-        val uploadTask = storageRef.putFile(fileUri)
-        uploadTask.addOnSuccessListener {
-            // Audio uploaded successfully
-            // You can get the download URL here and save it to Firestore or Realtime Database
-            storageRef.downloadUrl.addOnSuccessListener { uri ->
-                val downloadUrl = uri.toString()
-                // Save downloadUrl to Firestore or Realtime Database
-                Log.d("AUDIO URL", "$downloadUrl")
-            }
-        }.addOnFailureListener {
-            // Handle failure
-        }
-    }
 
     companion object {
         private const val TAG = "MainModel"

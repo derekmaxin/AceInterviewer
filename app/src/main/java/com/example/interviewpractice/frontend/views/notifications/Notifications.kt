@@ -5,11 +5,17 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.interviewpractice.controller.NotificationController
 import com.example.interviewpractice.frontend.components.notification.ConcreteNotificationGroupViewModel
@@ -43,6 +49,15 @@ fun Notifications(mm: MainModel, c: NotificationController) {
         ) {
             if (vm.newReviewNotification.isNotEmpty()) {
                 NotificationGroup("You have new reviews on your answers!", vm.newReviewNotification)
+            }
+            else {
+                Text("No new notifications!",
+                    style = TextStyle(
+                        fontSize = 20.sp,
+                        color = Color.Black,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center
+                    ))
             }
 
 //            for (group in viewModel.notifications.value) {
