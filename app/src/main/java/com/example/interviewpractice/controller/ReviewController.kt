@@ -6,7 +6,6 @@ import com.example.interviewpractice.model.AuthModel
 import com.example.interviewpractice.model.MainModel
 import com.example.interviewpractice.types.AnsweredQuestion
 import com.example.interviewpractice.types.Review
-import com.example.interviewpractice.types.ReviewScore
 import com.example.interviewpractice.types.UserException
 
 class ReviewController(mm: MainModel, am: AuthModel): Controller(mm,am, TAG) {
@@ -16,7 +15,7 @@ class ReviewController(mm: MainModel, am: AuthModel): Controller(mm,am, TAG) {
             verifyGenericString(reviewText,"Review text")
             verifyScore(clarity,understanding)
 
-            val review = Review(am.getUserID(),answeredQuestion.questionID, answeredQuestion.userID,reviewText, ReviewScore(understanding,clarity),
+            val review = Review(am.getUserID(),answeredQuestion.questionID, answeredQuestion.userID,reviewText, understanding,clarity,
                 getCurrentDate())
 
             mm.addReview(review)

@@ -282,30 +282,29 @@ class MainModel() : Presenter() {
         if (noCache(FetchType.HISTORY)) {
             val questionRef = db.collection("answered")
                 .whereEqualTo("userID", currentUser )
-                .whereGreaterThanOrEqualTo("date",from)
-                .whereLessThanOrEqualTo("date",to)
+//                .whereGreaterThanOrEqualTo("date",from)
+//                .whereLessThanOrEqualTo("date",to)
                 .orderBy("date",Query.Direction.DESCENDING)
 
             val query = questionRef.get().await()
+            Log.d(TAG,"History data: $query")
             historyHeatData.clear()
             historyChartData.clear()
             for (document in query) {
                 val entry: AnsweredQuestion = document.toObject<AnsweredQuestion>()
 
                 //GET CLARITY
-                val clarityRef = db.collection("reviews")
+                val reviewRef = db.collection("reviews")
                     .whereEqualTo("answeredQuestionID", entry.answeredQuestionID)
-                    .aggregate(AggregateField.average("reviewScore.clarity"))
-                val clarityQuery = clarityRef.get(AggregateSource.SERVER).await()
-                var clarityData = clarityQuery.get(AggregateField.average("clarity"))
+                    .aggregate(
+                        AggregateField.average("clarity"),
+                        AggregateField.average("understanding")
+                    )
+                val reviewQuery = reviewRef.get(AggregateSource.SERVER).await()
+                var clarityData = reviewQuery.get(AggregateField.average("clarity"))
                 if (clarityData == null) clarityData = 0.0
 
-                //GET UNDERSTANDING
-                val understandingRef = db.collection("reviews")
-                    .whereEqualTo("answeredQuestionID", entry.answeredQuestionID)
-                    .aggregate(AggregateField.average("reviewScore.clarity"))
-                val understandingQuery = clarityRef.get(AggregateSource.SERVER).await()
-                var understandingData = understandingQuery.get(AggregateField.average("understanding"))
+                var understandingData = reviewQuery.get(AggregateField.average("understanding"))
                 if (understandingData == null) understandingData = 0.0
 
                 val reviewScores = listOf(Pair("clarity",clarityData),Pair("understanding",understandingData))
@@ -319,6 +318,7 @@ class MainModel() : Presenter() {
                 }
             }
         }
+        Log.d(TAG,"this is the historyChartData: $historyChartData")
         notifySubscribers()
 
     }
@@ -342,8 +342,8 @@ class MainModel() : Presenter() {
             FetchType.SEARCH-> false
             FetchType.RECOMMENDATION->false
             FetchType.RESETUSER->true
-            FetchType.NOTIFICATION->false
-            FetchType.HISTORY -> false
+            FetchType.NOTIFICATION->(notificationCount == 0)
+            FetchType.HISTORY -> (historyChartData.isEmpty())
         }
     }
     val userQuestions = mutableListOf<Question>()

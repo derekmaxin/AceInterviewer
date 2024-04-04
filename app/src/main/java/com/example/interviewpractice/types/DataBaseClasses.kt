@@ -44,13 +44,9 @@ data class Review(
     val answeredQuestionID: String = "", //The answered question this review refers to
     val answeredQuestionAuthorID: String = "", //The id of the person who answered this question
     val reviewText: String = "", //What the review says
-    val reviewScore: ReviewScore = ReviewScore(),
-    val date: Date = Date()
-)
-
-data class ReviewScore(
     val understanding: Int = 1, //Understanding score, out of 5
-    val clarity: Int = 1 //Clarity score, out of 5
+    val clarity: Int = 1, //Clarity score, out of 5
+    val date: Date = Date()
 )
 
 data class AnsweredQuestion(

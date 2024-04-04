@@ -8,7 +8,6 @@ import com.example.interviewpractice.types.AnsweredQuestion
 import com.example.interviewpractice.types.ErrorType
 import com.example.interviewpractice.types.Question
 import com.example.interviewpractice.types.Review
-import com.example.interviewpractice.types.ReviewScore
 import com.example.interviewpractice.types.Tag
 import com.example.interviewpractice.types.UIError
 import com.example.interviewpractice.types.UserException
@@ -88,7 +87,8 @@ class QuestionController(mm: MainModel, am: AuthModel): Controller(mm,am, TAG) {
                 "ID2",
                 am.getUserID(),
                 "HORRIBLE ANSWER",
-                ReviewScore(1,1),
+                1,
+                1,
                 getCurrentDate()
 
             )
@@ -97,7 +97,8 @@ class QuestionController(mm: MainModel, am: AuthModel): Controller(mm,am, TAG) {
                 "ID2",
                 am.getUserID(),
                 "AWESOME ANSWER",
-                ReviewScore(5,4),
+                5,
+                4,
                 getCurrentDate()
 
             )

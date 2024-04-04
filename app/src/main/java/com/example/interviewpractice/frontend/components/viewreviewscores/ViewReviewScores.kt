@@ -26,7 +26,6 @@ import com.example.interviewpractice.frontend.components.review.Review
 import com.example.interviewpractice.frontend.components.review.ReviewScoreComponent
 import com.example.interviewpractice.frontend.components.review.ReviewViewModel
 import com.example.interviewpractice.types.History
-import com.example.interviewpractice.types.ReviewScore
 import kotlin.math.floor
 
 
@@ -43,7 +42,7 @@ fun ViewReviewScores(history: History) {
 
 
             Text(
-                text = "What is the square root of 289? Is this number prime?",
+                text = history.questionText,
                 style = MaterialTheme.typography.bodyLarge,
             )
             HorizontalDivider(thickness = 1.dp, color = Color.LightGray)
