@@ -1,5 +1,6 @@
 package com.example.interviewpractice.controller
 
+import android.content.Context
 import android.util.Log
 import com.example.interviewpractice.helpers.getCurrentDate
 import com.example.interviewpractice.helpers.verifyGenericString
@@ -16,6 +17,7 @@ import com.google.firebase.FirebaseException
 import com.google.firebase.firestore.FirebaseFirestoreException
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
+import java.io.File
 import java.util.Calendar
 
 class QuestionController(mm: MainModel, am: AuthModel): Controller(mm,am, TAG) {
@@ -158,6 +160,11 @@ class QuestionController(mm: MainModel, am: AuthModel): Controller(mm,am, TAG) {
         }
     }
 
+    fun uploadAudio(audioFile : File, context: Context){
+        handler("uploadAudio",false) {
+            mm.uploadAudio(audioFile, context)
+        }
+    }
 //    private fun getCurrDate(): String {
 //        val calendar = Calendar.getInstance()
 //        val year = calendar.get(Calendar.YEAR)
