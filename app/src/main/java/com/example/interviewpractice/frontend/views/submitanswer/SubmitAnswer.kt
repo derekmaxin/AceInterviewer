@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import com.example.interviewpractice.controller.QuestionController
+import com.example.interviewpractice.frontend.views.answerquestion.AnswerQuestionViewModel
 import java.io.File
 import java.io.IOException
 import java.util.UUID
@@ -29,12 +30,14 @@ class AudioRecord(private val context: Context) {
 
 
     @RequiresApi(Build.VERSION_CODES.S)
-    fun onRecord(start: Boolean, qc: QuestionController) = if (start) {
-        Log.d("RECORDER", "Started Recording")
-        startRecording()
-    } else {
-        Log.d("RECORDER", "Stopped Recording")
-        stopRecording(qc)
+    fun onRecord(start: Boolean, qc: QuestionController, vm: AnswerQuestionViewModel) {
+        if (start) {
+            Log.d("RECORDER", "Started Recording")
+            startRecording()
+        } else {
+            Log.d("RECORDER", "Stopped Recording")
+            stopRecording(qc, vm)
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.S)
@@ -57,7 +60,7 @@ class AudioRecord(private val context: Context) {
         }
     }
 
-    private fun stopRecording(qc: QuestionController) {
+    private fun stopRecording(qc: QuestionController, vm: AnswerQuestionViewModel) {
         recorder?.apply {
             try {
                 stop()
@@ -77,8 +80,10 @@ class AudioRecord(private val context: Context) {
 
         val audioFile = File(outputFile.absolutePath)
         if (audioFile.exists()) {
-            qc.uploadAudio(audioFile, context)
-            Log.d("RECORDER", "Audio file exists and uploaded: ${audioFile.absolutePath}")
+            vm.audioFile = audioFile
+            vm.context = context
+//            qc.uploadAudio(audioFile, context)
+            Log.d("RECORDER", "Audio file saved: ${audioFile.absolutePath}")
         } else {
             Log.e("RECORDER", "Audio file does not exist: ${audioFile.absolutePath}")
         }
@@ -88,7 +93,7 @@ class AudioRecord(private val context: Context) {
 
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable
-fun SubmitAnswer(qc: QuestionController) {
+fun SubmitAnswer(qc: QuestionController,vm: AnswerQuestionViewModel) {
     val launcher =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
             if (isGranted) {
@@ -114,7 +119,7 @@ fun SubmitAnswer(qc: QuestionController) {
                     context,
                     Manifest.permission.RECORD_AUDIO
                 ) -> {
-                    recorder.onRecord(onRecord, qc)
+                    recorder.onRecord(onRecord, qc, vm)
                     onRecord = !onRecord
                 }
 

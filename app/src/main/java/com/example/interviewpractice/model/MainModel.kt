@@ -142,7 +142,8 @@ class MainModel() : Presenter() {
     }
 
     suspend fun addAnsweredQuestion(question: AnsweredQuestion) {
-        db.collection("answered").add(question).await()
+        val document = db.collection("answered").add(question).await()
+        if (question.audioURI != Uri.parse("")) uploadAudio(question.audioURI,document.id)
         Log.d(TAG,"addAnsweredQuestion:success")
     }
 
@@ -416,11 +417,9 @@ class MainModel() : Presenter() {
 //    }
 
 
-    suspend fun uploadAudio(audioFile: File, context: Context){
-        val storageRef = storage.reference.child("audio_recordings/${audioFile.name}")
-
-        val fileUri = FileProvider.getUriForFile(context, context.packageName + ".provider", audioFile)
-        val uploadTask = storageRef.putFile(fileUri)
+    suspend fun uploadAudio(audioURI: Uri,aqid:String){
+        val storageRef = storage.reference.child("audio_recordings/${aqid}")
+        val uploadTask = storageRef.putFile(audioURI)
         uploadTask.addOnSuccessListener {
             // Audio uploaded successfully
             // You can get the download URL here and save it to Firestore or Realtime Database

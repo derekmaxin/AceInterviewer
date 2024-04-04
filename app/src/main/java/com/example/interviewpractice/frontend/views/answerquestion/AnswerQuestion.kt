@@ -78,10 +78,20 @@ fun AnswerScreen(mm: MainModel, qc: QuestionController ) {
         ) {
             val question = vm.currentQuestion
             if (question == null || vm.localLoading) Loader()
-            else Question(question) {}
+            else {
+                Question(question) {}
+                if (question.hasText) {
+                    SimpleOutlinedTextField(vm)
+                }
 
-            SimpleOutlinedTextField(vm)
-            SubmitAnswer(qc = qc)
+
+                if (question.hasVoice) {
+                    SubmitAnswer(qc = qc, vm=vm)
+                }
+
+            }
+
+
         }
 
         Column (
@@ -108,8 +118,12 @@ fun AnswerScreen(mm: MainModel, qc: QuestionController ) {
         Button(
             onClick = {
                 val question = vm.currentQuestion
-                if (question != null)
-                    qc.verifySubmitAnswer(answerText = vm.textAnswer,question.questionID)
+                val file = vm.audioFile
+                val context = vm.context
+                if (question != null) {
+                    qc.verifySubmitAnswer(answerText = vm.textAnswer,question.questionID, file, context ,question.hasVoice,question.hasText)
+                }
+
                       },
             modifier = Modifier
                 .height(50.dp)

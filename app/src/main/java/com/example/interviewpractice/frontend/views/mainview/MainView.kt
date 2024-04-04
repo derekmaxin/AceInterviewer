@@ -1,6 +1,7 @@
 package com.example.interviewpractice.frontend.views.mainview
 
 import android.os.Build
+import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
@@ -122,6 +123,7 @@ fun MainView(
 
         }
         else {
+            Log.d("UNAUTH", "HERE")
             NavHost(navController = unc, startDestination = "login") {
                 composable("login") {
                     LoginScreen(c = ac, am=am) { unc.navigate("register") }
@@ -130,19 +132,10 @@ fun MainView(
                     RegisterScreen(am=am, c = ac)
                 }
             }
-            composable("question") {
-                SubmitAnswer(qc = QuestionController(am = am, mm = mm))
-            }
+            //composable("question") {
+            //    SubmitAnswer(qc = QuestionController(am = am, mm = mm))
+            //}
         }
-        NavBar(
-            goToReviews={anc.navigate("reviews")},
-            goToSearch={anc.navigate("search")},
-            goToHome={anc.navigate("home")},
-            goToNotifications={anc.navigate("notifications")},
-            goToProfile={anc.navigate("profile")},
-            goToQuestion={anc.navigate("question")},
-            nc=nc,
-            mm=mm)
 
         if (vm.loading) {
             LoadingOverlay()

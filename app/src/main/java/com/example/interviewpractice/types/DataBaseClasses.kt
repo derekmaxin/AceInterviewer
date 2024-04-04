@@ -1,7 +1,6 @@
 package com.example.interviewpractice.types
 
-import com.example.interviewpractice.frontend.components.playbar.PlayBarViewModel
-import com.example.interviewpractice.frontend.components.question.QuestionViewModel
+import android.net.Uri
 import java.util.Date
 
 //Add more user fields here, like birthday, first/last name, photo url?, etc
@@ -52,7 +51,7 @@ data class Review(
 data class AnsweredQuestion(
     val userID: String = "", //Who answered the question
     val textResponse: String = "",
-//    val audioResponse: ?? //Some sort of link to the Google Cloud storage
+    val audioURI: Uri = Uri.parse(""), //Some sort of link to the Google Cloud storage
     val audioTime: Int = 0, //In seconds
     val isPrivate: Boolean = false,
     val questionID: String = "",
