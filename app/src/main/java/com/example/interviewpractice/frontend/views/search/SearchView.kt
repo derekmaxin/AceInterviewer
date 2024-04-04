@@ -34,6 +34,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.AbsoluteAlignment
 import androidx.compose.ui.Alignment
@@ -51,17 +52,25 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.interviewpractice.controller.QuestionController
 import com.example.interviewpractice.frontend.components.Loader
 import com.example.interviewpractice.frontend.components.question.Question
+import com.example.interviewpractice.frontend.views.mainview.Router
+import com.example.interviewpractice.helpers.navToQuestion
 import com.example.interviewpractice.model.MainModel
 import com.example.interviewpractice.types.FetchType
 import com.example.interviewpractice.types.Tag
 
 @Composable
 //@Preview
-fun SearchView(c: QuestionController, mm: MainModel, goToMakeQuestion: () -> Unit) {
+fun SearchView(c: QuestionController, mm: MainModel, r: Router) {
     val vm: SearchViewModel = viewModel()
-    vm.addModel(mm)
+
     LaunchedEffect(Unit){
+        vm.addModel(mm)
         c.fetchData(FetchType.SEARCH)
+    }
+    DisposableEffect(Unit) {
+        onDispose {
+            vm.unsubscribe()
+        }
     }
 
     Surface() {
@@ -75,7 +84,7 @@ fun SearchView(c: QuestionController, mm: MainModel, goToMakeQuestion: () -> Uni
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Button(
-                onClick = {/*c.dummyData()*/ },
+                onClick = {c.dummyData()},
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp)
@@ -193,7 +202,7 @@ fun SearchView(c: QuestionController, mm: MainModel, goToMakeQuestion: () -> Uni
                 color = Color.Black,
             ))
             Button(
-                onClick = { goToMakeQuestion() },
+                onClick = { r.goToMakeQuestion() },
                 modifier = Modifier
                     .height(50.dp)
                     .padding(vertical = 4.dp)
@@ -208,12 +217,11 @@ fun SearchView(c: QuestionController, mm: MainModel, goToMakeQuestion: () -> Uni
             // TODO: Render clickable questions components on search, collab with ryan,
             // also remove "dummy data dump" button
             val scrollState = rememberScrollState()
-
+            Spacer(modifier = Modifier.height(8.dp))
             Column(modifier = Modifier.verticalScroll(scrollState)) {
                 if (vm.localLoading) Loader()
                 for (question in vm.searchResults) {
-
-                    Question(question) { c.boost() }
+                    Question(question) { navToQuestion(r.goToAnswerQuestion,question,c) }
                     Spacer(modifier = Modifier.padding(4.dp))
                 }
             }
@@ -274,7 +282,7 @@ fun FilterOptions(vm: SearchViewModel = viewModel(), c: QuestionController) {
                                 if (vm.currentlyFilteredBy.contains(Tag.BIOLOGY))
                                     vm.currentlyFilteredBy.remove(Tag.BIOLOGY)
                                 else vm.currentlyFilteredBy.add(Tag.BIOLOGY)
-                                search()
+
                             },
                             label = { Text("Biology") })
                         FilterChip(
@@ -283,7 +291,7 @@ fun FilterOptions(vm: SearchViewModel = viewModel(), c: QuestionController) {
                                 if (vm.currentlyFilteredBy.contains(Tag.ENGLISH))
                                     vm.currentlyFilteredBy.remove(Tag.ENGLISH)
                                 else vm.currentlyFilteredBy.add(Tag.ENGLISH)
-                                search()
+
                             },
                             label = { Text("English") })
                         FilterChip(
@@ -292,7 +300,7 @@ fun FilterOptions(vm: SearchViewModel = viewModel(), c: QuestionController) {
                                 if (vm.currentlyFilteredBy.contains(Tag.CHEMISTRY))
                                     vm.currentlyFilteredBy.remove(Tag.CHEMISTRY)
                                 else vm.currentlyFilteredBy.add(Tag.CHEMISTRY)
-                                search()
+
                             },
                             label = { Text("Chemistry") })
                         FilterChip(
@@ -301,7 +309,7 @@ fun FilterOptions(vm: SearchViewModel = viewModel(), c: QuestionController) {
                                 if (vm.currentlyFilteredBy.contains(Tag.ART))
                                     vm.currentlyFilteredBy.remove(Tag.ART)
                                 else vm.currentlyFilteredBy.add(Tag.ART)
-                                search()
+
                             },
                             label = { Text("Art") })
                         FilterChip(
@@ -310,7 +318,7 @@ fun FilterOptions(vm: SearchViewModel = viewModel(), c: QuestionController) {
                                 if (vm.currentlyFilteredBy.contains(Tag.CS))
                                     vm.currentlyFilteredBy.remove(Tag.CS)
                                 else vm.currentlyFilteredBy.add(Tag.CS)
-                                search()
+
                             },
                             label = { Text("Computer Science") })
                         FilterChip(
@@ -319,7 +327,7 @@ fun FilterOptions(vm: SearchViewModel = viewModel(), c: QuestionController) {
                                 if (vm.currentlyFilteredBy.contains(Tag.MATH))
                                     vm.currentlyFilteredBy.remove(Tag.MATH)
                                 else vm.currentlyFilteredBy.add(Tag.MATH)
-                                search()
+
                             },
                             label = { Text("Math") })
                         FilterChip(
@@ -328,7 +336,7 @@ fun FilterOptions(vm: SearchViewModel = viewModel(), c: QuestionController) {
                                 if (vm.currentlyFilteredBy.contains(Tag.FINANCE))
                                     vm.currentlyFilteredBy.remove(Tag.FINANCE)
                                 else vm.currentlyFilteredBy.add(Tag.FINANCE)
-                                search()
+
                             },
                             label = { Text("Finance") })
                         FilterChip(
@@ -337,7 +345,7 @@ fun FilterOptions(vm: SearchViewModel = viewModel(), c: QuestionController) {
                                 if (vm.currentlyFilteredBy.contains(Tag.PHYSICS))
                                     vm.currentlyFilteredBy.remove(Tag.PHYSICS)
                                 else vm.currentlyFilteredBy.add(Tag.PHYSICS)
-                                search()
+
                             },
                             label = { Text("Physics") })
                         FilterChip(
@@ -346,7 +354,6 @@ fun FilterOptions(vm: SearchViewModel = viewModel(), c: QuestionController) {
                                 if (vm.currentlyFilteredBy.contains(Tag.BUSINESS))
                                     vm.currentlyFilteredBy.remove(Tag.BUSINESS)
                                 else vm.currentlyFilteredBy.add(Tag.BUSINESS)
-                                search()
                             },
                             label = { Text("Business") })
                     }

@@ -3,8 +3,10 @@ package com.example.interviewpractice.controller
 import android.util.Log
 import com.example.interviewpractice.model.AuthModel
 import com.example.interviewpractice.model.MainModel
+import com.example.interviewpractice.types.CatastrophicException
 import com.example.interviewpractice.types.ErrorType
 import com.example.interviewpractice.types.FetchType
+import com.example.interviewpractice.types.SystemException
 import com.example.interviewpractice.types.UIError
 import com.example.interviewpractice.types.UserException
 import com.google.firebase.FirebaseException
@@ -12,15 +14,22 @@ import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.firestore.FirebaseFirestoreException
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
+import java.util.Calendar
+import java.util.Date
 
 open class Controller(protected val mm: MainModel, protected val am: AuthModel, protected val TAG: String) {
 
     fun fetchData(ft: FetchType) {
-        handler("fetchData.${ft}",mm.noCache(ft)) {
+        val uid: String = am.getUserID()
+        handler("fetchData.${ft}",!mm.check(ft)) {
             when (ft) {
                 FetchType.PROFILE->mm.getCurrentUserData()
-                FetchType.LEADERBOARD->mm.getLeaderBoardData()
-                FetchType.SEARCH->mm.refresh()
+                FetchType.LEADERBOARD->mm.getLeaderboardData()
+                FetchType.SEARCH->{
+                    if (mm.check(FetchType.SEARCH)) mm.notifySubscribers()
+                    else mm.searchQuestion("")
+
+                }
                 FetchType.RECOMMENDATION-> {
                     if (mm.homePageRecommendations == null) {
                         mm.searchQuestion("",self=true)
@@ -28,8 +37,21 @@ open class Controller(protected val mm: MainModel, protected val am: AuthModel, 
 
                     mm.notifySubscribers()
                 }
-                FetchType.RESETUSER->mm.reset()
-                FetchType.NOTIFICATION->mm.getNotificationData()
+                FetchType.INIT->mm.reset()
+                FetchType.NOTIFICATION->mm.getNotificationData(uid)
+                FetchType.HISTORY->{
+                    val calendar = Calendar.getInstance()
+                    calendar.set(Calendar.DATE, 1)
+                    calendar.set(Calendar.HOUR_OF_DAY, 0);
+                    calendar.set(Calendar.MINUTE, 0);
+                    calendar.set(Calendar.SECOND, 0);
+
+                    val from: Date = calendar.time
+                    mm.getHistoryData(from,Date(),uid)
+                }
+                FetchType.QUESTION->mm.getQuestionData()
+
+
             }
         }
     }
@@ -62,13 +84,12 @@ open class Controller(protected val mm: MainModel, protected val am: AuthModel, 
                 am.error = UIError(ex.toString(), ErrorType.CATASTROPHIC)
                 Log.wtf(TAG, "$functionName:catastrophicFailure", ex)
 
-                //Log user out to prevent further damage
-                am.logout()
+                //Invalidate caches to prevent damage
+                mm.invalidateAll()
 
             } finally {
                 //Stop loading after we finished our task
                 if (requiresLoad) am.loading = false else mm.localLoading = false
-
             }
         }
     }

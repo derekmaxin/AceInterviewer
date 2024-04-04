@@ -4,9 +4,12 @@ import android.content.Context
 import android.net.Uri
 import android.util.Log
 import androidx.core.content.FileProvider
+import com.example.interviewpractice.helpers.getCurrentDate
+import com.example.interviewpractice.types.AnsweredQuestion
 import com.example.interviewpractice.types.CatastrophicException
 import com.example.interviewpractice.types.Collections
 import com.example.interviewpractice.types.FetchType
+import com.example.interviewpractice.types.History
 import com.example.interviewpractice.types.Notification
 import com.example.interviewpractice.types.NotificationType
 import com.example.interviewpractice.types.Question
@@ -15,15 +18,19 @@ import com.example.interviewpractice.types.Tag
 import com.example.interviewpractice.types.User
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
+import com.google.firebase.firestore.AggregateField
+import com.google.firebase.firestore.AggregateSource
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.toObject
 import com.google.firebase.storage.storage
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.tasks.await
 import java.io.File
 import java.io.InputStream
+import java.util.Date
 import java.util.UUID
 
 class MainModel() : Presenter() {
@@ -35,6 +42,7 @@ class MainModel() : Presenter() {
     var localLoading: Boolean = false
         set(value) {
             field = value
+            Log.d(TAG, "Updated LOCAL loading state: $localLoading")
             notifySubscribers()
         }
 
@@ -45,14 +53,53 @@ class MainModel() : Presenter() {
 //        notifySubscribers()
 //    }
 
+    var isCached = mutableMapOf<FetchType,Boolean>()
+
+    fun invalidateAll() {
+
+        FetchType.entries.forEach {
+            isCached[it] = false
+        }
+    }
+
+    private fun invalidate(ft: FetchType) {
+        if (ft == FetchType.QUESTION) {
+            isCached[ft] = true
+        }
+        else {
+            isCached[ft] = false
+        }
+
+    }
+
+    fun check(ft: FetchType): Boolean {
+        return isCached.getValue(ft)
+    }
+
+    //FetchType:
+
+    //SEARCH
     var searchResults = mutableListOf<Question>()
+
+    //LEADERBOARD
     var leaderBoardStandings = mutableListOf<User>()
+
+    //RECOMMENDATION
     var homePageRecommendations: Question? = null
 
+    //HISTORY
+    var historyHeatData = mutableMapOf<Date,Int>()
+    var historyChartData = mutableListOf<History>()
+
+    //NOTIFICATION
     var newReviewNotifications = mutableListOf<Notification>()
     var notificationCount = 0
 
+    //PROFILE
     var user: User? = null
+
+    //QUESTION
+    var currentQuestionData: Question? = null
 
     //USER FUNCTIONS
     suspend fun addUserPfp(userID: String, uri: Uri, context: Context){
@@ -94,9 +141,17 @@ class MainModel() : Presenter() {
         Log.d(TAG,"addQuestion:success")
     }
 
+    suspend fun addAnsweredQuestion(question: AnsweredQuestion) {
+        db.collection("answered").add(question).await()
+        Log.d(TAG,"addAnsweredQuestion:success")
+    }
+
+
+
     suspend fun addReview(review: Review) {
         //Add review itself
         db.collection("reviews").add(review).await()
+        //TODO: invalidate reviews
         Log.d(TAG,"addReview::success")
 
 
@@ -107,11 +162,12 @@ class MainModel() : Presenter() {
             review.answeredQuestionID,
             review.answeredQuestionAuthorID)
         db.collection("notifications").add(notification).await()
+        invalidate(FetchType.NOTIFICATION)
     }
 
-    suspend fun searchQuestion(queryText: String,filters: Set<Tag> = emptySet(),self:Boolean=false) {
+    suspend fun searchQuestion(queryText: String,filters: List<Tag> = emptyList(),self:Boolean=false) {
         val questionsRef = db.collection("questions")
-        var filty = filters.toList()
+        var filty = filters
 
         if (self) {
             var currUser = user
@@ -152,11 +208,15 @@ class MainModel() : Presenter() {
             }
             else {
                 homePageRecommendations = Question("We have no questions in your field of interest!",
-                    emptyList(),false,false,false,"")
+                    emptyList(),false,false,false,"", getCurrentDate(), emptyList()
+                )
             }
 
         }
+        isCached[FetchType.SEARCH] = true
         notifySubscribers()
+
+
     }
 
     fun addNotificationListener(currentUserID: String) {
@@ -185,108 +245,18 @@ class MainModel() : Presenter() {
                         }
                         notificationCount += 1
 
-                        notifySubscribers()
+
                         Log.d(TAG, "New Notification: ${dc.document.data}")
                     }
                     DocumentChange.Type.MODIFIED -> {
                         //MIGHT NEED TO CHANGE
                         Log.d(TAG, "Notification changed: ${dc.document.data}")
                     }
-                    DocumentChange.Type.REMOVED -> Log.d(TAG, "Notification read: ${dc.document.data}")
+                    DocumentChange.Type.REMOVED -> Log.d(TAG, "Notification removed: ${dc.document.data}")
                 }
             }
-        }
-    }
-
-    //------------[TEST METHODS]------------
-    suspend fun boost() {
-        val uid = auth.currentUser?.uid
-        if (uid != null) {
-            val userRef = db.collection("users").document(uid)
-            // Atomically increment the population of the city by 50.
-            userRef.update("questionsAnswered", FieldValue.increment(1))
-
-            leaderBoardStandings.clear()
             notifySubscribers()
-        }
-        else {
-            throw CatastrophicException("No uid for signed in user")
-        }
-    }
-
-    //------------[FETCH METHODS]------------
-    suspend fun getCurrentUserData() {
-        if (noCache(FetchType.PROFILE)) {
-            val uid = auth.currentUser?.uid
-            Log.d(TAG,"APPARENT USER: ${auth.currentUser?.email}")
-            if (uid != null) {
-                val userDoc = db.collection("users").document(uid)
-                val query = userDoc.get().await()
-
-                user = query.toObject<User>()
-                Log.d(TAG,"APPARENT CURRENT USER: ${user.toString()}")
-            }
-            else {
-                throw CatastrophicException("No uid for signed in user")
-            }
-        }
-        notifySubscribers()
-    }
-
-    suspend fun getLeaderBoardData() {
-        if (noCache(FetchType.LEADERBOARD)) {
-            val usersRef = db.collection("users")
-            val query = usersRef.orderBy("questionsAnswered", Query.Direction.DESCENDING).limit(10).get().await()
-            leaderBoardStandings.clear()
-            for (user in query) {
-                Log.d(TAG, "QUERY ${user.id} => ${user.data}")
-                leaderBoardStandings.add(user.toObject<User>())
-            }
-            Log.d(TAG,"TOP QUERY: $leaderBoardStandings")
-
-            val emptyUser = User(username ="None", questionsAnswered = 0)
-
-            while(leaderBoardStandings.size < 10) {
-                leaderBoardStandings.add(emptyUser)
-            }
-        }
-        notifySubscribers()
-
-    }
-    suspend fun getNotificationData() {
-        if (noCache(FetchType.NOTIFICATION)) {
-            val notificationRef = db.collection("notifications")
-            val query = notificationRef.get().await()
-            for (notification in query) {
-                //ASSUME ONLY NEW REVIEW NOTIFICATIONS FOR NOW
-                newReviewNotifications.add(notification.toObject<Notification>())
-
-            }
-        }
-        notifySubscribers()
-
-    }
-    fun refresh() {
-        notifySubscribers()
-    }
-    fun reset() {
-        user = null
-        searchResults.clear()
-        leaderBoardStandings.clear()
-        homePageRecommendations = null
-        notificationCount = 0
-        newReviewNotifications.clear()
-        notifySubscribers()
-    }
-
-    fun noCache(ft: FetchType): Boolean {
-        return when (ft) {
-            FetchType.PROFILE-> (user == null)
-            FetchType.LEADERBOARD-> (leaderBoardStandings.isEmpty())
-            FetchType.SEARCH-> false
-            FetchType.RECOMMENDATION->false
-            FetchType.RESETUSER->true
-            FetchType.NOTIFICATION->false
+            invalidate(FetchType.NOTIFICATION)
         }
     }
     val userQuestions = mutableListOf<Question>()
@@ -304,6 +274,147 @@ class MainModel() : Presenter() {
         }
         notifySubscribers()
     }
+
+    //------------[TEST METHODS]------------
+    suspend fun boost() {
+        val uid = auth.currentUser?.uid
+        if (uid != null) {
+            val userRef = db.collection("users").document(uid)
+            // Atomically increment the population of the city by 50.
+            userRef.update("questionsAnswered", FieldValue.increment(1))
+
+            leaderBoardStandings.clear()
+            notifySubscribers()
+            invalidate(FetchType.LEADERBOARD)
+        }
+        else {
+            throw CatastrophicException("No uid for signed in user")
+        }
+    }
+
+
+
+    //------------[FETCH METHODS]------------
+    suspend fun getCurrentUserData() {
+        fetch(FetchType.PROFILE) {
+            val uid = auth.currentUser?.uid
+            if (uid != null) {
+                val userDoc = db.collection("users").document(uid)
+                val query = userDoc.get().await()
+
+                user = query.toObject<User>()
+            }
+            else {
+                throw CatastrophicException("No uid for signed in user")
+            }
+        }
+    }
+    suspend fun getQuestionData() {
+        fetch(FetchType.QUESTION) {}
+    }
+
+    suspend fun getLeaderboardData() {
+        fetch(FetchType.LEADERBOARD) {
+            val usersRef = db.collection("users")
+            val query = usersRef.orderBy("questionsAnswered", Query.Direction.DESCENDING).limit(10).get().await()
+            leaderBoardStandings.clear()
+            for (user in query) {
+                leaderBoardStandings.add(user.toObject<User>())
+            }
+
+            //If there are not enough users
+            val emptyUser = User(username ="None", questionsAnswered = 0)
+
+            while(leaderBoardStandings.size < 10) {
+                leaderBoardStandings.add(emptyUser)
+            }
+        }
+    }
+    suspend fun getNotificationData(currentUser: String) {
+        fetch(FetchType.NOTIFICATION) {
+            val notificationRef = db.collection("notifications").whereEqualTo("userID",currentUser)
+            val query = notificationRef.get().await()
+            newReviewNotifications.clear()
+            notificationCount = 0
+            for (notification in query) {
+                //ASSUME ONLY NEW REVIEW NOTIFICATIONS FOR NOW
+                newReviewNotifications.add(notification.toObject<Notification>())
+                notificationCount+= 1
+            }
+        }
+    }
+    suspend fun getHistoryData(from: Date, to: Date, currentUser: String) {
+        fetch(FetchType.HISTORY) {
+            val questionRef = db.collection("answered")
+                .whereEqualTo("userID", currentUser )
+                .whereGreaterThanOrEqualTo("date",from)
+                .whereLessThanOrEqualTo("date",to)
+                .orderBy("date",Query.Direction.DESCENDING)
+
+            val query = questionRef.get().await()
+
+            historyHeatData.clear()
+            historyChartData.clear()
+
+            for (document in query) {
+                val entry: AnsweredQuestion = document.toObject<AnsweredQuestion>()
+
+                //GET CLARITY
+                val reviewRef = db.collection("reviews")
+                    .whereEqualTo("answeredQuestionID", document.id)
+                    .aggregate(
+                        AggregateField.average("clarity"),
+                        AggregateField.average("understanding")
+                    )
+                val reviewQuery = reviewRef.get(AggregateSource.SERVER).await()
+                var clarityData = reviewQuery.get(AggregateField.average("clarity"))
+                if (clarityData == null) clarityData = 0.0
+
+                var understandingData = reviewQuery.get(AggregateField.average("understanding"))
+                if (understandingData == null) understandingData = 0.0
+
+                val reviewScores = listOf(Pair("clarity",clarityData),Pair("understanding",understandingData))
+
+                val currentHistory: History = History(entry.textResponse,document.id,reviewScores,"")
+                historyChartData.add(currentHistory)
+                if (historyHeatData.containsKey(entry.date)) {
+                    historyHeatData[entry.date] = historyHeatData[entry.date]!! + 1
+                } else {
+                    historyHeatData[entry.date] = 1
+                }
+            }
+        }
+    }
+
+    private suspend fun fetch(ft: FetchType, func: suspend () -> Unit) {
+        if (!isCached.getValue(ft)) {
+            Log.d(TAG,"No cache found for ${ft}, fetching now...")
+            func()
+        }
+        else {
+            Log.d(TAG, "Found cache for $ft")
+        }
+        isCached[ft] = true
+        notifySubscribers()
+
+    }
+    fun reset() {
+        invalidateAll()
+        notifySubscribers()
+    }
+
+//    fun isCached.getValue(ft: FetchType): Boolean {
+//        return when (ft) {
+//            FetchType.PROFILE-> (user == null)
+//            FetchType.LEADERBOARD-> (leaderBoardStandings.isEmpty())
+//            FetchType.SEARCH-> false
+//            FetchType.RECOMMENDATION->false
+//            FetchType.RESETUSER->true
+//            FetchType.NOTIFICATION->(notificationCount == 0)
+//            FetchType.HISTORY -> true
+//        }
+//    }
+
 
     suspend fun uploadAudio(audioFile: File, context: Context){
         val storageRef = storage.reference.child("audio_recordings/${audioFile.name}")

@@ -5,12 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.example.interviewpractice.frontend.MMViewModel
-import com.example.interviewpractice.frontend.components.navbar.NavBarViewModel
-import com.example.interviewpractice.frontend.components.notification.NotificationGroup
-import com.example.interviewpractice.frontend.components.notification.NotificationGroupViewModel
-import com.example.interviewpractice.model.MainModel
 import com.example.interviewpractice.types.Notification
-import com.example.interviewpractice.types.Question
 
 class NotificationsViewModel(): MMViewModel() {
 

@@ -5,9 +5,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.example.interviewpractice.frontend.MMViewModel
-import com.example.interviewpractice.frontend.components.historychart.HistoryChartViewModel
-import com.example.interviewpractice.model.MainModel
-import com.example.interviewpractice.types.Question
 import com.example.interviewpractice.types.User
 
 class LeaderboardViewModel(): MMViewModel() {
@@ -16,8 +13,11 @@ class LeaderboardViewModel(): MMViewModel() {
     var topUsers by mutableStateOf<List<User>>(emptyList())
 
     override fun update() {
-        topUsers = model.leaderBoardStandings
-        Log.d(TAG, "Updated")
+        if (topUsers != model.leaderBoardStandings) {
+            topUsers = model.leaderBoardStandings
+            Log.d(TAG, "Updated leaderboard results")
+        }
+
     }
     companion object {
         private const val TAG = "ProfileViewModel"

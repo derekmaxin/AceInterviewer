@@ -4,8 +4,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.example.interviewpractice.frontend.MMViewModel
-import com.example.interviewpractice.frontend.Subscriber
-import com.example.interviewpractice.model.MainModel
 import com.example.interviewpractice.types.Tag
 
 class MakeQuestionViewModel(): MMViewModel() {

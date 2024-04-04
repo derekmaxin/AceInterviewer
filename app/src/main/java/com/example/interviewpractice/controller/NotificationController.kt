@@ -5,7 +5,6 @@ import com.example.interviewpractice.helpers.verifyGenericString
 import com.example.interviewpractice.model.AuthModel
 import com.example.interviewpractice.model.MainModel
 import com.example.interviewpractice.types.Review
-import com.example.interviewpractice.types.ReviewScore
 import com.example.interviewpractice.types.UserException
 
 class NotificationController(mm: MainModel, am: AuthModel): Controller(mm,am, TAG) {

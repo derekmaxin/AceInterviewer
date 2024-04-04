@@ -3,8 +3,6 @@ package com.example.interviewpractice.frontend.components.historychart
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import com.example.interviewpractice.frontend.MMViewModel
-import com.example.interviewpractice.model.AuthModel
-import com.example.interviewpractice.model.MainModel
 import java.time.LocalDate
 
 class HistoryChartViewModel(): MMViewModel() {

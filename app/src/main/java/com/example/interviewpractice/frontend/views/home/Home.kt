@@ -9,6 +9,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -31,26 +32,37 @@ import com.example.interviewpractice.frontend.components.playbar.PlayBar
 import com.example.interviewpractice.frontend.components.question.QuestionViewModel
 import com.example.interviewpractice.frontend.components.playbar.PlayBarViewModel
 import com.example.interviewpractice.frontend.components.question.DummyQuestion
+import com.example.interviewpractice.frontend.views.mainview.Router
+import com.example.interviewpractice.helpers.navToQuestion
 import com.example.interviewpractice.model.AuthModel
 import com.example.interviewpractice.model.MainModel
 import com.example.interviewpractice.types.FetchType
+import com.example.interviewpractice.types.Question
 
 @Composable
 //@Preview
 fun HomeScreen(
     c: AuthController,
-    mm: MainModel
+    mm: MainModel,
+    qc: QuestionController,
+    r: Router
 )
 {
     val scrollState = rememberScrollState()
 
     val vm: HomeViewModel = viewModel()
-    vm.addModel(mm)
     val playBarVM: PlayBarViewModel = viewModel()
-    playBarVM.addModel(mm)
+
     LaunchedEffect(Unit){
+        vm.addModel(mm)
+        playBarVM.addModel(mm)
         c.fetchData(FetchType.RECOMMENDATION)
-        Log.d("SEARCHVIEW","RERENDERED HOME!!!")
+    }
+    DisposableEffect(Unit) {
+        onDispose {
+            vm.unsubscribe()
+            playBarVM.unsubscribe()
+        }
     }
     Surface() {
         Column(
@@ -80,7 +92,9 @@ fun HomeScreen(
                 if (vm.algoResults == null || vm.localLoading) {
                     Loader()
                 } else {
-                    Question(q = vm.algoResults!!, {})
+                    Question(q = vm.algoResults!!) {
+                        navToQuestion(r.goToAnswerQuestion,vm.algoResults!!,qc)
+                    }
                 }
 
 

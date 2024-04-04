@@ -35,6 +35,8 @@ import com.example.interviewpractice.frontend.views.review.ReviewViewViewModel
 import com.example.interviewpractice.frontend.views.search.SearchViewModel
 import com.example.interviewpractice.model.MainModel
 import android.Manifest
+import android.util.Log
+import com.example.interviewpractice.controller.HistoryController
 import com.example.interviewpractice.controller.NotificationController
 import com.example.interviewpractice.controller.ReviewController
 
@@ -76,12 +78,14 @@ class MainActivity : ComponentActivity() {
     private lateinit var qc: QuestionController
     private lateinit var rc: ReviewController
     private lateinit var nc: NotificationController
+    private lateinit var hc: HistoryController
 
     private lateinit var aaa: BestQuestionsViewModel
 
 
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
+        Log.i("MainActivity","App started")
         super.onCreate(savedInstanceState)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
@@ -95,16 +99,21 @@ class MainActivity : ComponentActivity() {
 
         mainVM = MainViewModel()
         mainVM.addModel(authModel)
+
         authModel.initAuth()
+        mainModel.invalidateAll()
+
 
         ac = AuthController(mainModel,authModel)
         uc = UserController(mainModel,authModel)
         qc = QuestionController(mainModel,authModel)
         rc = ReviewController(mainModel,authModel)
         nc = NotificationController(mainModel,authModel)
+        hc = HistoryController(mainModel, authModel)
 
 
-        aaa = BestQuestionsViewModel(mainModel)
+        aaa = BestQuestionsViewModel()
+        aaa.addModel(mainModel)
 
 
 
@@ -121,6 +130,7 @@ class MainActivity : ComponentActivity() {
                         qc=qc,
                         rc=rc,
                         nc=nc,
+                        hc=hc,
                         bestQuestionsViewModel = aaa
                     )
                 }

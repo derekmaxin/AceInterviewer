@@ -19,7 +19,9 @@ open class MMViewModel(): ViewModel(), Subscriber {
             model.subscribe(this)
         }
 
-
+    }
+    override fun unsubscribe() {
+        model.unsubscribe(this)
     }
     override fun update() {
 
@@ -38,6 +40,9 @@ open class AMViewModel(): ViewModel(), Subscriber {
     override fun update() {
 
     }
+    override fun unsubscribe() {
+        m.unsubscribe(this)
+    }
 }
 
 open class LoaderMMViewModel(): ViewModel(), Subscriber {
@@ -53,9 +58,11 @@ open class LoaderMMViewModel(): ViewModel(), Subscriber {
     fun updateLoading() {
         if (localLoading != model.localLoading) {
             localLoading = model.localLoading
-            Log.d("LSubscriber", "Updated LOCAL loading state: $localLoading")
 
         }
+    }
+    override fun unsubscribe() {
+        model.unsubscribe(this)
     }
 
     override fun update() {
@@ -65,4 +72,5 @@ open class LoaderMMViewModel(): ViewModel(), Subscriber {
 
 interface Subscriber {
     fun update()
+    fun unsubscribe()
 }

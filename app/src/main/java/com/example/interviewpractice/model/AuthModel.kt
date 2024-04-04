@@ -3,6 +3,7 @@ package com.example.interviewpractice.model
 import android.util.Log
 import com.example.interviewpractice.types.User
 import com.example.interviewpractice.frontend.Subscriber
+import com.example.interviewpractice.frontend.views.mainview.MainViewModel
 import com.example.interviewpractice.types.CatastrophicException
 import com.example.interviewpractice.types.SystemException
 import com.example.interviewpractice.types.Tag
@@ -17,8 +18,6 @@ import java.util.Date
 
 class AuthModel: Presenter() {
     //Variables necessary to make the model work
-    //Subscribers here will ONLY be the xx
-    private val subscribers = mutableListOf<Subscriber>()
     private val auth = Firebase.auth
     private val db = Firebase.firestore
 
@@ -34,6 +33,7 @@ class AuthModel: Presenter() {
         set(value) {
             field = value
             notifySubscribers()
+            Log.d(TAG,"Updated GLOBAL loading state: loading -> $loading")
         }
     //error state
     var error: UIError? = null
@@ -44,10 +44,6 @@ class AuthModel: Presenter() {
 
     fun clearError() {
         error = null
-    }
-
-    fun refresh() {
-        notifySubscribers()
     }
     suspend fun createAccount(
         username: String, email: String, password: String, foi: Set<Tag>, birthday: Date
@@ -97,7 +93,6 @@ class AuthModel: Presenter() {
         setUserData(userData,current_user.uid)
 
         user = current_user
-        Log.d(TAG,"notifySystemSubscribers should have just been called")
         Log.d(TAG,"updateCurrentUser:success")
     }
 

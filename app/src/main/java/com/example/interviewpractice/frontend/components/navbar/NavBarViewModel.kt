@@ -5,7 +5,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.setValue
 import com.example.interviewpractice.frontend.MMViewModel
-import com.example.interviewpractice.frontend.views.search.SearchViewModel
 
 class NavBarViewModel(): MMViewModel() {
 
