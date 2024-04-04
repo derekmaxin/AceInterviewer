@@ -9,10 +9,16 @@ import androidx.compose.foundation.gestures.anchoredDraggable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PageSize
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -20,9 +26,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.lerp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.interviewpractice.controller.ReviewController
 import com.example.interviewpractice.frontend.components.playbar.PlayBar
@@ -32,6 +42,9 @@ import com.example.interviewpractice.frontend.components.starselection.StarSelec
 import com.example.interviewpractice.frontend.components.starselection.StarSelectionViewModel
 import com.example.interviewpractice.model.MainModel
 import com.example.interviewpractice.types.AnsweredQuestion
+import com.example.interviewpractice.types.Question
+import com.example.interviewpractice.types.Tag
+import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
 
 @Composable
@@ -72,11 +85,13 @@ fun ReviewView(mm: MainModel, c: ReviewController){
         userID = c.getUser()
     )
 
+    val pagerState = rememberPagerState(pageCount = { 2 })
 
+/*
     val density = LocalDensity.current
 
-    val state = remember {
-        AnchoredDraggableState(
+    val centerState by remember {
+        mutableStateOf(AnchoredDraggableState(
             initialValue = 0f,
             anchors = DraggableAnchors {
                 -1f at 1500f
@@ -86,9 +101,23 @@ fun ReviewView(mm: MainModel, c: ReviewController){
             positionalThreshold = { distance: Float -> distance * 0.3f },
             velocityThreshold = { with(density) { 100.dp.toPx() } },
             animationSpec = tween()
-        )
+        ))
     }
 
+    val rightState by remember {
+        mutableStateOf(AnchoredDraggableState(
+            initialValue = 1500f,
+            anchors = DraggableAnchors {
+                -1f at 1500f
+                0f at 0f
+                1f at -1500f
+            },
+            positionalThreshold = { distance: Float -> distance * 0.3f },
+            velocityThreshold = { with(density) { 100.dp.toPx() } },
+            animationSpec = tween()
+        ))
+    }
+    */
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -98,22 +127,54 @@ fun ReviewView(mm: MainModel, c: ReviewController){
         verticalArrangement = Arrangement.spacedBy(6.dp),
         horizontalAlignment = Alignment.Start
     ) {
+
+        HorizontalPager(
+            state = pagerState,
+            contentPadding = PaddingValues(horizontal = 16.dp),
+        ) { page ->
+            Box(
+                Modifier
+                    .wrapContentHeight()
+                    .graphicsLayer {
+                        val pageOffset = (
+                                (pagerState.currentPage - page) + pagerState
+                                    .currentPageOffsetFraction
+                                ).absoluteValue
+
+                        alpha = lerp(
+                            start = 0.5f,
+                            stop = 1f,
+                            fraction = 1f - pageOffset.coerceIn(0f, 1f)
+                        )
+                    }
+                    .padding(end = 16.dp)
+            ) {
+                if (page == 1) {
+                    DummyQuestion(
+                        qText = "This is the second question!"
+                    )
+                } else {
+                    DummyQuestion(
+                        qText = "This is a question box. It should take up the entire width of the screen"
+                    )
+                }
+            }
+        }
+
+        /*
         Box(
             modifier = Modifier
-                .anchoredDraggable(state, Orientation.Horizontal)
+                .anchoredDraggable(centerState, Orientation.Horizontal)
                 .offset {
                     IntOffset(
-                        x = state
+                        x = centerState
                             .requireOffset()
                             .roundToInt(), y = 0
                     )
                 }
         ) {
-            DummyQuestion(
-                qText = "How do you manage the memory of an object in C++?",
-                tags = listOf("C++", "Programming"),
-            )
-        }
+
+         */
 
         PlayBar(playBarViewModel)
 
