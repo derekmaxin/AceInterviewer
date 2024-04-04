@@ -25,6 +25,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,8 +36,10 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.interviewpractice.controller.HistoryController
 import com.example.interviewpractice.frontend.components.viewreviewscores.ViewReviewScores
 import com.example.interviewpractice.frontend.views.review.ReviewViewViewModel
+import com.example.interviewpractice.types.FetchType
 import java.util.Calendar
 import java.util.Locale
 
@@ -96,7 +99,11 @@ fun stringContainsLetter(input: String): Boolean {
     return regex.containsMatchIn(input)
 }
 @Composable
-fun History(viewModel: HistoryViewModel) {
+fun History(viewModel: HistoryViewModel, hc: HistoryController) {
+
+    LaunchedEffect(Unit){
+        hc.fetchData(FetchType.HISTORY)
+    }
 
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -132,8 +139,8 @@ fun History(viewModel: HistoryViewModel) {
         }
         HorizontalDivider(thickness = 1.dp, color = Color.LightGray)
 
-        for (vrsVM in viewModel.historyData) {
-            ViewReviewScores(vrsVM)
+        for (history in viewModel.historyChartData) {
+            ViewReviewScores(history)
         }
     }
 }

@@ -7,6 +7,7 @@ enum class FetchType {
     RECOMMENDATION,
     RESETUSER,
     NOTIFICATION,
+    HISTORY
 //    NAVBAR
 }
 

@@ -35,6 +35,7 @@ import com.example.interviewpractice.frontend.views.review.ReviewViewViewModel
 import com.example.interviewpractice.frontend.views.search.SearchViewModel
 import com.example.interviewpractice.model.MainModel
 import android.Manifest
+import com.example.interviewpractice.controller.HistoryController
 import com.example.interviewpractice.controller.NotificationController
 import com.example.interviewpractice.controller.ReviewController
 
@@ -76,6 +77,7 @@ class MainActivity : ComponentActivity() {
     private lateinit var qc: QuestionController
     private lateinit var rc: ReviewController
     private lateinit var nc: NotificationController
+    private lateinit var hc: HistoryController
 
     private lateinit var aaa: BestQuestionsViewModel
 
@@ -102,6 +104,7 @@ class MainActivity : ComponentActivity() {
         qc = QuestionController(mainModel,authModel)
         rc = ReviewController(mainModel,authModel)
         nc = NotificationController(mainModel,authModel)
+        hc = HistoryController(mainModel, authModel)
 
 
         aaa = BestQuestionsViewModel(mainModel)
@@ -121,6 +124,7 @@ class MainActivity : ComponentActivity() {
                         qc=qc,
                         rc=rc,
                         nc=nc,
+                        hc=hc,
                         bestQuestionsViewModel = aaa
                     )
                 }

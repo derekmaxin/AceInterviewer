@@ -1,10 +1,14 @@
 package com.example.interviewpractice.controller
 
 import android.util.Log
+import com.example.interviewpractice.helpers.getCurrentDate
 import com.example.interviewpractice.model.AuthModel
 import com.example.interviewpractice.model.MainModel
+import com.example.interviewpractice.types.AnsweredQuestion
 import com.example.interviewpractice.types.ErrorType
 import com.example.interviewpractice.types.Question
+import com.example.interviewpractice.types.Review
+import com.example.interviewpractice.types.ReviewScore
 import com.example.interviewpractice.types.Tag
 import com.example.interviewpractice.types.UIError
 import com.example.interviewpractice.types.UserException
@@ -32,7 +36,7 @@ class QuestionController(mm: MainModel, am: AuthModel): Controller(mm,am, TAG) {
 
             val newQuestion = Question(questionText, tagList,
                 hasVoice, hasText, false,
-                am.getUserID(), getCurrDate(), mutableListOf())
+                am.getUserID(), getCurrentDate(), mutableListOf())
             mm.addQuestion(newQuestion)
 
             Log.d(TAG, "verifyQuestion:success")
@@ -41,8 +45,8 @@ class QuestionController(mm: MainModel, am: AuthModel): Controller(mm,am, TAG) {
 
     }
 
-//    fun dummyData() {
-//        handler("dummyData",false) {
+    fun dummyData() {
+        handler("dummyData",false) {
 //            val t1 = listOf<Tag>(Tag.ART)
 //            val t2 = listOf<Tag>(Tag.ART, Tag.BUSINESS)
 //            val t3 = listOf<Tag>(Tag.CS)
@@ -58,9 +62,53 @@ class QuestionController(mm: MainModel, am: AuthModel): Controller(mm,am, TAG) {
 //            mm.addQuestion(q3)
 //            mm.addQuestion(q4)
 //            mm.addQuestion(q5)
-//            Log.d(TAG,"dummyData:success")
-//        }
-//    }
+
+            val answered1: AnsweredQuestion = AnsweredQuestion(
+                am.getUserID(),
+                "Blah",
+                0,
+                false,
+                questionID = "",
+                answeredQuestionID = "ID1",
+                getCurrentDate()
+
+            )
+            val answered2: AnsweredQuestion = AnsweredQuestion(
+                am.getUserID(),
+                "Blah2",
+                0,
+                false,
+                questionID = "",
+                answeredQuestionID = "ID2",
+                getCurrentDate()
+
+            )
+            val review1: Review = Review(
+                am.getUserID(),
+                "ID2",
+                am.getUserID(),
+                "HORRIBLE ANSWER",
+                ReviewScore(1,1),
+                getCurrentDate()
+
+            )
+            val review2: Review = Review(
+                am.getUserID(),
+                "ID2",
+                am.getUserID(),
+                "AWESOME ANSWER",
+                ReviewScore(5,4),
+                getCurrentDate()
+
+            )
+            mm.addAnsweredQuestion(answered1)
+            mm.addAnsweredQuestion(answered2)
+            mm.addReview(review1)
+            mm.addReview(review2)
+
+            Log.d(TAG,"dummyData:success")
+        }
+    }
 
     fun search(queryText: String, filters: Set<Tag> = emptySet()) {
         handler("search",false) {
@@ -124,13 +172,13 @@ class QuestionController(mm: MainModel, am: AuthModel): Controller(mm,am, TAG) {
         }
     }
 
-    private fun getCurrDate(): String {
-        val calendar = Calendar.getInstance()
-        val year = calendar.get(Calendar.YEAR)
-        val month = calendar.get(Calendar.MONTH) + 1
-        val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
-        return "$year-$month-$dayOfMonth"
-    }
+//    private fun getCurrDate(): String {
+//        val calendar = Calendar.getInstance()
+//        val year = calendar.get(Calendar.YEAR)
+//        val month = calendar.get(Calendar.MONTH) + 1
+//        val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
+//        return "$year-$month-$dayOfMonth"
+//    }
 
     companion object {
         private const val TAG = "QuestionController"

@@ -16,9 +16,8 @@ class ReviewController(mm: MainModel, am: AuthModel): Controller(mm,am, TAG) {
             verifyGenericString(reviewText,"Review text")
             verifyScore(clarity,understanding)
 
-            val currentDate = getCurrentDate()
-
-            val review = Review(am.getUserID(),answeredQuestion.questionID, answeredQuestion.userID,reviewText, ReviewScore(understanding,clarity),currentDate)
+            val review = Review(am.getUserID(),answeredQuestion.questionID, answeredQuestion.userID,reviewText, ReviewScore(understanding,clarity),
+                getCurrentDate())
 
             mm.addReview(review)
         }

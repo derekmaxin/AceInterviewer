@@ -30,6 +30,7 @@ open class Controller(protected val mm: MainModel, protected val am: AuthModel, 
                 }
                 FetchType.RESETUSER->mm.reset()
                 FetchType.NOTIFICATION->mm.getNotificationData()
+                FetchType.HISTORY->{}
             }
         }
     }

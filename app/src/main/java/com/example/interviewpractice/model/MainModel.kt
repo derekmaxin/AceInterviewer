@@ -3,9 +3,12 @@ package com.example.interviewpractice.model
 import android.content.Context
 import android.net.Uri
 import android.util.Log
+import com.example.interviewpractice.helpers.getCurrentDate
+import com.example.interviewpractice.types.AnsweredQuestion
 import com.example.interviewpractice.types.CatastrophicException
 import com.example.interviewpractice.types.Collections
 import com.example.interviewpractice.types.FetchType
+import com.example.interviewpractice.types.History
 import com.example.interviewpractice.types.Notification
 import com.example.interviewpractice.types.NotificationType
 import com.example.interviewpractice.types.Question
@@ -14,6 +17,8 @@ import com.example.interviewpractice.types.Tag
 import com.example.interviewpractice.types.User
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
+import com.google.firebase.firestore.AggregateField
+import com.google.firebase.firestore.AggregateSource
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.Query
@@ -22,6 +27,7 @@ import com.google.firebase.firestore.toObject
 import com.google.firebase.storage.storage
 import kotlinx.coroutines.tasks.await
 import java.io.InputStream
+import java.util.Date
 import java.util.UUID
 
 class MainModel() : Presenter() {
@@ -46,6 +52,8 @@ class MainModel() : Presenter() {
     var searchResults = mutableListOf<Question>()
     var leaderBoardStandings = mutableListOf<User>()
     var homePageRecommendations: Question? = null
+    var historyHeatData = mutableMapOf<Date,Int>()
+    var historyChartData = mutableListOf<History>()
 
     var newReviewNotifications = mutableListOf<Notification>()
     var notificationCount = 0
@@ -89,6 +97,11 @@ class MainModel() : Presenter() {
 
     suspend fun addQuestion(question: Question) {
         db.collection("questions").add(question).await()
+        Log.d(TAG,"addQuestion:success")
+    }
+
+    suspend fun addAnsweredQuestion(question: AnsweredQuestion) {
+        db.collection("answered").add(question).await()
         Log.d(TAG,"addQuestion:success")
     }
 
@@ -150,7 +163,7 @@ class MainModel() : Presenter() {
             }
             else {
                 homePageRecommendations = Question("We have no questions in your field of interest!",
-                    emptyList(),false,false,false,"","", emptyList()
+                    emptyList(),false,false,false,"", getCurrentDate(), emptyList()
                 )
             }
 
@@ -265,6 +278,50 @@ class MainModel() : Presenter() {
         notifySubscribers()
 
     }
+    suspend fun getHistoryData(from: Date, to: Date, currentUser: String) {
+        if (noCache(FetchType.HISTORY)) {
+            val questionRef = db.collection("answered")
+                .whereEqualTo("userID", currentUser )
+                .whereGreaterThanOrEqualTo("date",from)
+                .whereLessThanOrEqualTo("date",to)
+                .orderBy("date",Query.Direction.DESCENDING)
+
+            val query = questionRef.get().await()
+            historyHeatData.clear()
+            historyChartData.clear()
+            for (document in query) {
+                val entry: AnsweredQuestion = document.toObject<AnsweredQuestion>()
+
+                //GET CLARITY
+                val clarityRef = db.collection("reviews")
+                    .whereEqualTo("answeredQuestionID", entry.answeredQuestionID)
+                    .aggregate(AggregateField.average("reviewScore.clarity"))
+                val clarityQuery = clarityRef.get(AggregateSource.SERVER).await()
+                var clarityData = clarityQuery.get(AggregateField.average("clarity"))
+                if (clarityData == null) clarityData = 0.0
+
+                //GET UNDERSTANDING
+                val understandingRef = db.collection("reviews")
+                    .whereEqualTo("answeredQuestionID", entry.answeredQuestionID)
+                    .aggregate(AggregateField.average("reviewScore.clarity"))
+                val understandingQuery = clarityRef.get(AggregateSource.SERVER).await()
+                var understandingData = understandingQuery.get(AggregateField.average("understanding"))
+                if (understandingData == null) understandingData = 0.0
+
+                val reviewScores = listOf(Pair("clarity",clarityData),Pair("understanding",understandingData))
+
+                val currentHistory: History = History(entry.textResponse,entry.answeredQuestionID,reviewScores,"")
+                historyChartData.add(currentHistory)
+                if (historyHeatData.containsKey(entry.date)) {
+                    historyHeatData[entry.date] = historyHeatData[entry.date]!! + 1
+                } else {
+                    historyHeatData[entry.date] = 1
+                }
+            }
+        }
+        notifySubscribers()
+
+    }
     fun refresh() {
         notifySubscribers()
     }
@@ -286,6 +343,7 @@ class MainModel() : Presenter() {
             FetchType.RECOMMENDATION->false
             FetchType.RESETUSER->true
             FetchType.NOTIFICATION->false
+            FetchType.HISTORY -> false
         }
     }
     val userQuestions = mutableListOf<Question>()

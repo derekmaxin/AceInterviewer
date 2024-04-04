@@ -23,7 +23,6 @@ class ProfileViewModel(): MMViewModel(){
 //    val hcVM = HistoryChartViewModel(model)
 
     val badgeInfo = mutableMapOf<String, Int>()
-    val historyViewModel = HistoryViewModel()
 
     fun formatDate(date: Date): String {
         val formatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())

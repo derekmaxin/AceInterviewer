@@ -1,5 +1,7 @@
 package com.example.interviewpractice.types
 
+import com.example.interviewpractice.frontend.components.playbar.PlayBarViewModel
+import com.example.interviewpractice.frontend.components.question.QuestionViewModel
 import java.util.Date
 
 //Add more user fields here, like birthday, first/last name, photo url?, etc
@@ -19,8 +21,20 @@ data class Question(
     val hasText: Boolean = false,
     val deprecated: Boolean = false,
     val userID: String = "",
-    val date: String = "",
-    val answers: List<String> = emptyList()
+    val date: Date = Date(),
+    val answers: List<String> = emptyList(),
+    val questionID: String = ""
+)
+
+data class History(
+    val questionText: String = "",
+    val questionId: String = "",
+    val reviewScores: List<Pair<String,Double>> = emptyList(),
+    val audioUrl: String = "",
+
+
+//    val playBarViewModel = PlayBarViewModel()
+//    val questionViewModel = QuestionViewModel()
 )
 
 //Access Reviews from the Firestore with the same ID as the answered_question
@@ -31,12 +45,12 @@ data class Review(
     val answeredQuestionAuthorID: String = "", //The id of the person who answered this question
     val reviewText: String = "", //What the review says
     val reviewScore: ReviewScore = ReviewScore(),
-    val date: String = ""
+    val date: Date = Date()
 )
 
 data class ReviewScore(
-    val understanding: Int = 0, //Understanding score, out of 5
-    val clarity: Int = 0 //Clarity score, out of 5
+    val understanding: Int = 1, //Understanding score, out of 5
+    val clarity: Int = 1 //Clarity score, out of 5
 )
 
 data class AnsweredQuestion(
@@ -45,7 +59,9 @@ data class AnsweredQuestion(
 //    val audioResponse: ?? //Some sort of link to the Google Cloud storage
     val audioTime: Int = 0, //In seconds
     val isPrivate: Boolean = false,
-    val questionID: String = ""
+    val questionID: String = "",
+    val answeredQuestionID: String = "",
+    val date: Date = Date()
 )
 
 //Format as needed

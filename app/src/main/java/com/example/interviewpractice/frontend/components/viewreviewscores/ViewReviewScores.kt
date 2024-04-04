@@ -25,11 +25,13 @@ import com.example.interviewpractice.frontend.components.question.QuestionViewMo
 import com.example.interviewpractice.frontend.components.review.Review
 import com.example.interviewpractice.frontend.components.review.ReviewScoreComponent
 import com.example.interviewpractice.frontend.components.review.ReviewViewModel
+import com.example.interviewpractice.types.History
 import com.example.interviewpractice.types.ReviewScore
+import kotlin.math.floor
 
 
 @Composable
-fun ViewReviewScores(viewModel: ViewReviewScoresViewModel) {
+fun ViewReviewScores(history: History) {
     Card(
         modifier = Modifier
             .fillMaxWidth(),
@@ -45,11 +47,11 @@ fun ViewReviewScores(viewModel: ViewReviewScoresViewModel) {
                 style = MaterialTheme.typography.bodyLarge,
             )
             HorizontalDivider(thickness = 1.dp, color = Color.LightGray)
-            PlayBar(viewModel.playBarViewModel)
+//            PlayBar(viewModel.playBarViewModel)
             HorizontalDivider(thickness = 1.dp, color = Color.LightGray)
 
-            for (scoreComponent in viewModel.reviewScores) {
-                ReviewScoreComponent(scoreComponent.first, scoreComponent.second)
+            for (scoreComponent in history.reviewScores) {
+                ReviewScoreComponent(scoreComponent.first, scoreComponent.second.toInt())
             }
         }
     }

@@ -43,7 +43,6 @@ fun HomeScreen(
     playBarVM.addModel(mm)
     LaunchedEffect(Unit){
         c.fetchData(FetchType.RECOMMENDATION)
-        Log.d("SEARCHVIEW","RERENDERED HOME!!!")
     }
     Surface() {
         Column(

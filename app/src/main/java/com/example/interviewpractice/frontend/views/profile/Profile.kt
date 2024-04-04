@@ -38,17 +38,27 @@ import com.example.interviewpractice.model.MainModel
 import com.example.interviewpractice.types.FetchType
 import com.example.interviewpractice.controller.QuestionController
 import coil.compose.rememberImagePainter
+import com.example.interviewpractice.controller.HistoryController
 import com.example.interviewpractice.frontend.components.history.History
+import com.example.interviewpractice.frontend.components.history.HistoryViewModel
 
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 //@Preview
-fun ProfileView(mm: MainModel, c: QuestionController, goToLeaderboard: () -> Unit,
-                goToBestQuestions: () -> Unit, ac: AuthController, uc: UserController
+fun ProfileView(mm: MainModel,
+                c: QuestionController,
+                goToLeaderboard: () -> Unit,
+                ac: AuthController,
+                uc: UserController,
+                hc: HistoryController
 ) {
     val vm: ProfileViewModel = viewModel()
     vm.addModel(mm)
+    val historyViewModel: HistoryViewModel = viewModel()
+    historyViewModel.addModel(mm)
+
+
 
     LaunchedEffect(Unit){
         c.fetchData(FetchType.PROFILE)
@@ -112,7 +122,7 @@ fun ProfileView(mm: MainModel, c: QuestionController, goToLeaderboard: () -> Uni
 
             HistoryChart()
 
-            History(vm.historyViewModel)
+            History(historyViewModel, hc)
 
             Spacer(modifier = Modifier.height(16.dp))
             Button(

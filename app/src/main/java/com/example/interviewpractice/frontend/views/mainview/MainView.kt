@@ -12,6 +12,7 @@ import com.example.interviewpractice.frontend.views.auth.Loading
 import com.example.interviewpractice.frontend.views.auth.login.LoginScreen
 import com.example.interviewpractice.frontend.views.auth.register.RegisterScreen
 import androidx.compose.ui.platform.LocalContext
+import com.example.interviewpractice.controller.HistoryController
 import com.example.interviewpractice.controller.NotificationController
 import com.example.interviewpractice.controller.UserController
 import com.example.interviewpractice.controller.QuestionController
@@ -38,6 +39,7 @@ fun MainView(
     qc: QuestionController,
     rc: ReviewController,
     nc: NotificationController,
+    hc: HistoryController,
     am: AuthModel,
     mm: MainModel,
     bestQuestionsViewModel: BestQuestionsViewModel
@@ -94,8 +96,7 @@ fun MainView(
             }
             composable("profile") {
                 ProfileView(
-                    mm=mm, c = qc, ac=ac, uc=uc, goToLeaderboard = { anc.navigate("leaderboard")},
-                    goToBestQuestions = {anc.navigate("best questions")})
+                    mm=mm, c = qc, ac=ac, uc=uc, goToLeaderboard = { anc.navigate("leaderboard")}, hc=hc)
             }
         }
         NavBar(
