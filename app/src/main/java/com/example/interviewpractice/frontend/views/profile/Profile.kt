@@ -119,11 +119,7 @@ fun ProfileView(mm: MainModel,
                         style = TextStyle(fontSize = 10.sp)
                     )
                 }
-                Spacer(modifier = Modifier.width(16.dp))
-                HistoryButton()
-                Spacer(modifier = Modifier.width(16.dp))
-                SettingsButton()
-                Spacer(modifier = Modifier.width(16.dp))
+                Spacer(modifier = Modifier.width(128.dp))
                 LogoutButton(ac)
             }
             Spacer(modifier = Modifier.height(16.dp))
