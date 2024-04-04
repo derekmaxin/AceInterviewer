@@ -56,7 +56,6 @@ data class AnsweredQuestion(
     val audioTime: Int = 0, //In seconds
     val isPrivate: Boolean = false,
     val questionID: String = "",
-    val answeredQuestionID: String = "",
     val date: Date = Date()
 )
 

@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.RadioButtonUnchecked
@@ -14,32 +15,53 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.interviewpractice.controller.QuestionController
+import com.example.interviewpractice.frontend.components.Loader
 import com.example.interviewpractice.frontend.components.question.DummyQuestion
+import com.example.interviewpractice.frontend.components.question.Question
+import com.example.interviewpractice.model.MainModel
+import com.example.interviewpractice.types.FetchType
 
 @Composable
-fun SimpleOutlinedTextField() {
-    var text by remember { mutableStateOf("Write your response...") }
+fun SimpleOutlinedTextField(vm: AnswerQuestionViewModel) {
 
     OutlinedTextField (
         modifier = Modifier
             .fillMaxWidth(),
-        value = text,
-        onValueChange = { text = it },
+        value = vm.textAnswer,
+        onValueChange = { vm.textAnswer = it },
         label = { Text("Text Response") }
     )
 }
 
 @Composable
-@Preview
-fun AnswerScreen() {
+fun AnswerScreen(mm: MainModel, qc: QuestionController ) {
+    val vm: AnswerQuestionViewModel = viewModel()
+
+    LaunchedEffect(Unit){
+        vm.addModel(mm)
+        qc.fetchData(FetchType.QUESTION)
+    }
+    DisposableEffect(Unit) {
+        onDispose {
+            vm.unsubscribe()
+        }
+    }
+
     Surface() {
         Column(
             modifier = Modifier
@@ -50,12 +72,11 @@ fun AnswerScreen() {
             verticalArrangement = Arrangement.spacedBy(6.dp),
             horizontalAlignment = Alignment.Start,
         ) {
-            DummyQuestion(
-                qText =     "What is the difference between a reference, and a pointer?",
-                tags =      listOf<String>("C++", "Programming")
-            )
+            val question = vm.currentQuestion
+            if (question == null || vm.localLoading) Loader()
+            else Question(question) {}
 
-            SimpleOutlinedTextField()
+            SimpleOutlinedTextField(vm)
         }
 
         Column (
@@ -78,6 +99,23 @@ fun AnswerScreen() {
                     Icon(Icons.Filled.RadioButtonUnchecked, contentDescription = "Play")
                 }
             }
+        }
+        Button(
+            onClick = {
+                val question = vm.currentQuestion
+                if (question != null)
+                    qc.verifySubmitAnswer(answerText = vm.textAnswer,question.questionID)
+                      },
+            modifier = Modifier
+                .height(50.dp)
+                .padding(vertical = 4.dp)
+        ) {
+            Text("Submit Answer",
+                style = TextStyle(
+                    fontSize = 16.sp,
+                    color = Color.White,
+                )
+            )
         }
     }
 }

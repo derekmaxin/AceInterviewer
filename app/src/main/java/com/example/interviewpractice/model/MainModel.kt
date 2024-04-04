@@ -56,17 +56,18 @@ class MainModel() : Presenter() {
     fun invalidateAll() {
 
         FetchType.entries.forEach {
-            if (it == FetchType.SEARCH) {
-                isCached[it] = true
-            } else {
-                isCached[it] = false
-            }
-
+            isCached[it] = false
         }
     }
 
-    fun invalidate(ft: FetchType) {
-        isCached[ft] = false
+    private fun invalidate(ft: FetchType) {
+        if (ft == FetchType.QUESTION) {
+            isCached[ft] = true
+        }
+        else {
+            isCached[ft] = false
+        }
+
     }
 
     fun check(ft: FetchType): Boolean {
@@ -94,6 +95,9 @@ class MainModel() : Presenter() {
 
     //PROFILE
     var user: User? = null
+
+    //QUESTION
+    var currentQuestionData: Question? = null
 
     //USER FUNCTIONS
     suspend fun addUserPfp(userID: String, uri: Uri, context: Context){
@@ -137,8 +141,10 @@ class MainModel() : Presenter() {
 
     suspend fun addAnsweredQuestion(question: AnsweredQuestion) {
         db.collection("answered").add(question).await()
-        Log.d(TAG,"addQuestion:success")
+        Log.d(TAG,"addAnsweredQuestion:success")
     }
+
+
 
     suspend fun addReview(review: Review) {
         //Add review itself
@@ -157,9 +163,9 @@ class MainModel() : Presenter() {
         invalidate(FetchType.NOTIFICATION)
     }
 
-    suspend fun searchQuestion(queryText: String,filters: Set<Tag> = emptySet(),self:Boolean=false) {
+    suspend fun searchQuestion(queryText: String,filters: List<Tag> = emptyList(),self:Boolean=false) {
         val questionsRef = db.collection("questions")
-        var filty = filters.toList()
+        var filty = filters
 
         if (self) {
             var currUser = user
@@ -205,7 +211,10 @@ class MainModel() : Presenter() {
             }
 
         }
+        isCached[FetchType.SEARCH] = true
         notifySubscribers()
+
+
     }
 
     fun addNotificationListener(currentUserID: String) {
@@ -298,6 +307,9 @@ class MainModel() : Presenter() {
             }
         }
     }
+    suspend fun getQuestionData() {
+        fetch(FetchType.QUESTION) {}
+    }
 
     suspend fun getLeaderboardData() {
         fetch(FetchType.LEADERBOARD) {
@@ -347,7 +359,7 @@ class MainModel() : Presenter() {
 
                 //GET CLARITY
                 val reviewRef = db.collection("reviews")
-                    .whereEqualTo("answeredQuestionID", entry.answeredQuestionID)
+                    .whereEqualTo("answeredQuestionID", document.id)
                     .aggregate(
                         AggregateField.average("clarity"),
                         AggregateField.average("understanding")
@@ -361,7 +373,7 @@ class MainModel() : Presenter() {
 
                 val reviewScores = listOf(Pair("clarity",clarityData),Pair("understanding",understandingData))
 
-                val currentHistory: History = History(entry.textResponse,entry.answeredQuestionID,reviewScores,"")
+                val currentHistory: History = History(entry.textResponse,document.id,reviewScores,"")
                 historyChartData.add(currentHistory)
                 if (historyHeatData.containsKey(entry.date)) {
                     historyHeatData[entry.date] = historyHeatData[entry.date]!! + 1
@@ -373,7 +385,6 @@ class MainModel() : Presenter() {
     }
 
     private suspend fun fetch(ft: FetchType, func: suspend () -> Unit) {
-        delay(500)
         if (!isCached.getValue(ft)) {
             Log.d(TAG,"No cache found for ${ft}, fetching now...")
             func()

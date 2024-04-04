@@ -30,6 +30,7 @@ import com.example.interviewpractice.model.MainModel
 import com.example.interviewpractice.types.FetchType
 import androidx.compose.foundation.layout.Box
 import com.example.interviewpractice.frontend.components.LoadingOverlay
+import com.example.interviewpractice.frontend.views.answerquestion.AnswerScreen
 
 @Composable
 //@Preview
@@ -46,6 +47,7 @@ fun MainView(
     bestQuestionsViewModel: BestQuestionsViewModel
     )
 {
+
     LaunchedEffect(Unit) {
         ac.fetchData(FetchType.INIT)
     }
@@ -57,6 +59,7 @@ fun MainView(
     // NavController //////////////////////////////////////////////////////////
     val unc = rememberNavController()
     val anc = rememberNavController()
+    val router: Router = Router(anc)
 
     vm.error?.let {err ->
 
@@ -79,6 +82,9 @@ fun MainView(
                 composable("leaderboard") {
                     LeaderboardView(mm=mm,c=uc)
                 }
+                composable("answer question") {
+                    AnswerScreen(mm=mm,qc=qc)
+                }
 //            composable("best questions") {
 //                BestQuestionsView(vm= bestQuestionsViewModel)
 //            }
@@ -87,15 +93,14 @@ fun MainView(
                         goToHome = { anc.navigate("home") })
                 }
                 composable("home") {
-                    HomeScreen(c = ac, mm=mm)
+                    HomeScreen(c = ac, mm=mm,qc=qc,r=router)
                 }
                 composable("notifications") {
                     Notifications(mm=mm, c=nc)
                 }
                 composable("search") {
                     SearchView(
-                        c = qc, mm=mm
-                    ) { anc.navigate("make question") }
+                        c = qc, mm=mm, r=router)
                 }
                 composable("profile") {
                     ProfileView(

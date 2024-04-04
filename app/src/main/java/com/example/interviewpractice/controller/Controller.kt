@@ -3,8 +3,10 @@ package com.example.interviewpractice.controller
 import android.util.Log
 import com.example.interviewpractice.model.AuthModel
 import com.example.interviewpractice.model.MainModel
+import com.example.interviewpractice.types.CatastrophicException
 import com.example.interviewpractice.types.ErrorType
 import com.example.interviewpractice.types.FetchType
+import com.example.interviewpractice.types.SystemException
 import com.example.interviewpractice.types.UIError
 import com.example.interviewpractice.types.UserException
 import com.google.firebase.FirebaseException
@@ -23,7 +25,11 @@ open class Controller(protected val mm: MainModel, protected val am: AuthModel, 
             when (ft) {
                 FetchType.PROFILE->mm.getCurrentUserData()
                 FetchType.LEADERBOARD->mm.getLeaderboardData()
-                FetchType.SEARCH->mm.notifySubscribers()
+                FetchType.SEARCH->{
+                    if (mm.check(FetchType.SEARCH)) mm.notifySubscribers()
+                    else mm.searchQuestion("")
+
+                }
                 FetchType.RECOMMENDATION-> {
                     if (mm.homePageRecommendations == null) {
                         mm.searchQuestion("",self=true)
@@ -43,6 +49,9 @@ open class Controller(protected val mm: MainModel, protected val am: AuthModel, 
                     val from: Date = calendar.time
                     mm.getHistoryData(from,Date(),uid)
                 }
+                FetchType.QUESTION->mm.getQuestionData()
+
+
             }
         }
     }

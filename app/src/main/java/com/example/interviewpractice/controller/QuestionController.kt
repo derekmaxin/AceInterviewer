@@ -2,6 +2,7 @@ package com.example.interviewpractice.controller
 
 import android.util.Log
 import com.example.interviewpractice.helpers.getCurrentDate
+import com.example.interviewpractice.helpers.verifyGenericString
 import com.example.interviewpractice.model.AuthModel
 import com.example.interviewpractice.model.MainModel
 import com.example.interviewpractice.types.AnsweredQuestion
@@ -41,7 +42,22 @@ class QuestionController(mm: MainModel, am: AuthModel): Controller(mm,am, TAG) {
             Log.d(TAG, "verifyQuestion:success")
             onSuccess()
         }
+    }
 
+    fun verifySubmitAnswer(answerText:String,questionID: String) {
+        handler("verifySubmitAnswer") {
+            verifyGenericString(answerText, "Answer text")
+            val uid = am.getUserID()
+
+            val question = AnsweredQuestion(userID = uid, textResponse = answerText, questionID = questionID,date= getCurrentDate())
+
+            mm.addAnsweredQuestion(question)
+        }
+
+    }
+
+    fun loadNextQuestion(question: Question) {
+        mm.currentQuestionData = question
     }
 
     fun dummyData() {
@@ -68,7 +84,6 @@ class QuestionController(mm: MainModel, am: AuthModel): Controller(mm,am, TAG) {
                 0,
                 false,
                 questionID = "",
-                answeredQuestionID = "ID1",
                 getCurrentDate()
 
             )
@@ -78,7 +93,6 @@ class QuestionController(mm: MainModel, am: AuthModel): Controller(mm,am, TAG) {
                 0,
                 false,
                 questionID = "",
-                answeredQuestionID = "ID2",
                 getCurrentDate()
 
             )
@@ -111,9 +125,9 @@ class QuestionController(mm: MainModel, am: AuthModel): Controller(mm,am, TAG) {
         }
     }
 
-    fun search(queryText: String, filters: Set<Tag> = emptySet()) {
+    fun search(queryText: String, filters: List<Tag> = emptyList()) {
         handler("search",false) {
-            mm.searchQuestion(queryText,filters)
+            mm.searchQuestion(queryText, filters)
             Log.d(TAG,"search:success")
         }
     }

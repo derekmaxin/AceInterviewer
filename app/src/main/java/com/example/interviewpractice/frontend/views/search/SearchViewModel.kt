@@ -2,6 +2,7 @@ package com.example.interviewpractice.frontend.views.search
 
 import android.util.Log
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.example.interviewpractice.frontend.LoaderMMViewModel
@@ -13,7 +14,7 @@ class SearchViewModel(): LoaderMMViewModel() {
     var search by mutableStateOf("")
 
     var isFilterOptionsVisible = mutableStateOf(false)
-    var currentlyFilteredBy = mutableSetOf<Tag>()
+    var currentlyFilteredBy = mutableStateListOf<Tag>()
 
     var isCompletedFilter = mutableStateOf(false)
 

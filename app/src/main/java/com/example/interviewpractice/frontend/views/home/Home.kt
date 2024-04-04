@@ -25,15 +25,20 @@ import com.example.interviewpractice.frontend.components.playbar.PlayBar
 import com.example.interviewpractice.frontend.components.question.QuestionViewModel
 import com.example.interviewpractice.frontend.components.playbar.PlayBarViewModel
 import com.example.interviewpractice.frontend.components.question.DummyQuestion
+import com.example.interviewpractice.frontend.views.mainview.Router
+import com.example.interviewpractice.helpers.navToQuestion
 import com.example.interviewpractice.model.AuthModel
 import com.example.interviewpractice.model.MainModel
 import com.example.interviewpractice.types.FetchType
+import com.example.interviewpractice.types.Question
 
 @Composable
 //@Preview
 fun HomeScreen(
     c: AuthController,
-    mm: MainModel
+    mm: MainModel,
+    qc: QuestionController,
+    r: Router
 )
 {
     val scrollState = rememberScrollState()
@@ -80,7 +85,9 @@ fun HomeScreen(
                 if (vm.algoResults == null || vm.localLoading) {
                     Loader()
                 } else {
-                    Question(q = vm.algoResults!!, {})
+                    Question(q = vm.algoResults!!) {
+                        navToQuestion(r.goToAnswerQuestion,vm.algoResults!!,qc)
+                    }
                 }
 
 
