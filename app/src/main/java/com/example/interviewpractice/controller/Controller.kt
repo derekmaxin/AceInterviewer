@@ -12,6 +12,7 @@ import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.firestore.FirebaseFirestoreException
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
+import java.util.Date
 
 open class Controller(protected val mm: MainModel, protected val am: AuthModel, protected val TAG: String) {
 
@@ -30,7 +31,9 @@ open class Controller(protected val mm: MainModel, protected val am: AuthModel, 
                 }
                 FetchType.RESETUSER->mm.reset()
                 FetchType.NOTIFICATION->mm.getNotificationData()
-                FetchType.HISTORY->{}
+                FetchType.HISTORY->{
+                    mm.getHistoryData(Date(0),Date(),am.getUserID())
+                }
             }
         }
     }
