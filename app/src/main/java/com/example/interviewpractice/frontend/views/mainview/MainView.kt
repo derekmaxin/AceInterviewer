@@ -134,7 +134,6 @@ fun MainView(
                 SubmitAnswer(qc = QuestionController(am = am, mm = mm))
             }
         }
-<<<<<<< HEAD
         NavBar(
             goToReviews={anc.navigate("reviews")},
             goToSearch={anc.navigate("search")},
@@ -144,8 +143,6 @@ fun MainView(
             goToQuestion={anc.navigate("question")},
             nc=nc,
             mm=mm)
-=======
->>>>>>> f55d7d6cf771a40d46c7c0d2de0b603bff5e3c8f
 
         if (vm.loading) {
             LoadingOverlay()
