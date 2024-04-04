@@ -18,7 +18,7 @@ import java.util.Date
 open class Controller(protected val mm: MainModel, protected val am: AuthModel, protected val TAG: String) {
 
     fun fetchData(ft: FetchType) {
-        if (ft == FetchType.LEADERBOARD) Log.d(TAG,"LEADERBOARD: ${mm.check(ft)}")
+        val uid: String = am.getUserID()
         handler("fetchData.${ft}",!mm.check(ft)) {
             when (ft) {
                 FetchType.PROFILE->mm.getCurrentUserData()
@@ -32,7 +32,7 @@ open class Controller(protected val mm: MainModel, protected val am: AuthModel, 
                     mm.notifySubscribers()
                 }
                 FetchType.INIT->mm.reset()
-                FetchType.NOTIFICATION->mm.getNotificationData()
+                FetchType.NOTIFICATION->mm.getNotificationData(uid)
                 FetchType.HISTORY->{
                     val calendar = Calendar.getInstance()
                     calendar.set(Calendar.DATE, 1)
@@ -41,7 +41,7 @@ open class Controller(protected val mm: MainModel, protected val am: AuthModel, 
                     calendar.set(Calendar.SECOND, 0);
 
                     val from: Date = calendar.time
-                    mm.getHistoryData(from,Date(),am.getUserID())
+                    mm.getHistoryData(from,Date(),uid)
                 }
             }
         }

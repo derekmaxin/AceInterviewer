@@ -234,16 +234,18 @@ class MainModel() : Presenter() {
                         }
                         notificationCount += 1
 
-                        notifySubscribers()
+
                         Log.d(TAG, "New Notification: ${dc.document.data}")
                     }
                     DocumentChange.Type.MODIFIED -> {
                         //MIGHT NEED TO CHANGE
                         Log.d(TAG, "Notification changed: ${dc.document.data}")
                     }
-                    DocumentChange.Type.REMOVED -> Log.d(TAG, "Notification read: ${dc.document.data}")
+                    DocumentChange.Type.REMOVED -> Log.d(TAG, "Notification removed: ${dc.document.data}")
                 }
             }
+            notifySubscribers()
+            invalidate(FetchType.NOTIFICATION)
         }
     }
     val userQuestions = mutableListOf<Question>()
@@ -314,13 +316,16 @@ class MainModel() : Presenter() {
             }
         }
     }
-    suspend fun getNotificationData() {
+    suspend fun getNotificationData(currentUser: String) {
         fetch(FetchType.NOTIFICATION) {
-            val notificationRef = db.collection("notifications")
+            val notificationRef = db.collection("notifications").whereEqualTo("userID",currentUser)
             val query = notificationRef.get().await()
+            newReviewNotifications.clear()
+            notificationCount = 0
             for (notification in query) {
                 //ASSUME ONLY NEW REVIEW NOTIFICATIONS FOR NOW
                 newReviewNotifications.add(notification.toObject<Notification>())
+                notificationCount+= 1
             }
         }
     }
