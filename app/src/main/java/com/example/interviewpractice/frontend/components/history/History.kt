@@ -120,10 +120,6 @@ fun stringContainsLetter(input: String): Boolean {
 @Composable
 fun History(viewModel: HistoryViewModel, hc: HistoryController) {
 
-    LaunchedEffect(Unit){
-        hc.fetchData(FetchType.HISTORY)
-    }
-
     Column(
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(12.dp)
