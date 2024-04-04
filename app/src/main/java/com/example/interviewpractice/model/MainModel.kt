@@ -282,8 +282,8 @@ class MainModel() : Presenter() {
         if (noCache(FetchType.HISTORY)) {
             val questionRef = db.collection("answered")
                 .whereEqualTo("userID", currentUser )
-//                .whereGreaterThanOrEqualTo("date",from)
-//                .whereLessThanOrEqualTo("date",to)
+                .whereGreaterThanOrEqualTo("date",from)
+                .whereLessThanOrEqualTo("date",to)
                 .orderBy("date",Query.Direction.DESCENDING)
 
             val query = questionRef.get().await()
@@ -343,7 +343,7 @@ class MainModel() : Presenter() {
             FetchType.RECOMMENDATION->false
             FetchType.RESETUSER->true
             FetchType.NOTIFICATION->(notificationCount == 0)
-            FetchType.HISTORY -> (historyChartData.isEmpty())
+            FetchType.HISTORY -> true
         }
     }
     val userQuestions = mutableListOf<Question>()

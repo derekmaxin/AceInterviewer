@@ -12,6 +12,7 @@ import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.firestore.FirebaseFirestoreException
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
+import java.util.Calendar
 import java.util.Date
 
 open class Controller(protected val mm: MainModel, protected val am: AuthModel, protected val TAG: String) {
@@ -32,7 +33,12 @@ open class Controller(protected val mm: MainModel, protected val am: AuthModel, 
                 FetchType.RESETUSER->mm.reset()
                 FetchType.NOTIFICATION->mm.getNotificationData()
                 FetchType.HISTORY->{
-                    mm.getHistoryData(Date(0),Date(),am.getUserID())
+                    val calendar = Calendar.getInstance()
+                    calendar.set(Calendar.DATE, 1,1)
+
+                    val from: Date = calendar.time
+                    Log.d(TAG,"1 Month AGO? $from")
+                    mm.getHistoryData(from,Date(),am.getUserID())
                 }
             }
         }
