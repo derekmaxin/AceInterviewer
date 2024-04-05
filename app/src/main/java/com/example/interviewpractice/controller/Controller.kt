@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 import java.util.Calendar
 import java.util.Date
 
-open class Controller(protected val mm: MainModel, protected val am: AuthModel, protected val TAG: String) {
+open class Controller(protected val mm: MainModel, val am: AuthModel, protected val TAG: String) {
 
     fun fetchData(ft: FetchType) {
         handler("fetchData.${ft}",!mm.check(ft)) {

@@ -34,6 +34,7 @@ fun RegisterScreen(am: AuthModel, c: AuthController) {
     val vm: RegisterViewModel = viewModel()
     LaunchedEffect(Unit){
         vm.addModel(am)
+        am.loading = 0
     }
     DisposableEffect(Unit) {
         onDispose {

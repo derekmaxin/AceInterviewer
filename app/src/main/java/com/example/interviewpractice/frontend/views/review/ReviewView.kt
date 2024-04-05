@@ -224,8 +224,8 @@ fun ReviewView(mm: MainModel, c: ReviewController){
         ) {
 
          */
-
-        PlayBar(playBarViewModel)
+        playBarViewModel.
+        PlayBar(playBarViewModel,rvvm.currentReviewData[pagerState.currentPage])
 
         StarSelection(understandingVM)
         StarSelection(clarityVM)

@@ -136,6 +136,8 @@ class MainModel() : Presenter() {
         } ?: run {
             Log.e(TAG, "Failed to open input stream for URI: $uri")
         }
+        invalidate(FetchType.PROFILE)
+        notifySubscribers()
     }
 
 
