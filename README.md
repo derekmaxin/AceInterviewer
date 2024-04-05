@@ -18,17 +18,19 @@ Click [here](https://git.uwaterloo.ca/kotlin-gang/team-101-5/-/wikis/Project-Pro
 # Release 4.0.0
 _April 5, 2024_
 * Added the ability to upload profile photos to the profile.
-* Added the requirement to aqcuire user's audio permissions.
+* Added the ability to leave a review on a question response.
+* Added the answer question page with the ability to record, and store audio. 
+* Added the ability to see the questions you've answered by month on the profile.
+* Implemented audio playback and the ability to hear audio responses.
+* Added locked badges to the profile screen.
 * Added birthdays to profile.
 * Added logout to profile.
-* Added locked badges to the profile screen. 
 * Added additional search filter fields. 
-* Made the search screen scrollable.
-* Replaced default app icon.
-* Implemented audio playback and the ability to hear audio responses. 
-* Added the answer question page with the ability to record, and store audio. 
+* Made the search screen scrollable. 
 * Added the ability to scroll through answers on the review.
-* Added the ability to see the questions you've answered by month on the profile.
+* Added the requirement to aqcuire user's audio permissions.
+* Added an age requirement to registration.
+* Replaced default app icon.
 * Removed redundant features.
 
 # Release 3.0.0
