@@ -1,10 +1,12 @@
 package com.example.interviewpractice.frontend.components.question
 
+import androidx.compose.foundation.gestures.anchoredDraggable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
@@ -71,8 +73,10 @@ fun Question(q: Question, boost: ()->Unit) {
 
 
 @Composable
-fun DummyQuestion(qText: String, tags: List<String>) {
-    Card() {
+fun DummyQuestion(qText: String, tags: List<String> = emptyList()) {
+    Card(
+        modifier = Modifier.fillMaxWidth()
+    ) {
         Column(
             modifier = Modifier
                 .padding(16.dp),

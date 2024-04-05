@@ -27,6 +27,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -41,6 +42,7 @@ import com.example.interviewpractice.frontend.components.viewreviewscores.ViewRe
 import com.example.interviewpractice.frontend.views.review.ReviewViewViewModel
 import com.example.interviewpractice.types.FetchType
 import java.util.Calendar
+import java.util.Date
 import java.util.Locale
 
 fun getMonthsAsStringList(): List<String> {
@@ -56,15 +58,33 @@ fun getMonthsAsStringList(): List<String> {
     return monthNames
 }
 
+fun getDateRangeFromMonth(month: Int, year: Int): Pair<Date, Date> {
+    val firstDay = Calendar.getInstance()
+    firstDay.set(Calendar.MONTH, month)
+    firstDay.set(Calendar.YEAR, year)
+    firstDay.set(Calendar.DATE, 1)
+
+    val lastDay = Calendar.getInstance()
+    lastDay.set(Calendar.MONTH, month)
+    lastDay.set(Calendar.YEAR, year)
+    lastDay.set(Calendar.DATE, lastDay.getActualMaximum(Calendar.DATE))
+
+    return Pair(firstDay.time, lastDay.time)
+}
+
+fun onVMUpdate(hc: HistoryController) {
+
+}
+
 @Composable
 fun listSelectionDropdown(
-    startingValue: String,
+    startingIndex: Int,
     optionsList: List<String>,
-    onUpdate: (String) -> Unit,
+    onUpdate: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var expanded by remember { mutableStateOf(false) }
-    var selected by remember { mutableStateOf(startingValue)}
+    var selectedIndex by remember { mutableIntStateOf(startingIndex)}
 
     DropdownMenu(
         expanded = expanded,
@@ -72,14 +92,14 @@ fun listSelectionDropdown(
 
     ) {
 
-        for (item in optionsList) {
+        for (index in optionsList.indices) {
             DropdownMenuItem(
                 onClick = {
                     expanded = false
-                    onUpdate(item)
-                    selected = item
+                    onUpdate(index)
+                    selectedIndex = index
                 },
-                text = { Text(item) }
+                text = { Text(optionsList[index]) }
             )
         }
     }
@@ -88,11 +108,10 @@ fun listSelectionDropdown(
         modifier = modifier,
         onClick = { expanded = true }
     ) {
-        Text(selected)
+        Text(optionsList[selectedIndex])
         Icon( Icons.Outlined.ExpandMore, contentDescription = null )
     }
 }
-
 
 fun stringContainsLetter(input: String): Boolean {
     val regex = Regex("[a-zA-Z]")
@@ -112,9 +131,14 @@ fun History(viewModel: HistoryViewModel, hc: HistoryController) {
         ) {
             Spacer(Modifier.weight(1f))
             listSelectionDropdown(
-                startingValue = viewModel.selectedMonth,
+                startingIndex = viewModel.selectedMonth,
                 optionsList = getMonthsAsStringList(),
-                onUpdate = { viewModel.selectedMonth = it },
+                onUpdate =
+                {
+                    viewModel.selectedMonth = it
+                    val dateRange = getDateRangeFromMonth(viewModel.selectedMonth, viewModel.selectedYear.toInt())
+                    hc.getUserHistoryDataByDate(dateRange.first, dateRange.second)
+                },
                 modifier = Modifier
                     .height(50.dp)
             )
@@ -124,6 +148,8 @@ fun History(viewModel: HistoryViewModel, hc: HistoryController) {
                 onValueChange = {
                     if (!stringContainsLetter(it) && it.length <= 4) {
                         viewModel.selectedYear = it
+                        val dateRange = getDateRangeFromMonth(viewModel.selectedMonth, viewModel.selectedYear.toInt())
+                        hc.getUserHistoryDataByDate(dateRange.first, dateRange.second)
                     }
                     Log.d("CHANGE", "View model changed to $it") },
                 label = { Text("Year") },

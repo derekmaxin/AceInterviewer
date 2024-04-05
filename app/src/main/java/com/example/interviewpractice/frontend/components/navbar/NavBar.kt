@@ -81,6 +81,10 @@ fun NavBar(
                     IconButton(onClick = goToProfile) {
                         Icon(Icons.Default.Person, contentDescription = "Profile",Modifier.size(ICON_SIZE))
                     }
+
+//                    IconButton(onClick = goToQuestion) {
+//                        Icon(Icons.Filled.QuestionMark, contentDescription = "Profile", Modifier.size(ICON_SIZE))
+//                    }
                 }
             }
         )
