@@ -7,8 +7,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.material.icons.Icons
@@ -40,6 +42,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.interviewpractice.controller.HistoryController
+import com.example.interviewpractice.frontend.components.Loader
 import com.example.interviewpractice.frontend.components.viewreviewscores.ViewReviewScores
 import com.example.interviewpractice.frontend.views.review.ReviewViewViewModel
 import com.example.interviewpractice.model.MainModel
@@ -162,9 +165,25 @@ fun History(viewModel: HistoryViewModel, hc: HistoryController) {
             )
         }
         HorizontalDivider(thickness = 1.dp, color = Color.LightGray)
+        if (viewModel.localLoading) {
+            Spacer(modifier = Modifier.padding(8.dp))
+            Column(
 
-        for (history in viewModel.historyChartData) {
-            ViewReviewScores(history)
+                modifier = Modifier.fillMaxSize(), // Ensures the Column takes up the available space
+                verticalArrangement = Arrangement.Center, // Centers its children vertically
+                horizontalAlignment = Alignment.CenterHorizontally // Centers its children horizontally
+            ) {
+                Loader()
+
+            }
+            Spacer(modifier = Modifier.padding(8.dp))
+
         }
+        else {
+            for (history in viewModel.historyChartData) {
+                ViewReviewScores(history)
+            }
+        }
+
     }
 }

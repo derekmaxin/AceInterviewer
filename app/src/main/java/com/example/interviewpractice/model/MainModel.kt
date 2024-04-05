@@ -59,7 +59,6 @@ class MainModel() : Presenter() {
         FetchType.entries.forEach {
             isCached[it] = false
         }
-//        currentReviewData.clear()
     }
 
     fun invalidate(ft: FetchType) {
@@ -267,9 +266,6 @@ class MainModel() : Presenter() {
                             notificationCount += 0
                         }
                         notificationCount += 1
-
-
-                        Log.d(TAG, "New Notification: ${dc.document.data}")
                     }
                     DocumentChange.Type.MODIFIED -> {
                         //MIGHT NEED TO CHANGE
@@ -335,13 +331,16 @@ class MainModel() : Presenter() {
 
     //------------[FETCH METHODS]------------
     suspend fun getCurrentUserData() {
+        Log.d(TAG,"STARTING FETCH OF USER DATA")
         fetch(FetchType.PROFILE) {
             val uid = auth.currentUser?.uid
+            Log.d(TAG,"FOUND USER: ${auth.currentUser?.email}")
             if (uid != null) {
                 val userDoc = db.collection("users").document(uid)
                 val query = userDoc.get().await()
 
                 user = query.toObject<User>()
+                Log.d(TAG,"RESULTS OF USER SEARCH: ${user.toString()}")
             }
             else {
                 throw CatastrophicException("No uid for signed in user")
@@ -491,13 +490,9 @@ class MainModel() : Presenter() {
             Log.d(TAG, "Found cache for $ft")
         }
         isCached[ft] = true
-//        isCached[FetchType.TINDER] = false
         notifySubscribers()
 
-    }
-    fun reset() {
-        invalidateAll()
-        notifySubscribers()
+
     }
 
 //    fun isCached.getValue(ft: FetchType): Boolean {

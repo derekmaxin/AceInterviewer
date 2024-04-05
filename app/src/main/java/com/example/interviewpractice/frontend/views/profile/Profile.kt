@@ -46,12 +46,13 @@ import com.example.interviewpractice.controller.HistoryController
 import com.example.interviewpractice.frontend.components.history.History
 import com.example.interviewpractice.frontend.components.history.HistoryViewModel
 import com.example.interviewpractice.helpers.Lifecycle
+import com.example.interviewpractice.model.AuthModel
 
 
 @Composable
 //@Preview
 fun ProfileView(mm: MainModel,
-                c: QuestionController,
+                c: UserController,
                 goToLeaderboard: () -> Unit,
                 ac: AuthController,
                 uc: UserController,
@@ -62,14 +63,14 @@ fun ProfileView(mm: MainModel,
 
 
     LaunchedEffect(Unit) {
-        Log.d("PROFILE.KT ","LAUNCHING PROFILE")
         vm.addModel(mm)
         historyViewModel.addModel(mm)
-        c.fetchData(FetchType.PROFILE)
+        uc.fetchData(FetchType.PROFILE)
         hc.fetchData(FetchType.HISTORY)
     }
     DisposableEffect(Unit) {
         onDispose {
+            Log.d("PROFILE.KT","DISCONNECTING")
             vm.unsubscribe()
             historyViewModel.unsubscribe()
         }

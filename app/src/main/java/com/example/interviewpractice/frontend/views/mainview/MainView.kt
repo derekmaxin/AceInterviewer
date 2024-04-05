@@ -33,8 +33,10 @@ import com.example.interviewpractice.model.AuthModel
 import com.example.interviewpractice.model.MainModel
 import com.example.interviewpractice.types.FetchType
 import androidx.compose.foundation.layout.Box
+import com.example.interviewpractice.frontend.components.Loader
 import com.example.interviewpractice.frontend.components.LoadingOverlay
 import com.example.interviewpractice.frontend.views.answerquestion.AnswerScreen
+import com.google.firebase.auth.FirebaseAuth
 
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable
@@ -51,20 +53,42 @@ fun MainView(
     mm: MainModel,
     bestQuestionsViewModel: BestQuestionsViewModel
     )
-{
 
-    LaunchedEffect(Unit) {
-        ac.fetchData(FetchType.INIT)
-    }
-    DisposableEffect(Unit) {
-        onDispose {
-            vm.unsubscribe()
-        }
-    }
+{
     // NavController //////////////////////////////////////////////////////////
     val unc = rememberNavController()
     val anc = rememberNavController()
     val router: Router = Router(anc)
+    val authStateListener = FirebaseAuth.AuthStateListener { firebaseAuth ->
+        mm.invalidateAll()
+        vm.user = firebaseAuth.currentUser
+        am.authLoading = false
+        Log.d("MAINVIEW","Auth state determined, stopped authLoading")
+//        if (user != null) {
+//            // User is signed in, you can use the user object here
+//            Log.d("MAINVIEW", "onAuthStateChanged:signed_in:" + user.uid)
+//            // Proceed with accessing user information or navigating to your main activity
+//        } else {
+//            // User is signed out
+//            Log.d("MAINVIEW", "onAuthStateChanged:signed_out")
+//            // Handle the sign-out case or redirect the user to the login activity
+//        }
+    }
+
+    LaunchedEffect(Unit) {
+        mm.invalidateAll()
+        FirebaseAuth.getInstance().addAuthStateListener(authStateListener)
+
+    }
+    DisposableEffect(Unit) {
+        onDispose {
+            vm.unsubscribe()
+            FirebaseAuth.getInstance().removeAuthStateListener(authStateListener)
+        }
+    }
+
+
+
 
     vm.error?.let {err ->
 
@@ -76,70 +100,75 @@ fun MainView(
         toast.show()
         am.clearError()
     }
-    Box {
-        if (vm.user != null) {
-            //If user is signed in
+    if (vm.authLoading) {
+        Loader()
+    }
+    else {
+        Box {
+            if (vm.user != null) {
+                //If user is signed in
 
-            NavHost(navController = anc, startDestination = "home") {
-                composable("reviews") {
-                    ReviewView(mm=mm,c=rc)
-                }
-                composable("leaderboard") {
-                    LeaderboardView(mm=mm,c=uc)
-                }
-                composable("answer question") {
-                    AnswerScreen(mm=mm,qc=qc, router=router)
-                }
+                NavHost(navController = anc, startDestination = "home") {
+                    composable("reviews") {
+                        ReviewView(mm=mm,c=rc)
+                    }
+                    composable("leaderboard") {
+                        LeaderboardView(mm=mm,c=uc)
+                    }
+                    composable("answer question") {
+                        AnswerScreen(mm=mm,qc=qc, router=router)
+                    }
 //            composable("best questions") {
 //                BestQuestionsView(vm= bestQuestionsViewModel)
 //            }
-                composable("make question") {
-                    MakeQuestionScreen(mm=mm, questionController = qc,
-                        goToHome = { anc.navigate("home") })
+                    composable("make question") {
+                        MakeQuestionScreen(mm=mm, questionController = qc,
+                            goToHome = { anc.navigate("home") })
+                    }
+                    composable("home") {
+                        HomeScreen(c = ac, mm=mm,qc=qc,r=router)
+                    }
+                    composable("notifications") {
+                        Notifications(mm=mm, c=nc)
+                    }
+                    composable("search") {
+                        SearchView(
+                            c = qc, mm=mm, r=router)
+                    }
+                    composable("profile") {
+                        ProfileView(
+                            mm=mm, c = uc, ac=ac, uc=uc, goToLeaderboard = { anc.navigate("leaderboard")}, hc=hc)
+                    }
                 }
-                composable("home") {
-                    HomeScreen(c = ac, mm=mm,qc=qc,r=router)
-                }
-                composable("notifications") {
-                    Notifications(mm=mm, c=nc)
-                }
-                composable("search") {
-                    SearchView(
-                        c = qc, mm=mm, r=router)
-                }
-                composable("profile") {
-                    ProfileView(
-                        mm=mm, c = qc, ac=ac, uc=uc, goToLeaderboard = { anc.navigate("leaderboard")}, hc=hc)
-                }
-            }
-            NavBar(
-                goToReviews={anc.navigate("reviews")},
-                goToSearch={anc.navigate("search")},
-                goToHome={anc.navigate("home")},
-                goToNotifications={anc.navigate("notifications")},
-                goToProfile={anc.navigate("profile")},
-                nc=nc,
-                mm=mm)
+                NavBar(
+                    goToReviews={anc.navigate("reviews")},
+                    goToSearch={anc.navigate("search")},
+                    goToHome={anc.navigate("home")},
+                    goToNotifications={anc.navigate("notifications")},
+                    goToProfile={anc.navigate("profile")},
+                    nc=nc,
+                    mm=mm)
 
-        }
-        else {
-            Log.d("UNAUTH", "HERE")
-            NavHost(navController = unc, startDestination = "login") {
-                composable("login") {
-                    LoginScreen(c = ac, am=am) { unc.navigate("register") }
-                }
-                composable("register") {
-                    RegisterScreen(am=am, c = ac)
-                }
             }
-            //composable("question") {
-            //    SubmitAnswer(qc = QuestionController(am = am, mm = mm))
-            //}
-        }
+            else {
+                NavHost(navController = unc, startDestination = "login") {
+                    composable("login") {
+                        LoginScreen(c = ac, am=am) { unc.navigate("register") }
+                    }
+                    composable("register") {
+                        RegisterScreen(am=am, c = ac)
+                    }
+                }
+                //composable("question") {
+                //    SubmitAnswer(qc = QuestionController(am = am, mm = mm))
+                //}
+            }
 
-        if (vm.loading) {
-            LoadingOverlay()
-        }
+            if (vm.loading > 0) {
+                LoadingOverlay()
+            }
+    }
+
     }
 
 }

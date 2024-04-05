@@ -18,25 +18,27 @@ import java.util.Date
 
 class AuthModel: Presenter() {
     //Variables necessary to make the model work
-    private val auth = Firebase.auth
+    val auth = Firebase.auth
     private val db = Firebase.firestore
 
     //----------------DATA----------------
     //systemData
-    var user: FirebaseUser? = null
-        set(value) {
-            field = value
-            notifySubscribers()
-        }
     //loading
-    var loading: Boolean = false
+    var loading: Int = 1
         set(value) {
-            field = value
+            if (value < 0) field = 0
+            else field = value
             notifySubscribers()
             Log.d(TAG,"Updated GLOBAL loading state: loading -> $loading")
         }
     //error state
     var error: UIError? = null
+        set(value) {
+            field = value
+            notifySubscribers()
+        }
+
+    var authLoading: Boolean = true
         set(value) {
             field = value
             notifySubscribers()
@@ -55,14 +57,11 @@ class AuthModel: Presenter() {
 
     suspend fun signIn(email: String, password: String) {
         auth.signInWithEmailAndPassword(email, password).await()
-        user = auth.currentUser
         Log.d(TAG, "signIn:success")
     }
 
     fun logout() {
         auth.signOut()
-        user = null
-        notifySubscribers()
 
         //Stop loading after we finished authentication
     }
@@ -92,7 +91,6 @@ class AuthModel: Presenter() {
             email =email, fieldsOfInterest = foi.toList(), birthday =birthday)
         setUserData(userData,current_user.uid)
 
-        user = current_user
         Log.d(TAG,"updateCurrentUser:success")
     }
 
@@ -101,16 +99,9 @@ class AuthModel: Presenter() {
         Log.d(TAG,"setUserData:success")
     }
 
-    fun initAuth() {
-        user = auth.currentUser
-        Log.d(TAG,"$user")
-        if (user != null) {
-            notifySubscribers()
-        }
-    }
-
     fun getUserID(): String {
-        user = auth.currentUser
+        val user = auth.currentUser
+        Log.d(TAG,"APPARENT USER: ${user?.email}")
         val currentUser = user
         if (currentUser != null) {
             return currentUser.uid

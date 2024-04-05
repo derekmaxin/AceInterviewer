@@ -100,8 +100,6 @@ class MainActivity : ComponentActivity() {
 
         mainVM = MainViewModel()
         mainVM.addModel(authModel)
-
-        authModel.initAuth()
         mainModel.invalidateAll()
 
 

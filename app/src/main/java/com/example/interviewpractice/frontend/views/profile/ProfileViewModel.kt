@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import com.example.interviewpractice.frontend.LoaderMMViewModel
 import com.example.interviewpractice.frontend.MMViewModel
 import com.example.interviewpractice.types.FetchType
 import com.example.interviewpractice.types.User
@@ -11,7 +12,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-class ProfileViewModel(): MMViewModel(){
+class ProfileViewModel(): LoaderMMViewModel(){
 
 //    val hcVM = HistoryChartViewModel(model)
 
@@ -27,6 +28,7 @@ class ProfileViewModel(): MMViewModel(){
 
 
     override fun update() {
+        Log.d(TAG,"NEW POTENTIAL USER: ${user.toString()}")
         if (user != model.user) {
             user = model.user
             Log.d(TAG, "New profile data: ${user.toString()}")
