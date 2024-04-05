@@ -33,6 +33,7 @@ fun LoginScreen(
     val vm: LoginViewModel = viewModel()
     LaunchedEffect(Unit){
         vm.addModel(am)
+        am.loading = 0
     }
     DisposableEffect(Unit) {
         onDispose {

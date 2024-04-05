@@ -224,8 +224,11 @@ fun ReviewView(mm: MainModel, c: ReviewController){
         ) {
 
          */
-        playBarViewModel.
-        PlayBar(playBarViewModel,rvvm.currentReviewData[pagerState.currentPage])
+        if (rvvm.currentReviewData.size > pagerState.currentPage) {
+            playBarViewModel.audioURL = rvvm.currentReviewData[pagerState.currentPage].downloadUrl
+        }
+
+        PlayBar(playBarViewModel)
 
         StarSelection(understandingVM)
         StarSelection(clarityVM)
