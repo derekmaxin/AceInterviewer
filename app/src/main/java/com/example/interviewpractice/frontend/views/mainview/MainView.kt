@@ -98,7 +98,7 @@ fun MainView(
                         goToHome = { anc.navigate("home") })
                 }
                 composable("home") {
-                    HomeScreen(c = ac, mm=mm,qc=qc,r=router)
+                    HomeScreen(c = ac, mm=mm,qc=qc,uc=uc,r=router)
                 }
                 composable("notifications") {
                     Notifications(mm=mm, c=nc)

@@ -16,6 +16,7 @@ import com.example.interviewpractice.types.Tag
 import com.example.interviewpractice.types.UserException
 import java.io.File
 import java.util.Calendar
+import java.util.UUID
 
 class QuestionController(mm: MainModel, am: AuthModel): Controller(mm,am, TAG) {
 
@@ -33,9 +34,11 @@ class QuestionController(mm: MainModel, am: AuthModel): Controller(mm,am, TAG) {
             verifyAnswerFormat(hasVoice, hasText)
             verifyTags(tagList)
 
+            val questionID = UUID.randomUUID().toString()
+
             val newQuestion = Question(questionText, tagList,
                 hasVoice, hasText, false,
-                am.getUserID(), getCurrentDate(), mutableListOf())
+                am.getUserID(), getCurrentDate(), mutableListOf(), questionID)
             mm.addQuestion(newQuestion)
 
             Log.d(TAG, "verifyQuestion:success")
@@ -58,17 +61,17 @@ class QuestionController(mm: MainModel, am: AuthModel): Controller(mm,am, TAG) {
 
             val uid = am.getUserID()
 
-            val question = AnsweredQuestion(
+            var question = AnsweredQuestion(
                 userID = uid,
                 textResponse = answerText,
                 questionID = questionID,
                 date = getCurrentDate(),
-                audioURI = fileUri,
+                downloadUrl = "",
                 audioTime = 2
             )
 
 
-            mm.addAnsweredQuestion(question)
+            mm.addAnsweredQuestion(question, fileUri)
         }
 
     }

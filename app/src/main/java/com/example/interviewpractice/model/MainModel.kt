@@ -3,7 +3,7 @@ package com.example.interviewpractice.model
 import android.content.Context
 import android.net.Uri
 import android.util.Log
-import androidx.core.content.FileProvider
+import androidx.compose.runtime.mutableStateOf
 import com.example.interviewpractice.helpers.getCurrentDate
 import com.example.interviewpractice.types.AnsweredQuestion
 import com.example.interviewpractice.types.CatastrophicException
@@ -21,17 +21,19 @@ import com.google.firebase.auth.auth
 import com.google.firebase.firestore.AggregateField
 import com.google.firebase.firestore.AggregateSource
 import com.google.firebase.firestore.DocumentChange
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.toObject
 import com.google.firebase.storage.storage
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.tasks.await
-import java.io.File
 import java.io.InputStream
 import java.util.Date
 import java.util.UUID
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 class MainModel() : Presenter() {
 
@@ -104,6 +106,10 @@ class MainModel() : Presenter() {
     var currentReviewData = mutableListOf<AnsweredQuestion>()
     var currentIteration: Int = 1;
 
+    //
+    var userQuestions = mutableListOf<Question>()
+    var userAnswered = mutableListOf<AnsweredQuestion>()
+
     //USER FUNCTIONS
     suspend fun addUserPfp(userID: String, uri: Uri, context: Context){
         val userRef = db.collection("users").document(userID)
@@ -138,22 +144,43 @@ class MainModel() : Presenter() {
         }
     }
 
-
     suspend fun addQuestion(question: Question) {
         db.collection("questions").add(question).await()
         Log.d(TAG,"addQuestion:success")
     }
 
-    suspend fun addAnsweredQuestion(question: AnsweredQuestion) {
-        val document = db.collection("answered").add(question).await()
-        if (question.audioURI != "") uploadAudio(question.audioURI,document.id)
-        db.collection("users").document(question.userID).update("questionsAnswered", FieldValue.increment(1))
+    suspend fun addAnsweredQuestion(question: AnsweredQuestion, fileUri: String) {
+        val ref: DocumentReference = db.collection("answered").document()
+        val myId = ref.id
+        //val document = db.collection("answered").add(question).await()
+        if (fileUri.isNotEmpty()) {
+            val downloadUrl = uploadAudio(fileUri, myId)
+            Log.d("downloadUrl", "$downloadUrl")
+            question.downloadUrl = downloadUrl
+        }
+        db.collection("answered").add(question).await()
+        db.collection("users").document(question.userID)
+            .update("questionsAnswered", FieldValue.increment(1)).await()
         invalidate(FetchType.HISTORY)
-        Log.d(TAG,"addAnsweredQuestion:success")
-
+        Log.d(TAG, "addAnsweredQuestion:success")
     }
 
-
+    suspend fun uploadAudio(audioURI: String, aqid: String): String {
+        return suspendCoroutine { continuation ->
+            val storageRef = storage.reference.child("audio_recordings/$aqid")
+            val uploadTask = storageRef.putFile(Uri.parse(audioURI))
+            uploadTask.addOnSuccessListener { _ ->
+                storageRef.downloadUrl.addOnSuccessListener { uri ->
+                    val downloadUrl = uri.toString()
+                    continuation.resume(downloadUrl)
+                }.addOnFailureListener {
+                    continuation.resumeWithException(it)
+                }
+            }.addOnFailureListener {
+                continuation.resumeWithException(it)
+            }
+        }
+    }
 
     suspend fun addReview(review: Review) {
         //Add review itself
@@ -270,7 +297,20 @@ class MainModel() : Presenter() {
             invalidate(FetchType.NOTIFICATION)
         }
     }
-    val userQuestions = mutableListOf<Question>()
+
+    suspend fun searchUserAnswered() {
+        val questionsRef = db.collection("answered")
+
+        val query = questionsRef.whereEqualTo("userID", auth.currentUser?.uid)
+            .get()
+            .await()
+        userAnswered.clear()
+        for (question in query) {
+            Log.d(TAG, "QUERY ${question.id} => ${question.data}")
+            userAnswered.add(question.toObject(AnsweredQuestion::class.java))
+        }
+        notifySubscribers()
+    }
 
     suspend fun searchUserQuestion() {
         val questionsRef = db.collection("questions")
@@ -284,22 +324,6 @@ class MainModel() : Presenter() {
             userQuestions.add(question.toObject(Question::class.java))
         }
         notifySubscribers()
-    }
-
-    suspend fun uploadAudio(audioURI: String,aqid:String){
-        val storageRef = storage.reference.child("audio_recordings/${aqid}")
-        val uploadTask = storageRef.putFile(Uri.parse(audioURI))
-        uploadTask.addOnSuccessListener {
-            // Audio uploaded successfully
-            // You can get the download URL here and save it to Firestore or Realtime Database
-            storageRef.downloadUrl.addOnSuccessListener { uri ->
-                val downloadUrl = uri.toString()
-                // Save downloadUrl to Firestore or Realtime Database
-                Log.d("AUDIO URL", "$downloadUrl")
-            }
-        }.addOnFailureListener {
-            // Handle failure
-        }
     }
 
     //------------[TEST METHODS]------------
