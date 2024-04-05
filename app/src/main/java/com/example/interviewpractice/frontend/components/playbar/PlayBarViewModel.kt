@@ -49,8 +49,8 @@ class PlayerService(private val url: String) {
 
     fun play() {
         mediaPlayer?.setOnPreparedListener { mediaPlayer ->
-            audioLength = mediaPlayer.duration
-            //Log.d("PlayerService","$audioLength")
+            //audioLength = mediaPlayer.duration
+            Log.d("PlayerService","$audioLength")
             mediaPlayer.seekTo(currentPosition.toInt())
             mediaPlayer.start()
         }
@@ -79,11 +79,24 @@ class PlayerService(private val url: String) {
 }
 
 
-class PlayBarViewModel(/*private val url: String*/): MMViewModel() {
-    var mps = PlayerService("https://www2.cs.uic.edu/~i101/SoundFiles/BabyElephantWalk60.wav")
+class PlayBarViewModel(): MMViewModel() {
+    var audioURLState: MutableState<String> = mutableStateOf("")
+    var audioURL: String
+        get() = audioURLState.value
+        set(value) {
+            audioURLState.value = value
+            updatePlayerService()
+        }
+
+    var mps: PlayerService = PlayerService(audioURL)
+
+    private fun updatePlayerService() {
+        mps = PlayerService(audioURL)
+    }
 
     var playState by mutableStateOf(PlayState.PAUSE)
     var audioLengthSeconds by mutableIntStateOf(mps.audioLength)
+
 
     fun switchState() {
          if (playState == PlayState.PLAY) {

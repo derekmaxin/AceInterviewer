@@ -26,6 +26,7 @@ import androidx.core.content.PermissionChecker
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.interviewpractice.controller.AuthController
 import com.example.interviewpractice.controller.QuestionController
+import com.example.interviewpractice.controller.UserController
 import com.example.interviewpractice.frontend.components.Loader
 import com.example.interviewpractice.frontend.components.question.Question
 import com.example.interviewpractice.frontend.components.playbar.PlayBar
@@ -36,6 +37,7 @@ import com.example.interviewpractice.frontend.views.mainview.Router
 import com.example.interviewpractice.helpers.navToQuestion
 import com.example.interviewpractice.model.AuthModel
 import com.example.interviewpractice.model.MainModel
+import com.example.interviewpractice.types.AnsweredQuestion
 import com.example.interviewpractice.types.FetchType
 import com.example.interviewpractice.types.Question
 
@@ -45,6 +47,7 @@ fun HomeScreen(
     c: AuthController,
     mm: MainModel,
     qc: QuestionController,
+    uc: UserController,
     r: Router
 )
 {
@@ -57,6 +60,7 @@ fun HomeScreen(
         vm.addModel(mm)
         playBarVM.addModel(mm)
         c.fetchData(FetchType.RECOMMENDATION)
+        uc.getQuestionsThisUserAnswered()
     }
     DisposableEffect(Unit) {
         onDispose {
@@ -111,23 +115,30 @@ fun HomeScreen(
                 modifier = Modifier.padding(16.dp)
             )
 
-            for (i in 0..2) {
+
+            for (questionAnswer in vm.questionsThisUserAnswered) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 4.dp),
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    QuestionAnswered(playBarVM)
+                    //Log.d("question downloadUrl", "${questionAnswer.downloadUrl}")
+                    playBarVM.audioURL = questionAnswer.downloadUrl
+                    QuestionAnswered(questionAnswer, playBarVM)
                 }
             }
+
         }
     }
 }
 
 @Composable
-fun QuestionAnswered(playBarVM: PlayBarViewModel) {
-
+fun QuestionAnswered(
+    questionAnswer: AnsweredQuestion,
+    playBarVM: PlayBarViewModel
+) {
+    Log.d("playbar downloadUrl", "${playBarVM.audioURL}")
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -148,7 +159,17 @@ fun QuestionAnswered(playBarVM: PlayBarViewModel) {
                     modifier = Modifier.fillMaxSize()
                 ) {
                     Text(
-                        text = "Question Text",
+                        text = "${questionAnswer.questionText}",
+                        style = TextStyle(
+                            fontSize = 14.sp,
+                            color = Color.Black,
+                        ),
+                        modifier = Modifier.padding(8.dp),
+                        overflow = TextOverflow.Ellipsis,
+                        maxLines = 1
+                    )
+                    Text(
+                        text = "${questionAnswer.textResponse}",
                         style = TextStyle(
                             fontSize = 14.sp,
                             color = Color.Black,
@@ -162,17 +183,7 @@ fun QuestionAnswered(playBarVM: PlayBarViewModel) {
                 }
             }
             }
-            Surface(
-                shape = MaterialTheme.shapes.small,
-                modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .padding(8.dp)
-            ) {
-                Text(
-                    text = "5",
-                    modifier = Modifier.padding(4.dp)
-                )
-            }
+
         }
     }
 }
