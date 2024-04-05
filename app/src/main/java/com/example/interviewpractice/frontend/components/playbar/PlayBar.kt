@@ -1,5 +1,12 @@
 package com.example.interviewpractice.frontend.components.playbar
 
+import android.app.Service
+import android.content.Intent
+import android.media.AudioAttributes
+import android.media.MediaPlayer
+import android.net.Uri
+import android.os.IBinder
+import android.util.Log
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
@@ -16,6 +23,7 @@ import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
@@ -26,9 +34,21 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
+
+
+
 @Composable
 fun PlayBar(playBarViewModel: PlayBarViewModel) {
-    var sliderPosition by remember { mutableFloatStateOf(0f) }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            playBarViewModel.mps.stop()
+            playBarViewModel.mps.release()
+            Log.d("MPS", "Released")
+        }
+    }
+
+
     Row(
         modifier = Modifier
             .fillMaxWidth(),
@@ -36,7 +56,7 @@ fun PlayBar(playBarViewModel: PlayBarViewModel) {
 
     ) {
         IconButton(onClick = { playBarViewModel.switchState() }) {
-            if (playBarViewModel.playState.value == PlayState.PAUSE) {
+            if (playBarViewModel.playState == PlayState.PAUSE) {
                 Icon(Icons.Filled.PlayArrow, contentDescription = "Play")
             } else {
                 Icon(Icons.Filled.Pause, contentDescription = "Pause")
@@ -45,19 +65,19 @@ fun PlayBar(playBarViewModel: PlayBarViewModel) {
         }
         Slider(
             modifier = Modifier.weight(1f),
-            value = playBarViewModel.sliderPosition.value,
+            value = playBarViewModel.mps.currentPosition,
             onValueChange = {
-                sliderPosition = it
-                playBarViewModel.sliderPosition.value = it },
+                playBarViewModel.mps.currentPosition = it
+            },
             colors = SliderDefaults.colors(
                 thumbColor = MaterialTheme.colorScheme.secondary,
                 activeTrackColor = MaterialTheme.colorScheme.secondary,
                 inactiveTrackColor = Color(0xffd4c7eb),
             ),
-            valueRange = 0f..50f
+            valueRange = 0f..(playBarViewModel.mps.audioLength.toFloat())
         )
         Text(
-            text = "2:51",
+            text = (playBarViewModel.mps.audioLength / 60000).toString() + ":" + String.format("%02d",((playBarViewModel.mps.audioLength / 1000) % 60)).toString(),
             modifier = Modifier
                 .widthIn(64.dp),
             textAlign = TextAlign.Center,
