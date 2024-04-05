@@ -47,7 +47,7 @@ fun LoginScreen(
             verticalArrangement = Arrangement.Center
         ) {
             Image(
-                painter = painterResource(id = R.drawable.klee),
+                painter = painterResource(id = R.drawable.aceinterviewerlogo),
                 contentDescription = "Your Image",
                 modifier = Modifier
                     .fillMaxWidth()
