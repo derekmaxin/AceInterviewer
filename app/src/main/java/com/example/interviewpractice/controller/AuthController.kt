@@ -23,6 +23,7 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.util.Calendar
 import java.util.Date
 
 
@@ -42,6 +43,8 @@ class AuthController(mm: MainModel, am: AuthModel): Controller(mm,am,TAG) {
             verifyUsernameFormat(username)
             verifyPasswordFormat(password)
             verifyEmailFormat(email)
+            verifyBirthday(birthday)
+            verifyFOI(foi)
 
             am.createAccount(
                 username = username,
@@ -55,6 +58,7 @@ class AuthController(mm: MainModel, am: AuthModel): Controller(mm,am,TAG) {
             Log.d(TAG,"verifyRegister:success")
         }
     }
+
     fun verifySignIn(password:String,email:String) {
         Log.d(TAG,"SIGNING IN AS: $email")
         handler("verifySignIn",true) {
@@ -95,6 +99,20 @@ class AuthController(mm: MainModel, am: AuthModel): Controller(mm,am,TAG) {
         //Add more checks here as necessary
         verifyGenericString(password, "Password")
 
+    }
+
+    private fun verifyFOI(foi: Set<Tag>) {
+        if (foi.isEmpty()) throw UserException("Please select at least 1 field of interest")
+        if (foi.size > 3) throw UserException("You can only choose at most 3 fields of interest")
+    }
+
+    private fun verifyBirthday(birthday: Date) {
+        val today = Calendar.getInstance()
+        val birthdate = Calendar.getInstance()
+        birthdate.time = birthday
+
+        val years = today.get(Calendar.YEAR) - birthdate.get(Calendar.YEAR)
+        if (years < 16) throw UserException("You must be over 16 to use this app")
     }
 
     companion object {

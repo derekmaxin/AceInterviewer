@@ -1,6 +1,9 @@
 package com.example.interviewpractice.frontend.views.mainview
 
+import android.os.Build
+import android.util.Log
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -25,6 +28,7 @@ import com.example.interviewpractice.frontend.views.profile.ProfileView
 import com.example.interviewpractice.frontend.views.profile.bestquestions.BestQuestionsViewModel
 import com.example.interviewpractice.frontend.views.review.ReviewView
 import com.example.interviewpractice.frontend.views.search.SearchView
+import com.example.interviewpractice.frontend.views.submitanswer.SubmitAnswer
 import com.example.interviewpractice.model.AuthModel
 import com.example.interviewpractice.model.MainModel
 import com.example.interviewpractice.types.FetchType
@@ -32,6 +36,7 @@ import androidx.compose.foundation.layout.Box
 import com.example.interviewpractice.frontend.components.LoadingOverlay
 import com.example.interviewpractice.frontend.views.answerquestion.AnswerScreen
 
+@RequiresApi(Build.VERSION_CODES.S)
 @Composable
 //@Preview
 fun MainView(
@@ -118,6 +123,7 @@ fun MainView(
 
         }
         else {
+            Log.d("UNAUTH", "HERE")
             NavHost(navController = unc, startDestination = "login") {
                 composable("login") {
                     LoginScreen(c = ac, am=am) { unc.navigate("register") }
@@ -126,6 +132,9 @@ fun MainView(
                     RegisterScreen(am=am, c = ac)
                 }
             }
+            //composable("question") {
+            //    SubmitAnswer(qc = QuestionController(am = am, mm = mm))
+            //}
         }
 
         if (vm.loading) {

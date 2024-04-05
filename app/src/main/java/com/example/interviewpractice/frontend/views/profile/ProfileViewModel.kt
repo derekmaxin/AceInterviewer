@@ -25,11 +25,6 @@ class ProfileViewModel(): MMViewModel(){
     //DATA FROM BACKEND
     var user by mutableStateOf<User?>(null)
 
-    init {
-
-        //dummy
-        badgeInfo["questionsAnswered"] = 100
-    }
 
     override fun update() {
         if (user != model.user) {

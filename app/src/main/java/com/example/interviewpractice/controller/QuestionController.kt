@@ -1,22 +1,19 @@
 package com.example.interviewpractice.controller
 
+import android.content.Context
+import android.net.Uri
 import android.util.Log
+import androidx.core.content.FileProvider
 import com.example.interviewpractice.helpers.getCurrentDate
 import com.example.interviewpractice.helpers.verifyGenericString
 import com.example.interviewpractice.model.AuthModel
 import com.example.interviewpractice.model.MainModel
 import com.example.interviewpractice.types.AnsweredQuestion
-import com.example.interviewpractice.types.ErrorType
 import com.example.interviewpractice.types.Question
 import com.example.interviewpractice.types.Review
 import com.example.interviewpractice.types.Tag
-import com.example.interviewpractice.types.UIError
 import com.example.interviewpractice.types.UserException
-import com.google.firebase.FirebaseException
-import com.google.firebase.firestore.FirebaseFirestoreException
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.launch
-import java.util.Calendar
+import java.io.File
 
 class QuestionController(mm: MainModel, am: AuthModel): Controller(mm,am, TAG) {
 
@@ -44,12 +41,30 @@ class QuestionController(mm: MainModel, am: AuthModel): Controller(mm,am, TAG) {
         }
     }
 
-    fun verifySubmitAnswer(answerText:String,questionID: String) {
+    fun verifySubmitAnswer(answerText:String,questionID: String, audioFile: File?, context: Context?, hasText: Boolean, hasVoice: Boolean) {
         handler("verifySubmitAnswer") {
-            verifyGenericString(answerText, "Answer text")
+            if (hasText) {
+                verifyGenericString(answerText, "Answer text")
+            }
+            var fileUri: String = ""
+            if (hasVoice) {
+                if (audioFile == null || context == null) {
+                    throw UserException("No audio submitted on a question which requires it")
+                }
+                fileUri = FileProvider.getUriForFile(context, context.packageName + ".provider", audioFile).toString()
+            }
+
             val uid = am.getUserID()
 
-            val question = AnsweredQuestion(userID = uid, textResponse = answerText, questionID = questionID,date= getCurrentDate())
+            val question = AnsweredQuestion(
+                userID = uid,
+                textResponse = answerText,
+                questionID = questionID,
+                date = getCurrentDate(),
+                audioURI = fileUri,
+                audioTime = 2
+            )
+
 
             mm.addAnsweredQuestion(question)
         }
@@ -81,6 +96,7 @@ class QuestionController(mm: MainModel, am: AuthModel): Controller(mm,am, TAG) {
             val answered1: AnsweredQuestion = AnsweredQuestion(
                 am.getUserID(),
                 "Blah",
+                "",
                 0,
                 false,
                 questionID = "",
@@ -90,12 +106,17 @@ class QuestionController(mm: MainModel, am: AuthModel): Controller(mm,am, TAG) {
             val answered2: AnsweredQuestion = AnsweredQuestion(
                 am.getUserID(),
                 "Blah2",
+                "",
                 0,
                 false,
                 questionID = "",
                 getCurrentDate()
 
             )
+
+            mm.addAnsweredQuestion(answered1)
+            mm.addAnsweredQuestion(answered2)
+
             val review1: Review = Review(
                 am.getUserID(),
                 "ID2",
@@ -116,8 +137,7 @@ class QuestionController(mm: MainModel, am: AuthModel): Controller(mm,am, TAG) {
                 getCurrentDate()
 
             )
-            mm.addAnsweredQuestion(answered1)
-            mm.addAnsweredQuestion(answered2)
+
             mm.addReview(review1)
             mm.addReview(review2)
 
@@ -158,6 +178,11 @@ class QuestionController(mm: MainModel, am: AuthModel): Controller(mm,am, TAG) {
         }
     }
 
+//    fun uploadAudio(audioFile : File, context: Context){
+//        handler("uploadAudio",false) {
+//            mm.uploadAudio(audioFile, context)
+//        }
+//    }
 //    private fun getCurrDate(): String {
 //        val calendar = Calendar.getInstance()
 //        val year = calendar.get(Calendar.YEAR)

@@ -83,6 +83,7 @@ class MainActivity : ComponentActivity() {
     private lateinit var aaa: BestQuestionsViewModel
 
 
+    @RequiresApi(Build.VERSION_CODES.S)
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.i("MainActivity","App started")
