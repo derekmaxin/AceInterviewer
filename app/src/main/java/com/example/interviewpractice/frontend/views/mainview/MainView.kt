@@ -31,6 +31,7 @@ import com.example.interviewpractice.types.FetchType
 import androidx.compose.foundation.layout.Box
 import com.example.interviewpractice.frontend.components.LoadingOverlay
 import com.example.interviewpractice.frontend.views.answerquestion.AnswerScreen
+import com.example.interviewpractice.frontend.views.seereview.SeeReviewView
 
 @Composable
 //@Preview
@@ -85,6 +86,9 @@ fun MainView(
                 composable("answer question") {
                     AnswerScreen(mm=mm,qc=qc)
                 }
+                composable("see review") {
+                    SeeReviewView(mm=mm)
+                }
 //            composable("best questions") {
 //                BestQuestionsView(vm= bestQuestionsViewModel)
 //            }
@@ -96,7 +100,7 @@ fun MainView(
                     HomeScreen(c = ac, mm=mm,qc=qc,r=router)
                 }
                 composable("notifications") {
-                    Notifications(mm=mm, c=nc)
+                    Notifications(mm=mm, c=nc, goToSeeReview = { anc.navigate("see review") })
                 }
                 composable("search") {
                     SearchView(

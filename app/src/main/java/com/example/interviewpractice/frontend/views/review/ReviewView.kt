@@ -99,8 +99,5 @@ fun ReviewView(mm: MainModel, c: ReviewController){
         Button( onClick = {c.verifyReview(rvvm.reviewText, clarityVM.intScore,understandingVM.intScore,dummyQuestion/*REPLACE WITH ACTUAL QUESTION ID*/)} ) {
             Text("Submit")
         }
-
-        //StarSelection("Sample")
-        //TODO: Add Marcus' tiered feedback review component
     }
 }

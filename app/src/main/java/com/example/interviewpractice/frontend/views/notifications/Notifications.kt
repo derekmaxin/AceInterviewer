@@ -21,7 +21,7 @@ import com.example.interviewpractice.types.NotificationType
 
 @Composable
 
-fun Notifications(mm: MainModel, c: NotificationController) {
+fun Notifications(mm: MainModel, c: NotificationController, goToSeeReview: () -> Unit) {
     val vm: NotificationsViewModel = viewModel()
 
 
@@ -42,7 +42,7 @@ fun Notifications(mm: MainModel, c: NotificationController) {
                 .padding(16.dp),
         ) {
             if (vm.newReviewNotification.isNotEmpty()) {
-                NotificationGroup("You have new reviews on your answers!", vm.newReviewNotification)
+                NotificationGroup("You have new reviews on your answers!", vm.newReviewNotification, goToSeeReview)
             }
 
 //            for (group in viewModel.notifications.value) {
