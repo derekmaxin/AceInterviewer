@@ -132,6 +132,7 @@ fun ReviewView(mm: MainModel, c: ReviewController){
         lastPage = pagerState.currentPage
     }
 
+
 /*
     val density = LocalDensity.current
 
