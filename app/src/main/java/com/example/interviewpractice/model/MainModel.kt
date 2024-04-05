@@ -56,13 +56,12 @@ class MainModel() : Presenter() {
     var isCached = mutableMapOf<FetchType,Boolean>()
 
     fun invalidateAll() {
-
         FetchType.entries.forEach {
             isCached[it] = false
         }
     }
 
-    private fun invalidate(ft: FetchType) {
+    fun invalidate(ft: FetchType) {
         if (ft == FetchType.QUESTION) {
             isCached[ft] = true
         }
@@ -100,6 +99,10 @@ class MainModel() : Presenter() {
 
     //QUESTION
     var currentQuestionData: Question? = null
+
+    //TINDER
+    var currentReviewData = mutableListOf<AnsweredQuestion>()
+    var currentIteration: Int = 1;
 
     //USER FUNCTIONS
     suspend fun addUserPfp(userID: String, uri: Uri, context: Context){
@@ -144,6 +147,7 @@ class MainModel() : Presenter() {
     suspend fun addAnsweredQuestion(question: AnsweredQuestion) {
         val document = db.collection("answered").add(question).await()
         if (question.audioURI != "") uploadAudio(question.audioURI,document.id)
+        db.collection("users").document(question.userID).update("questionsAnswered", FieldValue.increment(1))
         invalidate(FetchType.HISTORY)
         Log.d(TAG,"addAnsweredQuestion:success")
 
@@ -153,7 +157,7 @@ class MainModel() : Presenter() {
 
     suspend fun addReview(review: Review) {
         //Add review itself
-        db.collection("reviews").add(review).await()
+        val document = db.collection("reviews").add(review).await()
         //TODO: invalidate reviews
 
 
@@ -162,8 +166,11 @@ class MainModel() : Presenter() {
             notificationText = "A new review was added for question ${review.answeredQuestionID}",
             type = NotificationType.NEWREVIEW,
             review.answeredQuestionID,
-            review.answeredQuestionAuthorID)
+            review.answeredQuestionAuthorID,
+            document.id)
         db.collection("notifications").add(notification).await()
+
+        db.collection("answered").document(review.answeredQuestionID).update("reviewCount", FieldValue.increment(1))
         invalidate(FetchType.NOTIFICATION)
         invalidate(FetchType.HISTORY)
         Log.d(TAG,"addReview::success")
@@ -363,8 +370,67 @@ class MainModel() : Presenter() {
             }
         }
     }
+    suspend fun getNextReview(currentUser: String) {
+        fetch(FetchType.TINDER) {
+            var requiredReviews = 1
+            var requiredProficency = 90
+            when (currentIteration) {
+                1 -> {
+                    requiredReviews = 1
+                }
+                2 -> {
+                    requiredReviews = 3
+                }
+                3 -> {
+                    requiredReviews = 5
+                }
+                4 -> {
+                    requiredReviews = 7
+                }
+                5 -> {
+                    requiredReviews = 9
+                }
+                else -> {
+                    requiredReviews = currentIteration*2 - 1
+                }
+            }
+
+            getCurrentUserData()
+
+            if (user ==null) throw CatastrophicException("No user data found")
+            val foi = user!!.fieldsOfInterest
+
+            val questionRef = db.collection("answered")
+                .whereLessThanOrEqualTo("reviewCount", requiredReviews )
+//                .orderBy("date",Query.Direction.ASCENDING)
+
+            val query = questionRef.get().await()
+
+            for (entry in query ) {
+                val answered = entry.toObject<AnsweredQuestion>()
+                if (answered.tags.any { it in foi }) {
+                    currentReviewData.add(answered)
+                }
+            }
+
+            /*
+
+
+
+                    Iteration 1 Get the oldest 10 questions answered in which the user has proficiency in all tags >90 and have 0 to 1 reviews
+                    Iteration 2 Get the oldest 10 questions answered in which the user has proficiency in all tags >85 and have 0 to 3 reviews
+                    Iteration 3 Get the oldest 10 questions answered in which the user has proficiency in all tags >80 and have 0 to 5 reviews
+                    Iteration 4 Get the oldest 10 questions answered in which the user has proficiency in all tags >75 and have 0 to 7 reviews
+                    Iteration 5 Get the oldest 10 questions answered in which the user has proficiency in all tags >70 and have 0 to 9 reviews
+
+                    Each iteration after this point should not decrease it's minimum proficiency requirement, but should increase its max number of reviews by 2 each iteration.
+                    The results should then be displayed in the order that they were collected (matches found in Iteration 1 come before Iteration 2, for example).
+            */
+        }
+    }
     suspend fun getHistoryData(from: Date, to: Date, currentUser: String) {
         fetch(FetchType.HISTORY) {
+            Log.d(TAG,"ENTERED")
             val questionRef = db.collection("answered")
                 .whereEqualTo("userID", currentUser )
                 .whereGreaterThanOrEqualTo("date",from)
@@ -378,7 +444,7 @@ class MainModel() : Presenter() {
 
             for (document in query) {
                 val entry: AnsweredQuestion = document.toObject<AnsweredQuestion>()
-
+                Log.d(TAG,"ANOTHER ANSWERED QUESTION DATA: ${entry.date}")
 
                 //GET CLARITY
                 val reviewRef = db.collection("reviews")
@@ -420,6 +486,8 @@ class MainModel() : Presenter() {
 
     }
     fun reset() {
+        currentReviewData.clear()
+        currentIteration = 1
         invalidateAll()
         notifySubscribers()
     }

@@ -35,6 +35,7 @@ class AuthController(mm: MainModel, am: AuthModel): Controller(mm,am,TAG) {
     fun verifyRegister(
         username: String,
         password: String,
+        confirm: String,
         email: String,
         foi: Set<Tag>,
         birthday: Date
@@ -45,6 +46,7 @@ class AuthController(mm: MainModel, am: AuthModel): Controller(mm,am,TAG) {
             verifyEmailFormat(email)
             verifyBirthday(birthday)
             verifyFOI(foi)
+            verifyConfirm(password,confirm)
 
             am.createAccount(
                 username = username,
@@ -113,6 +115,9 @@ class AuthController(mm: MainModel, am: AuthModel): Controller(mm,am,TAG) {
 
         val years = today.get(Calendar.YEAR) - birthdate.get(Calendar.YEAR)
         if (years < 16) throw UserException("You must be over 16 to use this app")
+    }
+    private fun verifyConfirm(password: String,confirm: String) {
+        if (password != confirm) throw UserException("passwords")
     }
 
     companion object {

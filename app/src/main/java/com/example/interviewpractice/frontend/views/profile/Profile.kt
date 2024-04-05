@@ -59,10 +59,10 @@ fun ProfileView(mm: MainModel,
 ) {
     val vm: ProfileViewModel = viewModel()
     val historyViewModel: HistoryViewModel = viewModel()
-    historyViewModel.addModel(mm)
 
 
     LaunchedEffect(Unit) {
+        Log.d("PROFILE.KT ","LAUNCHING PROFILE")
         vm.addModel(mm)
         historyViewModel.addModel(mm)
         c.fetchData(FetchType.PROFILE)
@@ -71,7 +71,6 @@ fun ProfileView(mm: MainModel,
     DisposableEffect(Unit) {
         onDispose {
             vm.unsubscribe()
-            historyViewModel.unsubscribe()
             historyViewModel.unsubscribe()
         }
     }
@@ -131,13 +130,6 @@ fun ProfileView(mm: MainModel,
 
             History(historyViewModel, hc)
 
-            Spacer(modifier = Modifier.height(16.dp))
-            Button(
-                modifier = Modifier.fillMaxWidth(),
-                onClick = {  }
-            ) {
-                Text(text = "Your Proficiency Scores")
-            }
             Button(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = goToLeaderboard

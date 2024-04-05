@@ -36,7 +36,15 @@ fun NavBar(
     }
 
     val vm: NavBarViewModel = viewModel()
-    vm.addModel(mm)
+    LaunchedEffect(Unit){
+        vm.addModel(mm)
+    }
+    DisposableEffect(Unit) {
+        onDispose {
+            vm.unsubscribe()
+        }
+    }
+
 
     val ICON_SIZE = 42.dp
 

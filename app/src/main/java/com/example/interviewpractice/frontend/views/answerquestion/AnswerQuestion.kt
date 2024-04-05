@@ -1,6 +1,7 @@
 package com.example.interviewpractice.frontend.views.answerquestion
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -31,10 +32,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import com.example.interviewpractice.controller.QuestionController
 import com.example.interviewpractice.frontend.components.Loader
 import com.example.interviewpractice.frontend.components.question.DummyQuestion
 import com.example.interviewpractice.frontend.components.question.Question
+import com.example.interviewpractice.frontend.views.mainview.Router
 import com.example.interviewpractice.frontend.views.submitanswer.SubmitAnswer
 import com.example.interviewpractice.model.MainModel
 import com.example.interviewpractice.types.FetchType
@@ -53,7 +56,7 @@ fun SimpleOutlinedTextField(vm: AnswerQuestionViewModel) {
 
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable
-fun AnswerScreen(mm: MainModel, qc: QuestionController ) {
+fun AnswerScreen(mm: MainModel, qc: QuestionController, router: Router) {
     val vm: AnswerQuestionViewModel = viewModel()
 
     LaunchedEffect(Unit){
@@ -121,7 +124,8 @@ fun AnswerScreen(mm: MainModel, qc: QuestionController ) {
                 val file = vm.audioFile
                 val context = vm.context
                 if (question != null) {
-                    qc.verifySubmitAnswer(answerText = vm.textAnswer,question.questionID, file, context ,question.hasVoice,question.hasText)
+                    qc.verifySubmitAnswer(answerText = vm.textAnswer,question.questionID, file, context ,hasVoice = question.hasVoice,hasText = question.hasText)
+                    router.goToHome()
                 }
 
                       },

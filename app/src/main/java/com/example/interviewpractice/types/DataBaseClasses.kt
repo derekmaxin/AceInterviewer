@@ -55,14 +55,17 @@ data class AnsweredQuestion(
     val audioTime: Int = 0, //In seconds
     val isPrivate: Boolean = false,
     val questionID: String = "",
-    val date: Date = Date()
+    val date: Date = Date(),
+    val reviewCount: Int = 0, //Number of reviews this question has
+    val tags: List<Tag> = emptyList(),
 )
 
 //Format as needed
 data class Notification(
     val notificationText: String = "",
     val type: NotificationType = NotificationType.NEWREVIEW,
-    val typeID: String = "",
+    val questionID: String = "",
+    val reviewID: String = "",
     val userID: String = "" //Who the notification is for
 )
 

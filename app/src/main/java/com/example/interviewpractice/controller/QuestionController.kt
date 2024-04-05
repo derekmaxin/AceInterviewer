@@ -9,11 +9,13 @@ import com.example.interviewpractice.helpers.verifyGenericString
 import com.example.interviewpractice.model.AuthModel
 import com.example.interviewpractice.model.MainModel
 import com.example.interviewpractice.types.AnsweredQuestion
+import com.example.interviewpractice.types.FetchType
 import com.example.interviewpractice.types.Question
 import com.example.interviewpractice.types.Review
 import com.example.interviewpractice.types.Tag
 import com.example.interviewpractice.types.UserException
 import java.io.File
+import java.util.Calendar
 
 class QuestionController(mm: MainModel, am: AuthModel): Controller(mm,am, TAG) {
 
@@ -93,53 +95,68 @@ class QuestionController(mm: MainModel, am: AuthModel): Controller(mm,am, TAG) {
 //            mm.addQuestion(q4)
 //            mm.addQuestion(q5)
 
-            val answered1: AnsweredQuestion = AnsweredQuestion(
-                am.getUserID(),
-                "Blah",
-                "",
-                0,
-                false,
-                questionID = "",
-                getCurrentDate()
 
-            )
-            val answered2: AnsweredQuestion = AnsweredQuestion(
-                am.getUserID(),
-                "Blah2",
-                "",
-                0,
-                false,
-                questionID = "",
-                getCurrentDate()
 
-            )
+//            val answered1: AnsweredQuestion = AnsweredQuestion(
+//                am.getUserID(),
+//                "Blah",
+//                "",
+//                0,
+//                false,
+//                questionID = "",
+//                getCurrentDate()
+//
+//            )
+//            val answered2: AnsweredQuestion = AnsweredQuestion(
+//                am.getUserID(),
+//                "Blah2",
+//                "",
+//                0,
+//                false,
+//                questionID = "",
+//                getCurrentDate()
+//
+//            )
+//
+//            mm.addAnsweredQuestion(answered1)
+//            mm.addAnsweredQuestion(answered2)
+//
+//            val review1: Review = Review(
+//                am.getUserID(),
+//                "ID2",
+//                am.getUserID(),
+//                "HORRIBLE ANSWER",
+//                1,
+//                1,
+//                getCurrentDate()
+//
+//            )
+//            val review2: Review = Review(
+//                am.getUserID(),
+//                "ID2",
+//                am.getUserID(),
+//                "AWESOME ANSWER",
+//                5,
+//                4,
+//                getCurrentDate()
+//
+//            )
 
-            mm.addAnsweredQuestion(answered1)
-            mm.addAnsweredQuestion(answered2)
+//            mm.addReview(review1)
+//            mm.addReview(review2)
+            val month = 3
+            val year = 2023
+            val firstDay = Calendar.getInstance()
+            firstDay.set(Calendar.MONTH, month)
+            firstDay.set(Calendar.YEAR, year)
+            firstDay.set(Calendar.DATE, 1)
 
-            val review1: Review = Review(
-                am.getUserID(),
-                "ID2",
-                am.getUserID(),
-                "HORRIBLE ANSWER",
-                1,
-                1,
-                getCurrentDate()
-
-            )
-            val review2: Review = Review(
-                am.getUserID(),
-                "ID2",
-                am.getUserID(),
-                "AWESOME ANSWER",
-                5,
-                4,
-                getCurrentDate()
-
-            )
-
-            mm.addReview(review1)
-            mm.addReview(review2)
+            val lastDay = Calendar.getInstance()
+            lastDay.set(Calendar.MONTH, month)
+            lastDay.set(Calendar.YEAR, year)
+            lastDay.set(Calendar.DATE, lastDay.getActualMaximum(Calendar.DATE))
+            mm.invalidate(FetchType.HISTORY)
+            mm.getHistoryData(firstDay.time,lastDay.time, am.getUserID())
 
             Log.d(TAG,"dummyData:success")
         }
