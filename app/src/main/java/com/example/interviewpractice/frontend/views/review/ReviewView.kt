@@ -87,6 +87,7 @@ fun ReviewView(mm: MainModel, c: ReviewController){
 
     val pagerState = rememberPagerState(pageCount = { 2 })
 
+
 /*
     val density = LocalDensity.current
 
