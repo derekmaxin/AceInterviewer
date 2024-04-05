@@ -123,7 +123,7 @@ fun HomeScreen(
                         .padding(vertical = 4.dp),
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    //Log.d("question downloadUrl", "${question.downloadUrl}")
+                    //Log.d("question downloadUrl", "${questionAnswer.downloadUrl}")
                     playBarVM.audioURL = questionAnswer.downloadUrl
                     QuestionAnswered(questionAnswer, playBarVM)
                 }
@@ -138,7 +138,7 @@ fun QuestionAnswered(
     questionAnswer: AnsweredQuestion,
     playBarVM: PlayBarViewModel
 ) {
-
+    Log.d("playbar downloadUrl", "${playBarVM.audioURL}")
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -158,6 +158,16 @@ fun QuestionAnswered(
                 Column(
                     modifier = Modifier.fillMaxSize()
                 ) {
+                    Text(
+                        text = "${questionAnswer.questionText}",
+                        style = TextStyle(
+                            fontSize = 14.sp,
+                            color = Color.Black,
+                        ),
+                        modifier = Modifier.padding(8.dp),
+                        overflow = TextOverflow.Ellipsis,
+                        maxLines = 1
+                    )
                     Text(
                         text = "${questionAnswer.textResponse}",
                         style = TextStyle(

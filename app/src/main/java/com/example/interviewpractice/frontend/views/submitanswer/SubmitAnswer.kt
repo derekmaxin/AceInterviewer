@@ -10,10 +10,13 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Button
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
@@ -106,12 +109,12 @@ fun SubmitAnswer(qc: QuestionController,vm: AnswerQuestionViewModel) {
         }
 
     val context = LocalContext.current
-    var onRecord = true
+    var onRecord = remember {mutableStateOf(true) }
     val recorder = AudioRecord(context)
 
     Surface(
         modifier = Modifier
-            .fillMaxSize()
+            .fillMaxWidth()
     ) {
         Button(onClick = {
             when (PackageManager.PERMISSION_GRANTED) {
@@ -119,8 +122,8 @@ fun SubmitAnswer(qc: QuestionController,vm: AnswerQuestionViewModel) {
                     context,
                     Manifest.permission.RECORD_AUDIO
                 ) -> {
-                    recorder.onRecord(onRecord, qc, vm)
-                    onRecord = !onRecord
+                    recorder.onRecord(onRecord.value, qc, vm)
+                    onRecord.value = !onRecord.value
                 }
 
                 else -> {
@@ -130,7 +133,7 @@ fun SubmitAnswer(qc: QuestionController,vm: AnswerQuestionViewModel) {
             }
 
         }) {
-            Text("Record")
+            Text(if (onRecord.value) "Start Recording" else "Stop Recording")
         }
     }
 }
