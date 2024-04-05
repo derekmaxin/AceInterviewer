@@ -1,6 +1,5 @@
 package com.example.interviewpractice.frontend.views.notifications
 
-import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -18,16 +17,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.interviewpractice.controller.NotificationController
-import com.example.interviewpractice.frontend.components.notification.ConcreteNotificationGroupViewModel
 import com.example.interviewpractice.frontend.components.notification.NotificationGroup
-import com.example.interviewpractice.frontend.components.notification.NotificationGroupViewModel
 import com.example.interviewpractice.model.MainModel
 import com.example.interviewpractice.types.FetchType
-import com.example.interviewpractice.types.NotificationType
 
 @Composable
 
-fun Notifications(mm: MainModel, c: NotificationController, goToSeeReview: () -> Unit) {
+fun Notifications(mm: MainModel, c: NotificationController, goToSeeReview: (String) -> Unit) {
     val vm: NotificationsViewModel = viewModel()
 
 

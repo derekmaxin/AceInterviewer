@@ -1,5 +1,6 @@
 package com.example.interviewpractice.frontend.components.notification
 
+import android.util.Log
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -30,7 +31,7 @@ import androidx.compose.ui.unit.dp
 import com.example.interviewpractice.types.Notification
 
 @Composable
-fun NotificationGroup(type: String, notifications: List<Notification>, goToSeeReview: () -> Unit) {
+fun NotificationGroup(type: String, notifications: List<Notification>, goToSeeReview: (String) -> Unit) {
 //    var expanded by MutableState<Boolean>(false)
     var expanded by remember {mutableStateOf(false)}
     BadgedBox(
@@ -83,7 +84,8 @@ fun NotificationGroup(type: String, notifications: List<Notification>, goToSeeRe
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clickable {
-                                    goToSeeReview()
+                                    Log.d("ReviewIdInitial ","$notification.reviewID")
+                                    goToSeeReview(notification.reviewID)
                                 },
                             elevation = CardDefaults.cardElevation(
                                 defaultElevation = 6.dp

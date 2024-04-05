@@ -52,6 +52,7 @@ open class Controller(protected val mm: MainModel, protected val am: AuthModel, 
                 FetchType.TINDER->mm.getNextReview(am.getUserID())
 
 
+                else -> {}
             }
         }
     }

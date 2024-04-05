@@ -165,9 +165,9 @@ class MainModel() : Presenter() {
         val notification = Notification(
             notificationText = "A new review was added for question ${review.answeredQuestionID}",
             type = NotificationType.NEWREVIEW,
-            review.answeredQuestionID,
-            review.answeredQuestionAuthorID,
-            document.id)
+            questionID = review.answeredQuestionID,
+            userID = review.answeredQuestionAuthorID,
+            reviewID = document.id)
         db.collection("notifications").add(notification).await()
 
         db.collection("answered").document(review.answeredQuestionID).update("reviewCount", FieldValue.increment(1))
@@ -333,6 +333,20 @@ class MainModel() : Presenter() {
             }
             else {
                 throw CatastrophicException("No uid for signed in user")
+            }
+        }
+    }
+
+    suspend fun getReviewData(reviewId : String){
+        fetch(FetchType.REVIEW) {
+            if (reviewId != null) {
+                val userDoc = db.collection("reviews").document(reviewId)
+                val query = userDoc.get().await()
+
+                //review = query.toObject<User>()
+            }
+            else {
+                throw CatastrophicException("Review with this id does not exist")
             }
         }
     }

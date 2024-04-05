@@ -33,6 +33,8 @@ import com.example.interviewpractice.model.AuthModel
 import com.example.interviewpractice.model.MainModel
 import com.example.interviewpractice.types.FetchType
 import androidx.compose.foundation.layout.Box
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import com.example.interviewpractice.frontend.components.LoadingOverlay
 import com.example.interviewpractice.frontend.views.answerquestion.AnswerScreen
 import com.example.interviewpractice.frontend.views.seereview.SeeReviewView
@@ -67,6 +69,12 @@ fun MainView(
     val anc = rememberNavController()
     val router: Router = Router(anc)
 
+    val (dataForSeeReview, setDataForSeeReview) = remember { mutableStateOf("default id") }
+    val navigateToSeeReview: (String) -> Unit = { data ->
+        setDataForSeeReview(data)
+        anc.navigate("see review") // Navigate to the "see review" screen when data is set
+    }
+
     vm.error?.let {err ->
 
         //TODO: Work with snackbars instead of Toasts. This is just a placeholder
@@ -92,7 +100,7 @@ fun MainView(
                     AnswerScreen(mm=mm,qc=qc, router=router)
                 }
                 composable("see review") {
-                    SeeReviewView(mm=mm)
+                    SeeReviewView(mm = mm, reviewId = dataForSeeReview)
                 }
 //            composable("best questions") {
 //                BestQuestionsView(vm= bestQuestionsViewModel)
@@ -105,7 +113,7 @@ fun MainView(
                     HomeScreen(c = ac, mm=mm,qc=qc,r=router)
                 }
                 composable("notifications") {
-                    Notifications(mm=mm, c=nc, goToSeeReview = { anc.navigate("see review") })
+                    Notifications(mm=mm, c=nc, goToSeeReview =  navigateToSeeReview)
                 }
                 composable("search") {
                     SearchView(
