@@ -17,4 +17,10 @@ class UserController(mm: MainModel, am: AuthModel): Controller(mm,am,TAG) {
             mm.addUserPfp(am.getUserID(), uri, context)
         }
     }
+
+    fun getQuestionsThisUserAnswered () {
+        handler("searchUserAnswered",false) {
+            mm.searchUserAnswered()
+        }
+    }
 }

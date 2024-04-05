@@ -77,7 +77,7 @@ fun AnswerScreen(mm: MainModel, qc: QuestionController, router: Router) {
                 .padding(vertical = 32.dp),
 
             verticalArrangement = Arrangement.spacedBy(6.dp),
-            horizontalAlignment = Alignment.Start,
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             val question = vm.currentQuestion
             if (question == null || vm.localLoading) Loader()
@@ -93,53 +93,31 @@ fun AnswerScreen(mm: MainModel, qc: QuestionController, router: Router) {
                 }
 
             }
+            Button(
+                onClick = {
+                    val question = vm.currentQuestion
+                    val file = vm.audioFile
+                    val context = vm.context
+                    if (question!= null) {
+                        qc.verifySubmitAnswer(answerText = vm.textAnswer,question.questionID, file, context ,hasVoice = question.hasVoice,hasText = question.hasText, tags=question.tags, questionText = question.questionText)
+                        router.goToHome()
+                    }
 
-
-        }
-
-        Column (
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 16.dp)
-                .padding(vertical = 32.dp),
-
-            verticalArrangement = Arrangement.Bottom,
-            horizontalAlignment = Alignment.Start,
-        ) {
-
-            Row(
+                },
                 modifier = Modifier
-                    .fillMaxWidth(),
-
-                horizontalArrangement = Arrangement.Center
+                    .height(50.dp)
+                    .padding(vertical = 4.dp)
             ) {
-                Button( onClick = { TODO("Start Recording") }) {
-                    Icon(Icons.Filled.RadioButtonUnchecked, contentDescription = "Play")
-                }
-            }
-        }
-        Button(
-            onClick = {
-                val question = vm.currentQuestion
-                val file = vm.audioFile
-                val context = vm.context
-                if (question!= null) {
-                    qc.verifySubmitAnswer(answerText = vm.textAnswer,question.questionID, file, context ,hasVoice = question.hasVoice,hasText = question.hasText, tags=question.tags, questionText = question.questionText)
-                    router.goToHome()
-                }
-
-                      },
-            modifier = Modifier
-                .height(50.dp)
-                .padding(vertical = 4.dp)
-        ) {
-            Text("Submit Answer",
-                style = TextStyle(
-                    fontSize = 16.sp,
-                    color = Color.White,
+                Text("Submit Answer",
+                    style = TextStyle(
+                        fontSize = 16.sp,
+                        color = Color.White,
+                    )
                 )
-            )
+            }
+
         }
+
     }
 }
 

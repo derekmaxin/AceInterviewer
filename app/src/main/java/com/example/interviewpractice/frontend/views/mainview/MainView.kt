@@ -121,33 +121,33 @@ fun MainView(
 //            composable("best questions") {
 //                BestQuestionsView(vm= bestQuestionsViewModel)
 //            }
-                    composable("make question") {
-                        MakeQuestionScreen(mm=mm, questionController = qc,
-                            goToHome = { anc.navigate("home") })
-                    }
-                    composable("home") {
-                        HomeScreen(c = ac, mm=mm,qc=qc,r=router)
-                    }
-                    composable("notifications") {
-                        Notifications(mm=mm, c=nc)
-                    }
-                    composable("search") {
-                        SearchView(
-                            c = qc, mm=mm, r=router)
-                    }
-                    composable("profile") {
-                        ProfileView(
-                            mm=mm, c = uc, ac=ac, uc=uc, goToLeaderboard = { anc.navigate("leaderboard")}, hc=hc)
-                    }
+                composable("make question") {
+                    MakeQuestionScreen(mm=mm, questionController = qc,
+                        goToHome = { anc.navigate("home") })
                 }
-                NavBar(
-                    goToReviews={anc.navigate("reviews")},
-                    goToSearch={anc.navigate("search")},
-                    goToHome={anc.navigate("home")},
-                    goToNotifications={anc.navigate("notifications")},
-                    goToProfile={anc.navigate("profile")},
-                    nc=nc,
-                    mm=mm)
+                composable("home") {
+                    HomeScreen(c = ac, mm=mm,qc=qc,uc=uc,r=router)
+                }
+                composable("notifications") {
+                    Notifications(mm=mm, c=nc)
+                }
+                composable("search") {
+                    SearchView(
+                        c = qc, mm=mm, r=router)
+                }
+                composable("profile") {
+                    ProfileView(
+                        mm=mm, c = uc, ac=ac, uc=uc, goToLeaderboard = { anc.navigate("leaderboard")}, hc=hc)
+                }
+            }
+            NavBar(
+                goToReviews={anc.navigate("reviews")},
+                goToSearch={anc.navigate("search")},
+                goToHome={anc.navigate("home")},
+                goToNotifications={anc.navigate("notifications")},
+                goToProfile={anc.navigate("profile")},
+                nc=nc,
+                mm=mm)
 
             }
             else {

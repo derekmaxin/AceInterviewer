@@ -52,13 +52,13 @@ data class AnsweredQuestion(
     val questionText: String = "",
     val userID: String = "", //Who answered the question
     val textResponse: String = "",
-    val audioURI: String = "", //Some sort of link to the Google Cloud storage
+    var downloadUrl: String = "", //Some sort of link to the Google Cloud storage
     val audioTime: Int = 0, //In seconds
     val isPrivate: Boolean = false,
     val questionID: String = "",
     val date: Date = Date(),
     val reviewCount: Int = 0, //Number of reviews this question has
-    val tags: List<Tag> = emptyList(),
+    val tags: List<Tag> = emptyList()
 )
 
 data class HasReviewed(
