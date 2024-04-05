@@ -177,7 +177,6 @@ fun History(viewModel: HistoryViewModel, hc: HistoryController) {
 
             }
             Spacer(modifier = Modifier.padding(8.dp))
-
         }
         else {
             for (history in viewModel.historyChartData) {

@@ -23,6 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.PermissionChecker
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.interviewpractice.controller.AuthController
 import com.example.interviewpractice.controller.QuestionController
@@ -54,20 +55,21 @@ fun HomeScreen(
     val scrollState = rememberScrollState()
 
     val vm: HomeViewModel = viewModel()
-    val playBarVM: PlayBarViewModel = viewModel()
+
 
     LaunchedEffect(Unit){
         vm.addModel(mm)
-        playBarVM.addModel(mm)
+        // playBarVM.addModel(mm)
         c.fetchData(FetchType.RECOMMENDATION)
         uc.getQuestionsThisUserAnswered()
     }
     DisposableEffect(Unit) {
         onDispose {
             vm.unsubscribe()
-            playBarVM.unsubscribe()
+            // playBarVM.unsubscribe()
         }
     }
+
     Surface() {
         Column(
             modifier = Modifier
@@ -123,8 +125,12 @@ fun HomeScreen(
                         .padding(vertical = 4.dp),
                     horizontalArrangement = Arrangement.Center
                 ) {
+
                     //Log.d("question downloadUrl", "${questionAnswer.downloadUrl}")
+                    val playBarVM: PlayBarViewModel = viewModel(key = questionAnswer.downloadUrl)
+                    playBarVM.addModel(mm)
                     playBarVM.audioURL = questionAnswer.downloadUrl
+
                     QuestionAnswered(questionAnswer, playBarVM)
                 }
             }

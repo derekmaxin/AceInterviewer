@@ -45,6 +45,7 @@ fun ViewReviewScores(history: History) {
                 text = history.questionText,
                 style = MaterialTheme.typography.bodyLarge,
             )
+
             HorizontalDivider(thickness = 1.dp, color = Color.LightGray)
 //            PlayBar(viewModel.playBarViewModel)
             HorizontalDivider(thickness = 1.dp, color = Color.LightGray)
