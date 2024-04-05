@@ -32,7 +32,14 @@ import com.example.interviewpractice.types.Tag
 //@Preview
 fun RegisterScreen(am: AuthModel, c: AuthController) {
     val vm: RegisterViewModel = viewModel()
-    vm.addModel(am)
+    LaunchedEffect(Unit){
+        vm.addModel(am)
+    }
+    DisposableEffect(Unit) {
+        onDispose {
+            vm.unsubscribe()
+        }
+    }
     Surface {
         Column(
             modifier = Modifier
@@ -123,6 +130,7 @@ fun RegisterScreen(am: AuthModel, c: AuthController) {
                     c.verifyRegister(
                         username = vm.username,
                         password = vm.password,
+                        confirm = vm.passwordConfirm,
                         email = vm.email,
                         foi = vm.selectedOptions,
                         birthday = vm.getSelectedBirthday(),

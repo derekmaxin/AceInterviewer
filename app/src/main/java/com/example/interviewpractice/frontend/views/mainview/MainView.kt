@@ -88,7 +88,7 @@ fun MainView(
                     LeaderboardView(mm=mm,c=uc)
                 }
                 composable("answer question") {
-                    AnswerScreen(mm=mm,qc=qc)
+                    AnswerScreen(mm=mm,qc=qc, router=router)
                 }
 //            composable("best questions") {
 //                BestQuestionsView(vm= bestQuestionsViewModel)

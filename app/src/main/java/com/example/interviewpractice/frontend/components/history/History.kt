@@ -25,6 +25,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -37,9 +38,11 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.interviewpractice.controller.HistoryController
 import com.example.interviewpractice.frontend.components.viewreviewscores.ViewReviewScores
 import com.example.interviewpractice.frontend.views.review.ReviewViewViewModel
+import com.example.interviewpractice.model.MainModel
 import com.example.interviewpractice.types.FetchType
 import java.util.Calendar
 import java.util.Date
@@ -150,8 +153,7 @@ fun History(viewModel: HistoryViewModel, hc: HistoryController) {
                         viewModel.selectedYear = it
                         val dateRange = getDateRangeFromMonth(viewModel.selectedMonth, viewModel.selectedYear.toInt())
                         hc.getUserHistoryDataByDate(dateRange.first, dateRange.second)
-                    }
-                    Log.d("CHANGE", "View model changed to $it") },
+                    } },
                 label = { Text("Year") },
                 maxLines = 1,
                 modifier = Modifier

@@ -23,6 +23,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,6 +44,7 @@ import com.example.interviewpractice.frontend.components.starselection.StarSelec
 import com.example.interviewpractice.frontend.components.starselection.StarSelectionViewModel
 import com.example.interviewpractice.model.MainModel
 import com.example.interviewpractice.types.AnsweredQuestion
+import com.example.interviewpractice.types.FetchType
 import com.example.interviewpractice.types.Question
 import com.example.interviewpractice.types.Tag
 import kotlin.math.absoluteValue
@@ -66,13 +69,28 @@ fun SimpleOutlinedTextField(rvvm: ReviewViewViewModel) {
 fun ReviewView(mm: MainModel, c: ReviewController){
 
     val rvvm: ReviewViewViewModel = viewModel()
-    rvvm.addModel(mm)
     val clarityVM: StarSelectionViewModel = viewModel(key="clarity")
-    clarityVM.addModel(mm)
+
     val understandingVM: StarSelectionViewModel = viewModel(key="understanding")
-    understandingVM.addModel(mm)
+
     val playBarViewModel: PlayBarViewModel = viewModel()
-    playBarViewModel.addModel(mm)
+
+
+    LaunchedEffect(Unit){
+        rvvm.addModel(mm)
+        clarityVM.addModel(mm)
+        understandingVM.addModel(mm)
+        playBarViewModel.addModel(mm)
+        c.fetchData(FetchType.TINDER)
+    }
+    DisposableEffect(Unit) {
+        onDispose {
+            rvvm.unsubscribe()
+            clarityVM.unsubscribe()
+            understandingVM.unsubscribe()
+            playBarViewModel.unsubscribe()
+        }
+    }
 
 
     clarityVM.name = "Clarity"
@@ -80,10 +98,10 @@ fun ReviewView(mm: MainModel, c: ReviewController){
 
 
 
-    val dummyQuestion = AnsweredQuestion(
-        textResponse = "How do you manage the memory of an object in C++?",
-        userID = c.getUser()
-    )
+//    val dummyQuestion = AnsweredQuestion(
+//        textResponse = "How do you manage the memory of an object in C++?",
+//        userID = c.getUser()
+//    )
 
     val pagerState = rememberPagerState(pageCount = { 2 })
 
@@ -150,13 +168,23 @@ fun ReviewView(mm: MainModel, c: ReviewController){
                     .padding(end = 16.dp)
             ) {
                 if (page == 1) {
-                    DummyQuestion(
-                        qText = "This is the second question!"
-                    )
+                    if ((rvvm.currentReviewData.isNotEmpty())) {
+                        DummyQuestion(
+                            qText = rvvm.currentReviewData.first().textResponse
+                        )
+                    }
+                    else {
+                        DummyQuestion(qText = "NO QUESTIONS TO REVIEW RIGHT NOW")
+                    }
                 } else {
-                    DummyQuestion(
-                        qText = "This is a question box. It should take up the entire width of the screen"
-                    )
+                    if ((rvvm.currentReviewData.size > 1)) {
+                        DummyQuestion(
+                            qText = rvvm.currentReviewData[1].textResponse
+                        )
+                    }
+                    else {
+                        DummyQuestion(qText = "NO QUESTIONS TO REVIEW RIGHT NOW")
+                    }
                 }
             }
         }
@@ -182,12 +210,21 @@ fun ReviewView(mm: MainModel, c: ReviewController){
         StarSelection(clarityVM)
 
         SimpleOutlinedTextField(rvvm)
+        if (rvvm.currentReviewData.isNotEmpty()) {
+            Button(
+                onClick = {
 
-        Button(
-            onClick = {c.verifyReview(rvvm.reviewText, clarityVM.intScore,understandingVM.intScore,dummyQuestion/*REPLACE WITH ACTUAL QUESTION ID*/)} ,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Submit")
+                    c.verifyReview(
+                        rvvm.reviewText,
+                        clarityVM.intScore,
+                        understandingVM.intScore,
+                        rvvm.currentReviewData.first()/*REPLACE WITH ACTUAL QUESTION ID*/
+                    )
+                },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Submit")
+            }
         }
     }
 }

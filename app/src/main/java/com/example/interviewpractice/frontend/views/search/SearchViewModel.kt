@@ -23,7 +23,7 @@ class SearchViewModel(): LoaderMMViewModel() {
 
     override fun update() {
         if (searchResults != model.searchResults) {
-            searchResults = model.searchResults
+            searchResults = model.searchResults.toList()
             Log.d(TAG, "updated search results on frontend: ${searchResults.toString()}")
         }
     }

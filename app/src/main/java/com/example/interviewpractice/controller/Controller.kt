@@ -49,6 +49,7 @@ open class Controller(protected val mm: MainModel, protected val am: AuthModel, 
                     mm.getHistoryData(from,Date(),am.getUserID())
                 }
                 FetchType.QUESTION->mm.getQuestionData()
+                FetchType.TINDER->mm.getNextReview(am.getUserID())
 
 
             }
