@@ -1,5 +1,6 @@
 package com.example.interviewpractice.frontend.views.review
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
@@ -18,6 +19,7 @@ class ReviewViewViewModel(): MMViewModel() {
     val questionsIndex = mutableIntStateOf(0)
 
     var currentReviewData by mutableStateOf<List<AnsweredQuestion>>(emptyList())
+    var currentIDData by mutableStateOf<List<String>>(emptyList())
 //    val questionVM = mutableStateOf(QuestionViewModel(model))
 //    val playBarViewModel = mutableStateOf(PlayBarViewModel(model))
 //
@@ -26,9 +28,15 @@ class ReviewViewViewModel(): MMViewModel() {
 
 
     override fun update() {
+        Log.d(TAG,"Backend Review Data: ${model.currentReviewData}, ${currentReviewData}")
         if (currentReviewData != model.currentReviewData) {
             currentReviewData = model.currentReviewData.toList()
+            currentIDData = model.currentIdData.toList()
+            Log.d(TAG,"REVIEWVIEW CHANGED!: $currentReviewData")
         }
+    }
+    companion object {
+        private const val TAG = "ReviewViewViewModel"
     }
 
 }

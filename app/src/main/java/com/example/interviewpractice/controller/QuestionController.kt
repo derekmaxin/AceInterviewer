@@ -43,7 +43,7 @@ class QuestionController(mm: MainModel, am: AuthModel): Controller(mm,am, TAG) {
         }
     }
 
-    fun verifySubmitAnswer(answerText:String,questionID: String, audioFile: File?, context: Context?, hasText: Boolean, hasVoice: Boolean) {
+    fun verifySubmitAnswer(answerText:String,questionID: String, audioFile: File?, context: Context?, hasText: Boolean, hasVoice: Boolean, tags: List<Tag>, questionText: String) {
         handler("verifySubmitAnswer") {
             if (hasText) {
                 verifyGenericString(answerText, "Answer text")
@@ -64,7 +64,9 @@ class QuestionController(mm: MainModel, am: AuthModel): Controller(mm,am, TAG) {
                 questionID = questionID,
                 date = getCurrentDate(),
                 audioURI = fileUri,
-                audioTime = 2
+                audioTime = 2,
+                tags=tags,
+                questionText = questionText
             )
 
 
@@ -75,6 +77,7 @@ class QuestionController(mm: MainModel, am: AuthModel): Controller(mm,am, TAG) {
 
     fun loadNextQuestion(question: Question) {
         mm.currentQuestionData = question
+        Log.d(TAG, "LOADED NEXT QUESTION: $question")
     }
 
     fun dummyData() {

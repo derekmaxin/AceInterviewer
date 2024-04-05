@@ -1,5 +1,6 @@
 package com.example.interviewpractice.frontend.views.review
 
+import android.util.Log
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.gestures.AnchoredDraggableState
@@ -25,15 +26,23 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.lerp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.interviewpractice.controller.ReviewController
@@ -47,6 +56,7 @@ import com.example.interviewpractice.types.AnsweredQuestion
 import com.example.interviewpractice.types.FetchType
 import com.example.interviewpractice.types.Question
 import com.example.interviewpractice.types.Tag
+import kotlinx.coroutines.launch
 import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
 
@@ -70,10 +80,11 @@ fun ReviewView(mm: MainModel, c: ReviewController){
 
     val rvvm: ReviewViewViewModel = viewModel()
     val clarityVM: StarSelectionViewModel = viewModel(key="clarity")
-
     val understandingVM: StarSelectionViewModel = viewModel(key="understanding")
-
     val playBarViewModel: PlayBarViewModel = viewModel()
+
+    val btnscope = rememberCoroutineScope()
+    var lastPage by remember { mutableStateOf(0) }
 
 
     LaunchedEffect(Unit){
@@ -82,9 +93,12 @@ fun ReviewView(mm: MainModel, c: ReviewController){
         understandingVM.addModel(mm)
         playBarViewModel.addModel(mm)
         c.fetchData(FetchType.TINDER)
+        clarityVM.name = "Clarity"
+        understandingVM.name = "Understanding"
     }
     DisposableEffect(Unit) {
         onDispose {
+            Log.d("REVIEW","DISPOSING")
             rvvm.unsubscribe()
             clarityVM.unsubscribe()
             understandingVM.unsubscribe()
@@ -93,8 +107,7 @@ fun ReviewView(mm: MainModel, c: ReviewController){
     }
 
 
-    clarityVM.name = "Clarity"
-    understandingVM.name = "Understanding"
+
 
 
 
@@ -103,7 +116,21 @@ fun ReviewView(mm: MainModel, c: ReviewController){
 //        userID = c.getUser()
 //    )
 
-    val pagerState = rememberPagerState(pageCount = { 2 })
+    val pagerState = rememberPagerState(pageCount = { 11 })
+    LaunchedEffect(pagerState.currentPage) {
+        if (pagerState.currentPage < lastPage) {
+            pagerState.scrollToPage(pagerState.currentPage)
+        }
+        if (pagerState.currentPage == 10) {
+            // Refresh your content here, for example:
+            mm.invalidate(FetchType.TINDER)
+            c.fetchData(FetchType.TINDER)
+
+            // Navigate back to the first page
+            pagerState.scrollToPage(0)
+        }
+        lastPage = pagerState.currentPage
+    }
 
 /*
     val density = LocalDensity.current
@@ -167,23 +194,16 @@ fun ReviewView(mm: MainModel, c: ReviewController){
                     }
                     .padding(end = 16.dp)
             ) {
-                if (page == 1) {
-                    if ((rvvm.currentReviewData.isNotEmpty())) {
-                        DummyQuestion(
-                            qText = rvvm.currentReviewData.first().textResponse
-                        )
-                    }
-                    else {
-                        DummyQuestion(qText = "NO QUESTIONS TO REVIEW RIGHT NOW")
-                    }
-                } else {
-                    if ((rvvm.currentReviewData.size > 1)) {
-                        DummyQuestion(
-                            qText = rvvm.currentReviewData[1].textResponse
-                        )
-                    }
-                    else {
-                        DummyQuestion(qText = "NO QUESTIONS TO REVIEW RIGHT NOW")
+                for (i in 0..9) {
+                    if (i == page) {
+                        if ((rvvm.currentReviewData.size > i)) {
+                            DummyQuestion(
+                                qText = rvvm.currentReviewData[i].textResponse
+                            )
+                        }
+                        else {
+                            DummyQuestion(qText = "NO QUESTION TO REVIEW RIGHT NOW")
+                        }
                     }
                 }
             }
@@ -210,21 +230,47 @@ fun ReviewView(mm: MainModel, c: ReviewController){
         StarSelection(clarityVM)
 
         SimpleOutlinedTextField(rvvm)
-        if (rvvm.currentReviewData.isNotEmpty()) {
-            Button(
-                onClick = {
+        if (rvvm.currentReviewData.size > pagerState.currentPage ) {
+            if (rvvm.currentIDData[pagerState.currentPage] != "1") {
+                Button(
+                    onClick = {
+                        c.verifyReview(
+                            reviewText = rvvm.reviewText,
+                            clarity = clarityVM.intScore,
+                            understanding = understandingVM.intScore,
+                            answeredQuestion = rvvm.currentReviewData[pagerState.currentPage],
+                            answeredQuestionID = rvvm.currentIDData[pagerState.currentPage],
 
-                    c.verifyReview(
-                        rvvm.reviewText,
-                        clarityVM.intScore,
-                        understandingVM.intScore,
-                        rvvm.currentReviewData.first()/*REPLACE WITH ACTUAL QUESTION ID*/
-                    )
-                },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("Submit")
+                            /*REPLACE WITH ACTUAL QUESTION ID*/
+                        )
+                        btnscope.launch {
+                            val mut = rvvm.currentIDData.toMutableList()
+                            mut[pagerState.currentPage] = "1"
+                            rvvm.currentIDData = mut
+                            pagerState.animateScrollToPage(pagerState.currentPage+1)
+
+                        }
+
+
+
+
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Submit")
+                }
             }
+            else {
+                Text(text = "You already answered this question!", style = TextStyle(
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black,
+                )
+                )
+            }
+
         }
     }
+
+
 }
