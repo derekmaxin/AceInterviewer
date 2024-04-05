@@ -1,5 +1,6 @@
 package com.example.interviewpractice.helpers
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -10,6 +11,7 @@ import com.example.interviewpractice.frontend.MMViewModel
 import com.example.interviewpractice.types.FetchType
 import com.example.interviewpractice.types.Question
 import com.example.interviewpractice.types.UserException
+import com.google.firebase.auth.FirebaseAuth
 import java.util.Date
 
 

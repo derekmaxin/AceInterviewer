@@ -11,24 +11,25 @@ import com.example.interviewpractice.frontend.Subscriber
 import com.example.interviewpractice.model.MainModel
 import com.example.interviewpractice.types.UIError
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.auth.User
 
 class MainViewModel( ): AMViewModel() {
 
-    var loading: Boolean by mutableStateOf(false)
-    var user: FirebaseUser? by mutableStateOf(null)
+    var loading: Int by mutableStateOf(1)
     var error: UIError? by mutableStateOf(null)
+    var authLoading: Boolean by mutableStateOf(true)
+    var user: FirebaseUser? by mutableStateOf(null)
 
     override fun update() {
         if (error != m.error) {
             error = m.error
             Log.d(TAG,"Updated error state: error -> ${error?.message}")
         }
-        if (user != m.user) {
-            user = m.user
-            Log.d(TAG,"Updated auth state: user -> $user")
-        }
         if (loading != m.loading) {
             loading = m.loading
+        }
+        if (authLoading != m.authLoading) {
+            authLoading = m.authLoading
         }
     }
     companion object {

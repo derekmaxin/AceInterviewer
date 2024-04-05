@@ -22,7 +22,7 @@ data class Question(
     val userID: String = "",
     val date: Date = Date(),
     val answers: List<String> = emptyList(),
-    val questionID: String = ""
+    var questionID: String = ""
 )
 
 data class History(
@@ -49,6 +49,7 @@ data class Review(
 )
 
 data class AnsweredQuestion(
+    val questionText: String = "",
     val userID: String = "", //Who answered the question
     val textResponse: String = "",
     var downloadUrl: String = "", //Some sort of link to the Google Cloud storage
@@ -58,6 +59,10 @@ data class AnsweredQuestion(
     val date: Date = Date(),
     val reviewCount: Int = 0, //Number of reviews this question has
     val tags: List<Tag> = emptyList()
+)
+
+data class HasReviewed(
+    val hasReviewed: Boolean = true
 )
 
 //Format as needed

@@ -9,6 +9,7 @@ import com.example.interviewpractice.types.AnsweredQuestion
 import com.example.interviewpractice.types.CatastrophicException
 import com.example.interviewpractice.types.Collections
 import com.example.interviewpractice.types.FetchType
+import com.example.interviewpractice.types.HasReviewed
 import com.example.interviewpractice.types.History
 import com.example.interviewpractice.types.Notification
 import com.example.interviewpractice.types.NotificationType
@@ -34,6 +35,7 @@ import java.util.UUID
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
+
 
 class MainModel() : Presenter() {
 
@@ -104,7 +106,7 @@ class MainModel() : Presenter() {
 
     //TINDER
     var currentReviewData = mutableListOf<AnsweredQuestion>()
-    var currentIteration: Int = 1;
+    var currentIdData = mutableListOf<String>()
 
     //
     var userQuestions = mutableListOf<Question>()
@@ -145,7 +147,12 @@ class MainModel() : Presenter() {
     }
 
     suspend fun addQuestion(question: Question) {
-        db.collection("questions").add(question).await()
+        val ref: DocumentReference = db.collection("my_collection").document()
+        val qid: String = ref.id
+        question.questionID = qid
+        db.collection("questions").document(qid).set(question).await()
+
+        db.collection("questions")
         Log.d(TAG,"addQuestion:success")
     }
 
@@ -162,7 +169,8 @@ class MainModel() : Presenter() {
         db.collection("users").document(question.userID)
             .update("questionsAnswered", FieldValue.increment(1)).await()
         invalidate(FetchType.HISTORY)
-        Log.d(TAG, "addAnsweredQuestion:success")
+        invalidate(FetchType.TINDER)
+        Log.d(TAG,"addAnsweredQuestion:success")
     }
 
     suspend fun uploadAudio(audioURI: String, aqid: String): String {
@@ -192,10 +200,13 @@ class MainModel() : Presenter() {
         val notification = Notification(
             notificationText = "A new review was added for question ${review.answeredQuestionID}",
             type = NotificationType.NEWREVIEW,
-            review.answeredQuestionID,
-            review.answeredQuestionAuthorID,
-            document.id)
+            questionID = review.answeredQuestionID,
+            userID = review.answeredQuestionAuthorID,
+            reviewID = document.id)
         db.collection("notifications").add(notification).await()
+
+        db.collection("users").document(review.userID).collection("hasReviewed").document(review.answeredQuestionID).set(HasReviewed())
+
 
         db.collection("answered").document(review.answeredQuestionID).update("reviewCount", FieldValue.increment(1))
         invalidate(FetchType.NOTIFICATION)
@@ -271,20 +282,19 @@ class MainModel() : Presenter() {
                 when (dc.type) {
                     DocumentChange.Type.ADDED -> {
                         //New review came in
-                        val review = dc.document.toObject<Review>()
-                        val notification = Notification(
-                            notificationText = "A new review was added for question ${review.answeredQuestionID}",
-                            type = NotificationType.NEWREVIEW,
-                            review.answeredQuestionID,
-                            currentUserID)
+                        val notification = dc.document.toObject<Notification>()
+//                        val notification = Notification(
+//                            notificationText = "A new review was added for question ${review.answeredQuestionID}",
+//                            type = NotificationType.NEWREVIEW,
+//                            reviewID = dc.document.id,
+//                            questionID = review.answeredQuestionID,
+//                            userID = currentUserID)
+//                        Log.d(TAG,"NOTIFICATION DATA: $notification")
                         newReviewNotifications.add(notification)
                         if (notificationCount == -1) {
                             notificationCount += 0
                         }
                         notificationCount += 1
-
-
-                        Log.d(TAG, "New Notification: ${dc.document.data}")
                     }
                     DocumentChange.Type.MODIFIED -> {
                         //MIGHT NEED TO CHANGE
@@ -347,13 +357,16 @@ class MainModel() : Presenter() {
 
     //------------[FETCH METHODS]------------
     suspend fun getCurrentUserData() {
+        Log.d(TAG,"STARTING FETCH OF USER DATA")
         fetch(FetchType.PROFILE) {
             val uid = auth.currentUser?.uid
+            Log.d(TAG,"FOUND USER: ${auth.currentUser?.email}")
             if (uid != null) {
                 val userDoc = db.collection("users").document(uid)
                 val query = userDoc.get().await()
 
                 user = query.toObject<User>()
+                Log.d(TAG,"RESULTS OF USER SEARCH: ${user.toString()}")
             }
             else {
                 throw CatastrophicException("No uid for signed in user")
@@ -396,44 +409,41 @@ class MainModel() : Presenter() {
     }
     suspend fun getNextReview(currentUser: String) {
         fetch(FetchType.TINDER) {
-            var requiredReviews = 1
-            var requiredProficency = 90
-            when (currentIteration) {
-                1 -> {
-                    requiredReviews = 1
-                }
-                2 -> {
-                    requiredReviews = 3
-                }
-                3 -> {
-                    requiredReviews = 5
-                }
-                4 -> {
-                    requiredReviews = 7
-                }
-                5 -> {
-                    requiredReviews = 9
-                }
-                else -> {
-                    requiredReviews = currentIteration*2 - 1
-                }
-            }
-
             getCurrentUserData()
 
             if (user ==null) throw CatastrophicException("No user data found")
             val foi = user!!.fieldsOfInterest
 
             val questionRef = db.collection("answered")
-                .whereLessThanOrEqualTo("reviewCount", requiredReviews )
-//                .orderBy("date",Query.Direction.ASCENDING)
+                .orderBy("reviewCount",Query.Direction.ASCENDING)
+//                .whereNotEqualTo("userID", currentUser)
+                //ADD BACK IN after
+                .limit(10)
 
             val query = questionRef.get().await()
 
+            val reviewRef = db.collection("reviews")
+                .whereEqualTo("userID",currentUser)
+
+
+            currentReviewData.clear()
             for (entry in query ) {
                 val answered = entry.toObject<AnsweredQuestion>()
+                Log.d(TAG,"REVIEW QUERY: $answered")
                 if (answered.tags.any { it in foi }) {
-                    currentReviewData.add(answered)
+
+                    var docRef = db.collection("users")
+                        .document(currentUser)
+                        .collection("hasReviewed").document(entry.id);
+                    val res = docRef.get().await()
+                    if (!res.exists()) {
+                        currentReviewData.add(answered)
+                        currentIdData.add(entry.id)
+                    }
+                    else {
+                        Log.d(TAG,"ALREADY REVIEWED THIS QUESTION")
+                    }
+
                 }
             }
 
@@ -508,12 +518,7 @@ class MainModel() : Presenter() {
         isCached[ft] = true
         notifySubscribers()
 
-    }
-    fun reset() {
-        currentReviewData.clear()
-        currentIteration = 1
-        invalidateAll()
-        notifySubscribers()
+
     }
 
 //    fun isCached.getValue(ft: FetchType): Boolean {

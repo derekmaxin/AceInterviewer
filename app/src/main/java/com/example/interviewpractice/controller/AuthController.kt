@@ -40,6 +40,8 @@ class AuthController(mm: MainModel, am: AuthModel): Controller(mm,am,TAG) {
         foi: Set<Tag>,
         birthday: Date
     ) {
+    am.authLoading = true
+    Log.d(TAG,"New register, started authLoading")
         handler("verifyRegister",true) {
             verifyUsernameFormat(username)
             verifyPasswordFormat(password)
@@ -62,6 +64,8 @@ class AuthController(mm: MainModel, am: AuthModel): Controller(mm,am,TAG) {
     }
 
     fun verifySignIn(password:String,email:String) {
+        am.authLoading = true
+        Log.d(TAG,"New sign-in, started authLoading")
         Log.d(TAG,"SIGNING IN AS: $email")
         handler("verifySignIn",true) {
             verifyPasswordFormat(password)
@@ -74,9 +78,10 @@ class AuthController(mm: MainModel, am: AuthModel): Controller(mm,am,TAG) {
     }
 
     fun verifyLogout() {
+        am.authLoading = true
+        Log.d(TAG,"New logout, started authLoading")
         handler("verifyLogout") {
             am.logout()
-            mm.reset()
         }
     }
 

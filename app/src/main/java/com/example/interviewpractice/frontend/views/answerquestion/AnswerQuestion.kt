@@ -123,8 +123,8 @@ fun AnswerScreen(mm: MainModel, qc: QuestionController, router: Router) {
                 val question = vm.currentQuestion
                 val file = vm.audioFile
                 val context = vm.context
-                if (question != null) {
-                    qc.verifySubmitAnswer(answerText = vm.textAnswer,question.questionID, file, context ,hasVoice = question.hasVoice,hasText = question.hasText)
+                if (question!= null) {
+                    qc.verifySubmitAnswer(answerText = vm.textAnswer,question.questionID, file, context ,hasVoice = question.hasVoice,hasText = question.hasText, tags=question.tags, questionText = question.questionText)
                     router.goToHome()
                 }
 

@@ -5,7 +5,6 @@ enum class FetchType {
     LEADERBOARD,
     SEARCH,
     RECOMMENDATION,
-    INIT,
     NOTIFICATION,
     HISTORY,
     QUESTION,

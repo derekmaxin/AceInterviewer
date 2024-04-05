@@ -5,7 +5,7 @@ import com.example.interviewpractice.frontend.Subscriber
 import com.example.interviewpractice.frontend.LoaderMMViewModel
 
 abstract class Presenter {
-    private val subscribers = mutableListOf<Subscriber>()
+    val subscribers = mutableListOf<Subscriber>()
     fun notifySubscribers() {
         subscribers.forEach() {
             it.update()

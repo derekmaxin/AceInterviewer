@@ -22,7 +22,12 @@ open class Controller(protected val mm: MainModel, protected val am: AuthModel, 
     fun fetchData(ft: FetchType) {
         handler("fetchData.${ft}",!mm.check(ft)) {
             when (ft) {
-                FetchType.PROFILE->mm.getCurrentUserData()
+                FetchType.PROFILE-> {
+                    am.loading+= 1
+                    mm.getCurrentUserData()
+                }
+
+
                 FetchType.LEADERBOARD->mm.getLeaderboardData()
                 FetchType.SEARCH->{
                     if (mm.check(FetchType.SEARCH)) mm.notifySubscribers()
@@ -36,7 +41,6 @@ open class Controller(protected val mm: MainModel, protected val am: AuthModel, 
 
                     mm.notifySubscribers()
                 }
-                FetchType.INIT->mm.reset()
                 FetchType.NOTIFICATION->mm.getNotificationData(am.getUserID())
                 FetchType.HISTORY->{
                     val calendar = Calendar.getInstance()
@@ -53,12 +57,17 @@ open class Controller(protected val mm: MainModel, protected val am: AuthModel, 
 
 
             }
+            if ( ft == FetchType.RECOMMENDATION || ft==FetchType.HISTORY ) {
+                am.loading = 0
+            }
+
         }
     }
     protected fun handler(functionName: String, requiresLoad: Boolean = false, func: suspend () -> Unit) {
         MainScope().launch {
             try {
-                if (requiresLoad) am.loading = true else mm.localLoading = true
+                if (requiresLoad) am.loading +=1
+                else mm.localLoading = true
                 func()
             } catch (ex: FirebaseAuthException) {
                 //Represents user errors that are caught by Firebase Auth
@@ -89,8 +98,10 @@ open class Controller(protected val mm: MainModel, protected val am: AuthModel, 
 
             } finally {
                 //Stop loading after we finished our task
-                if (requiresLoad) am.loading = false else mm.localLoading = false
+                if (requiresLoad) am.loading -= 1
+                else mm.localLoading = false
             }
         }
     }
+
 }
