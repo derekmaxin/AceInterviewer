@@ -48,7 +48,6 @@ fun ViewReviewScores(history: History) {
 
             HorizontalDivider(thickness = 1.dp, color = Color.LightGray)
 //            PlayBar(viewModel.playBarViewModel)
-            HorizontalDivider(thickness = 1.dp, color = Color.LightGray)
 
             for (scoreComponent in history.reviewScores) {
                 ReviewScoreComponent(scoreComponent.first, scoreComponent.second.toInt())

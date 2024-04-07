@@ -27,6 +27,7 @@ data class Question(
 
 data class History(
     val questionText: String = "",
+    val questionAns: String = "",
     val questionId: String = "",
     val reviewScores: List<Pair<String,Double>> = emptyList(),
     val audioUrl: String = "",

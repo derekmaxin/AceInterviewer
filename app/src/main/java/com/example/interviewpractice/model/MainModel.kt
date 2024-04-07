@@ -200,7 +200,7 @@ class MainModel() : Presenter() {
 
         //Add notification
         val notification = Notification(
-            notificationText = "A new review was added for question ${review.answeredQuestionID}",
+            notificationText = "A new review was added for your answer. Review: ${review.reviewText}",
             type = NotificationType.NEWREVIEW,
             questionID = review.answeredQuestionID,
             userID = review.answeredQuestionAuthorID,
@@ -496,9 +496,9 @@ class MainModel() : Presenter() {
                 var understandingData = reviewQuery.get(AggregateField.average("understanding"))
                 if (understandingData == null) understandingData = 0.0
 
-                val reviewScores = listOf(Pair("clarity",clarityData),Pair("understanding",understandingData))
+                val reviewScores = listOf(Pair("clarity",clarityData),Pair("completeness",understandingData))
 
-                val currentHistory: History = History(entry.textResponse,document.id,reviewScores,"")
+                val currentHistory: History = History(entry.questionText, entry.textResponse,document.id,reviewScores,"")
                 historyChartData.add(currentHistory)
                 if (historyHeatData.containsKey(entry.date)) {
                     historyHeatData[entry.date] = historyHeatData[entry.date]!! + 1
