@@ -22,16 +22,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.interviewpractice.controller.NotificationController
-import com.example.interviewpractice.frontend.components.notification.ConcreteNotificationGroupViewModel
 import com.example.interviewpractice.frontend.components.notification.NotificationGroup
-import com.example.interviewpractice.frontend.components.notification.NotificationGroupViewModel
 import com.example.interviewpractice.model.MainModel
 import com.example.interviewpractice.types.FetchType
-import com.example.interviewpractice.types.NotificationType
 
 @Composable
 
-fun Notifications(mm: MainModel, c: NotificationController) {
+fun Notifications(mm: MainModel, c: NotificationController, goToSeeReview: (String) -> Unit) {
     val vm: NotificationsViewModel = viewModel()
 
 
@@ -65,7 +62,7 @@ fun Notifications(mm: MainModel, c: NotificationController) {
             }
             Spacer(modifier = Modifier.padding(4.dp))
             if (vm.newReviewNotification.isNotEmpty()) {
-                NotificationGroup("You have new reviews on your answers!", vm.newReviewNotification)
+                NotificationGroup("You have new reviews on your answers!", vm.newReviewNotification, goToSeeReview)
             }
             else {
                 Text("No new notifications!",

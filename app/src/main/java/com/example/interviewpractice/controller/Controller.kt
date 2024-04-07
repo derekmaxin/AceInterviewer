@@ -56,6 +56,7 @@ open class Controller(protected val mm: MainModel, val am: AuthModel, protected 
                 FetchType.TINDER->mm.getNextReview(am.getUserID())
 
 
+                else -> {}
             }
             if ( ft == FetchType.RECOMMENDATION || ft==FetchType.HISTORY ) {
                 am.loading = 0

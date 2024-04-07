@@ -375,6 +375,20 @@ class MainModel() : Presenter() {
             }
         }
     }
+
+    suspend fun getReviewData(reviewId : String){
+        fetch(FetchType.REVIEW) {
+            if (reviewId != null) {
+                val userDoc = db.collection("reviews").document(reviewId)
+                val query = userDoc.get().await()
+
+                //review = query.toObject<User>()
+            }
+            else {
+                throw CatastrophicException("Review with this id does not exist")
+            }
+        }
+    }
     suspend fun getQuestionData() {
         fetch(FetchType.QUESTION) {}
     }
