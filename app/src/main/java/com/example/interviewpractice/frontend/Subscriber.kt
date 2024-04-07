@@ -21,7 +21,6 @@ open class MMViewModel(): ViewModel(), Subscriber {
 
     }
     override fun unsubscribe() {
-        Log.d("UNSUB", "UNSUBSCRIBED!!")
         model.unsubscribe(this)
     }
     override fun update() {
@@ -42,7 +41,6 @@ open class AMViewModel(): ViewModel(), Subscriber {
 
     }
     override fun unsubscribe() {
-        Log.d("UNSUB", "UNSUBSCRIBED!!")
         m.unsubscribe(this)
     }
 }
@@ -54,9 +52,7 @@ open class LoaderMMViewModel(): ViewModel(), Subscriber {
     fun addModel(mm: MainModel) {
         model = mm
         if (!model.subscribers.contains(this)) {
-            Log.d("PROFILE.KT ","Contains? ${mm.subscribers.contains(this)}")
             model.subscribe(this)
-            Log.d("PROFILE.KT ","Contains? ${mm.subscribers.contains(this)}")
         }
     }
     fun updateLoading() {
@@ -66,7 +62,6 @@ open class LoaderMMViewModel(): ViewModel(), Subscriber {
         }
     }
     override fun unsubscribe() {
-        Log.d("UNSUB", "UNSUBSCRIBED!!")
         model.unsubscribe(this)
     }
 

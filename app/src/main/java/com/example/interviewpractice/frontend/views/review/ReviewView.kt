@@ -96,7 +96,6 @@ fun ReviewView(mm: MainModel, c: ReviewController){
     }
     DisposableEffect(Unit) {
         onDispose {
-            Log.d("REVIEW","DISPOSING")
             rvvm.unsubscribe()
             clarityVM.unsubscribe()
             understandingVM.unsubscribe()
