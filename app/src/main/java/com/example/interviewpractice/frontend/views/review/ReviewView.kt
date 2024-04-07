@@ -81,7 +81,6 @@ fun ReviewView(mm: MainModel, c: ReviewController){
     val rvvm: ReviewViewViewModel = viewModel()
     val clarityVM: StarSelectionViewModel = viewModel(key="clarity")
     val understandingVM: StarSelectionViewModel = viewModel(key="understanding")
-    val playBarViewModel: PlayBarViewModel = viewModel()
 
     val btnscope = rememberCoroutineScope()
     var lastPage by remember { mutableStateOf(0) }
@@ -91,7 +90,6 @@ fun ReviewView(mm: MainModel, c: ReviewController){
         rvvm.addModel(mm)
         clarityVM.addModel(mm)
         understandingVM.addModel(mm)
-        playBarViewModel.addModel(mm)
         c.fetchData(FetchType.TINDER)
         clarityVM.name = "Clarity"
         understandingVM.name = "Understanding"
@@ -102,7 +100,6 @@ fun ReviewView(mm: MainModel, c: ReviewController){
             rvvm.unsubscribe()
             clarityVM.unsubscribe()
             understandingVM.unsubscribe()
-            playBarViewModel.unsubscribe()
         }
     }
 
@@ -225,10 +222,13 @@ fun ReviewView(mm: MainModel, c: ReviewController){
 
          */
         if (rvvm.currentReviewData.size > pagerState.currentPage) {
-            playBarViewModel.audioURL = rvvm.currentReviewData[pagerState.currentPage].downloadUrl
+            PlayBar(mm, rvvm.currentReviewData[pagerState.currentPage].downloadUrl)
+        }
+        else {
+            PlayBar(mm)
         }
 
-        PlayBar(playBarViewModel)
+
 
         StarSelection(understandingVM)
         StarSelection(clarityVM)
