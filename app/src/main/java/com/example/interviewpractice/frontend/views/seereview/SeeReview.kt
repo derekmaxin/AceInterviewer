@@ -110,13 +110,7 @@ fun SeeReviewView(mm: MainModel, n : Notification) {
                         maxLines = 1
                     )
 
-
-                    val playBarVM: PlayBarViewModel = viewModel(key = n.answeredQuestion.downloadUrl)
-
-
-                    playBarVM.addModel(mm)
-                    playBarVM.audioURL = n.answeredQuestion.downloadUrl
-                    PlayBar(playBarVM)
+                    PlayBar(mm, n.answeredQuestion.downloadUrl)
 
                     HorizontalDivider(thickness = 1.dp, color = Color.LightGray)
 
