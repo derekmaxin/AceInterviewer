@@ -226,7 +226,7 @@ fun SearchView(c: QuestionController, mm: MainModel, r: Router) {
             Column(modifier = Modifier.verticalScroll(scrollState)) {
                 if (vm.localLoading) Loader()
                 for (question in vm.searchResults) {
-                    Question(question.first,question.second) {}
+                    Question(question.first,question.second) { navToQuestion(r.goToAnswerQuestion, question.first, c)}
                     Spacer(modifier = Modifier.padding(4.dp))
                 }
             }
