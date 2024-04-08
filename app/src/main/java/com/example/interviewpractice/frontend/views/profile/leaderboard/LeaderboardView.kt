@@ -51,7 +51,7 @@ fun LeaderboardView(mm: MainModel, c: UserController)
             modifier = Modifier.fillMaxWidth(),
         ) {
             Text(
-                "Leaderboard",
+                "Questions Answered Leaders",
                 style = TextStyle(
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold

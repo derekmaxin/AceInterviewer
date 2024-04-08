@@ -192,20 +192,25 @@ fun ProfileView(mm: MainModel,
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = "Your Reviewed Answers",
+                text = "Leaderboard",
                 modifier = Modifier.padding(horizontal = 8.dp)
             )
-            History(historyViewModel, hc)
-            Spacer(modifier = Modifier.height(8.dp))
-            HorizontalDivider(thickness = 1.dp, color = Color.LightGray)
-            Spacer(modifier = Modifier.height(8.dp))
-
             Button(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = goToLeaderboard
             ) {
-                Text(text = "Leaderboard")
+                Text(text = "Go to Leaderboard →")
             }
+
+            Spacer(modifier = Modifier.height(8.dp))
+            HorizontalDivider(thickness = 1.dp, color = Color.LightGray)
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = "Your Reviewed Answers",
+                modifier = Modifier.padding(horizontal = 8.dp)
+            )
+            History(historyViewModel, hc)
         }
     }
 }
