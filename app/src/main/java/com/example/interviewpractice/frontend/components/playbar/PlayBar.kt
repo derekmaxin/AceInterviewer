@@ -41,13 +41,14 @@ import com.example.interviewpractice.types.Question
 
 
 @Composable
-fun PlayBar(mm: MainModel, url: String = "") {
+fun PlayBar(mm: MainModel, url: String = "", length: Int) {
 
     val playBarViewModel: PlayBarViewModel = viewModel(key = url)
 
     LaunchedEffect(Unit){
         playBarViewModel.addModel(mm)
         playBarViewModel.audioURL = url
+        playBarViewModel.audioLength = length
 //        Log.d("PlayBarView", playBarViewModel.audioURL)
     }
     DisposableEffect(Unit) {

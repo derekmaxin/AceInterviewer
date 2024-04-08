@@ -174,6 +174,7 @@ class MainModel(
         invalidate(FetchType.HISTORY)
         invalidate(FetchType.TINDER)
         invalidate(FetchType.ANSWERED)
+        invalidate(FetchType.SEARCH)
 //        Log.d(TAG,"INVALIDATED ANSWERED: ${isCached[FetchType.ANSWERED]}")
         val ref: DocumentReference = db.collection("answered").document()
         val myId = ref.id
@@ -210,6 +211,7 @@ class MainModel(
     suspend fun addReview(review: Review) {
         // Add review itself
         val reviewRef = db.collection("reviews").add(review).await()
+
 
         // Fetch answered data asynchronously
         val answeredRef = db.collection("answered").document(review.answeredQuestionID)
@@ -315,8 +317,6 @@ class MainModel(
     }
 
     fun addNotificationListener(currentUserID: String) {
-        invalidate(FetchType.NOTIFICATION)
-        invalidate(FetchType.HISTORY)
         //ASSUME ONLY NEW REVIEW NOTIFICATIONS (FOR NOW FOR SIMPLICITY)
         val docRef = db.collection(Collections.notifications.toString()).whereEqualTo("userID",currentUserID)
 
@@ -325,6 +325,7 @@ class MainModel(
                 Log.w(TAG, "Listen failed.", e)
                 return@addSnapshotListener
             }
+            Log.d(TAG,"Added notification listener")
 
             for (dc in snapshots!!.documentChanges) {
                 when (dc.type) {
@@ -337,11 +338,8 @@ class MainModel(
 //                            reviewID = dc.document.id,
 //                            questionID = review.answeredQuestionID,
 //                            userID = currentUserID)
-//                        Log.d(TAG,"NOTIFICATION DATA: $notification")
+                        Log.d(TAG,"NOTIFICATION DATA: $notification")
                         newReviewNotifications.add(notification)
-                        if (notificationCount == -1) {
-                            notificationCount = 0
-                        }
                         notificationCount += 1
                     }
                     DocumentChange.Type.MODIFIED -> {
@@ -359,6 +357,7 @@ class MainModel(
                 }
             }
             invalidate(FetchType.NOTIFICATION)
+            invalidate(FetchType.HISTORY)
             notifySubscribers()
 
         }

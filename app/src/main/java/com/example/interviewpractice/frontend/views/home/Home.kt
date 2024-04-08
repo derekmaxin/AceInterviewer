@@ -210,7 +210,7 @@ fun QuestionAnswered(
                         modifier = Modifier.padding(8.dp),
                     )
                     Spacer(modifier = Modifier.height(8.dp))
-                    PlayBar(mm, questionAnswer.downloadUrl)
+                    PlayBar(mm, questionAnswer.downloadUrl,questionAnswer.audioTime)
                 }
             }
             }

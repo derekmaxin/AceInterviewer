@@ -52,7 +52,7 @@ fun Tag(text: String) {
 @Composable
 fun Question(q: Question, isAnswered: Boolean = false, boost: ()->Unit) {
     var modif = Modifier.padding()
-    if (isAnswered) modif = Modifier.border(width = 3.dp, color = Color(0xFF4CAF50), shape = RoundedCornerShape(16.dp)) // Add a green border to the Card
+    if (isAnswered) modif = Modifier.border(width = 3.dp, color = Color(0xFF4CAF50), shape = RoundedCornerShape(12.dp)) // Add a green border to the Card
     Card(
         onClick = {boost()},
 

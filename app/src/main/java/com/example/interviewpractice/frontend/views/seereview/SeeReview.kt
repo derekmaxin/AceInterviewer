@@ -100,7 +100,7 @@ fun SeeReviewView(mm: MainModel, n : Notification) {
                         modifier = Modifier.padding(8.dp),
                     )
 
-                    PlayBar(mm,n.answeredQuestion.downloadUrl)
+                    PlayBar(mm,n.answeredQuestion.downloadUrl,n.answeredQuestion.audioTime)
 
                     HorizontalDivider(thickness = 1.dp, color = Color.LightGray)
 

@@ -23,9 +23,9 @@ import com.example.interviewpractice.types.History
 
 @Composable
 fun ViewReviewScores(history: History, mm: MainModel) {
-    val playBarViewModel = PlayBarViewModel()
-    playBarViewModel.audioURL = history.audioUrl
-    playBarViewModel.audioLength = 20000
+//    val playBarViewModel = PlayBarViewModel()
+//    playBarViewModel.audioURL = history.audioUrl
+//    playBarViewModel.audioLength = 20000
 
     Card(
         modifier = Modifier
@@ -42,7 +42,7 @@ fun ViewReviewScores(history: History, mm: MainModel) {
             )
 
             HorizontalDivider(thickness = 1.dp, color = Color.LightGray)
-            PlayBar(mm, history.audioUrl)
+            PlayBar(mm, history.audioUrl,history.audioTime)
             HorizontalDivider(thickness = 1.dp, color = Color.LightGray)
 //            PlayBar(viewModel.playBarViewModel)
 

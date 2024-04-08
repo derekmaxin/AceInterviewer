@@ -210,7 +210,7 @@ fun ReviewView(mm: MainModel, c: ReviewController, router: Router){
                 )
 
             )
-            PlayBar(mm, rvvm.currentReviewData[pagerState.currentPage].downloadUrl)
+            PlayBar(mm, rvvm.currentReviewData[pagerState.currentPage].downloadUrl,rvvm.currentReviewData[pagerState.currentPage].audioTime)
             Spacer(modifier = Modifier.height(16.dp))
             Text(
                 "Your Review:",

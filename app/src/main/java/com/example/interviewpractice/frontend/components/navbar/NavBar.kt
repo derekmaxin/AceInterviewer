@@ -33,7 +33,6 @@ fun NavBar(
 
 
     val vm: NavBarViewModel = viewModel()
-    var listener = null
     LaunchedEffect(Unit){
         vm.addModel(mm)
         nc.listenForNotifications()
