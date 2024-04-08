@@ -1,6 +1,7 @@
 package com.example.interviewpractice.controller
 
 import android.content.Context
+import android.media.MediaPlayer
 import android.net.Uri
 import android.util.Log
 import androidx.core.content.FileProvider
@@ -14,7 +15,11 @@ import com.example.interviewpractice.types.Question
 import com.example.interviewpractice.types.Review
 import com.example.interviewpractice.types.Tag
 import com.example.interviewpractice.types.UserException
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.io.File
+import java.io.IOException
 import java.util.Calendar
 import java.util.UUID
 
@@ -59,19 +64,34 @@ class QuestionController(mm: MainModel, am: AuthModel): Controller(mm,am, TAG) {
                 fileUri = FileProvider.getUriForFile(context, context.packageName + ".provider", audioFile).toString()
             }
 
+            var mediaPlayer = MediaPlayer()
+            var audioLength: Int
+
+            mediaPlayer.let {
+                if (it.isPlaying) {
+                    mediaPlayer.stop()
+                    mediaPlayer.reset()
+                }
+            }
+            mediaPlayer.release()
+            mediaPlayer = MediaPlayer().apply {
+                setDataSource(fileUri)
+                prepare()
+            }
+
+            audioLength = mediaPlayer.duration
             val uid = am.getUserID()
 
-            var question = AnsweredQuestion(
+            val question = AnsweredQuestion(
                 userID = uid,
                 textResponse = answerText,
                 questionID = questionID,
                 date = getCurrentDate(),
                 downloadUrl = "",
-                audioTime = 2,
-                tags=tags,
+                audioTime = audioLength,
+                tags = tags,
                 questionText = questionText
             )
-
 
             mm.addAnsweredQuestion(question, fileUri)
         }

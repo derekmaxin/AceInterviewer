@@ -226,6 +226,7 @@ fun ReviewView(mm: MainModel, c: ReviewController){
          */
         if (rvvm.currentReviewData.size > pagerState.currentPage) {
             playBarViewModel.audioURL = rvvm.currentReviewData[pagerState.currentPage].downloadUrl
+            playBarViewModel.audioLength = rvvm.currentReviewData[pagerState.currentPage].audioTime
         }
 
         PlayBar(playBarViewModel)

@@ -43,7 +43,7 @@ fun PlayBar(playBarViewModel: PlayBarViewModel) {
         onDispose {
             //playBarViewModel.mps.stop()
             playBarViewModel.mps.release()
-            Log.d("MPS", "Released")
+            Log.d("mps", "Released")
         }
     }
 

@@ -28,6 +28,7 @@ class PlayerService(private val url: String) {
     private var mediaPlayer: MediaPlayer? = null
     var currentPosition = 0
 
+
     var audioLength: Int = 0
         set(value) {
             if (value != field) {
@@ -42,6 +43,7 @@ class PlayerService(private val url: String) {
             field = value
         }
 
+    private var prepared = false
     private var currentPositionTimer: Timer? = null
     private var currentPositionListener: (Int) -> Unit = {}
     private var currentPlayStateListener: (PlayState) -> Unit = {}
@@ -70,7 +72,7 @@ class PlayerService(private val url: String) {
     fun setAudioLengthListener(listener: (Int) -> Unit) { this.audioLengthListener = listener }
     fun setPlayStateListener(listener: (PlayState) -> Unit) { this.currentPlayStateListener = listener }
 
-    fun play() {
+    fun setup() {
         mediaPlayer?.let {
             if (it.isPlaying) {
                 mediaPlayer?.stop()
@@ -82,18 +84,30 @@ class PlayerService(private val url: String) {
             try {
                 setDataSource(url)
                 prepareAsync()
+                prepared = true
             } catch(e: IOException) {
                 Log.e("mps", "No audio file submitted for this question")
             }
         }
+        /*
+        mediaPlayer?.setOnPreparedListener {
+            audioLength = mediaPlayer?.duration ?: 0
+            prepared = true
+        }
 
-        mediaPlayer?.setOnPreparedListener { mediaPlayer ->
+         */
+    }
+
+    fun play() {
+        if (prepared) {
             playState = PlayState.PLAY
-            audioLength = mediaPlayer.duration
-            mediaPlayer.seekTo(currentPosition.toInt())
+            audioLength = mediaPlayer?.duration ?: 0
+            mediaPlayer?.seekTo(currentPosition.toInt())
             startPositionListener()
-            mediaPlayer.start()
-
+            mediaPlayer?.start()
+        } else {
+            setup()
+            mediaPlayer?.setOnPreparedListener() { play() }
         }
 
         mediaPlayer?.setOnCompletionListener {
@@ -143,6 +157,7 @@ class PlayBarViewModel(): MMViewModel() {
 
     private fun updatePlayerService() {
         mps = PlayerService(audioURL)
+        currentPosition = 0
 
         mps.setAudioLengthListener {
             Log.d("mps", "audio length changed to $it")
