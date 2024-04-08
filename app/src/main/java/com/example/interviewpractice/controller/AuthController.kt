@@ -101,26 +101,26 @@ class AuthController(mm: MainModel, am: AuthModel): Controller(mm,am,TAG) {
         }
     }
 
-    private fun verifyUsernameFormat(username: String) {
+    fun verifyUsernameFormat(username: String) {
         //Add more checks here as necessary
         verifyGenericString(username, "Username")
     }
-    private fun verifyEmailFormat(email: String) {
+    fun verifyEmailFormat(email: String) {
         //Add more checks here as necessary
         verifyGenericString(email, "Email")
     }
-    private fun verifyPasswordFormat(password: String) {
+    fun verifyPasswordFormat(password: String) {
         //Add more checks here as necessary
         verifyGenericString(password, "Password")
 
     }
 
-    private fun verifyFOI(foi: Set<Tag>) {
+    fun verifyFOI(foi: Set<Tag>) {
         if (foi.isEmpty()) throw UserException("Please select at least 1 field of interest")
         if (foi.size > 3) throw UserException("You can only choose at most 3 fields of interest")
     }
 
-    private fun verifyBirthday(birthday: Date) {
+    fun verifyBirthday(birthday: Date) {
         val today = Calendar.getInstance()
         val birthdate = Calendar.getInstance()
         birthdate.time = birthday
@@ -128,7 +128,7 @@ class AuthController(mm: MainModel, am: AuthModel): Controller(mm,am,TAG) {
         val years = today.get(Calendar.YEAR) - birthdate.get(Calendar.YEAR)
         if (years < 16) throw UserException("You must be over 16 to use this app")
     }
-    private fun verifyConfirm(password: String,confirm: String) {
+    fun verifyConfirm(password: String,confirm: String) {
         if (password != confirm) throw UserException("passwords")
     }
 

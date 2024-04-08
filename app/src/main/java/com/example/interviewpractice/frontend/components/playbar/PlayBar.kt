@@ -54,6 +54,7 @@ fun PlayBar(mm: MainModel, url: String = "") {
         onDispose {
             //playBarViewModel.mps.stop()
             playBarViewModel.mps.release()
+            Log.d("mps", "Released")
             Log.d("MPS", "Released")
             playBarViewModel.unsubscribe()
         }
