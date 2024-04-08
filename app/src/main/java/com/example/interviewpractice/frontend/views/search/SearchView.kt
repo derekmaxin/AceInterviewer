@@ -83,20 +83,19 @@ fun SearchView(c: QuestionController, mm: MainModel, r: Router) {
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Button(
-                onClick = {c.dummyData()},
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(50.dp)
-                    .padding(vertical = 4.dp)
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                modifier = Modifier.fillMaxWidth(),
             ) {
-                Text("Dummy Data Dump",
+                Text(
+                    "Search and Add Questions",
                     style = TextStyle(
-                        fontSize = 16.sp,
-                        color = Color.White,
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold
                     )
                 )
             }
+            Spacer(modifier = Modifier.padding(4.dp))
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -214,8 +213,6 @@ fun SearchView(c: QuestionController, mm: MainModel, r: Router) {
                     )
                 )
             }
-            // TODO: Render clickable questions components on search, collab with ryan,
-            // also remove "dummy data dump" button
             val scrollState = rememberScrollState()
             Spacer(modifier = Modifier.height(8.dp))
             Column(modifier = Modifier.verticalScroll(scrollState)) {

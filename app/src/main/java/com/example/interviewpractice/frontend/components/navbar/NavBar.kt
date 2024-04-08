@@ -31,16 +31,20 @@ fun NavBar(
     nc: NotificationController,
     mm: MainModel) {
 
+
+    val vm: NavBarViewModel = viewModel()
+    var listener = null
     LaunchedEffect(Unit){
+        vm.addModel(mm)
         nc.listenForNotifications()
     }
 
-    val vm: NavBarViewModel = viewModel()
-    LaunchedEffect(Unit){
-        vm.addModel(mm)
-    }
     DisposableEffect(Unit) {
         onDispose {
+            if (vm.listener != null) {
+                val nlistener = vm.listener
+                nlistener!!.remove()
+            }
             vm.unsubscribe()
         }
     }

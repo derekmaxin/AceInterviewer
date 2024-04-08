@@ -30,6 +30,7 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
+import androidx.compose.ui.graphics.Color
 import com.example.interviewpractice.controller.UserController
 import com.example.interviewpractice.frontend.components.historychart.HistoryChart
 import com.example.interviewpractice.frontend.components.userbadge.UserBadgeDisplay
@@ -47,8 +48,10 @@ import com.example.interviewpractice.frontend.components.history.History
 import com.example.interviewpractice.frontend.components.history.HistoryViewModel
 import com.example.interviewpractice.helpers.Lifecycle
 import com.example.interviewpractice.model.AuthModel
+import com.example.interviewpractice.types.Tag
 
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 //@Preview
 fun ProfileView(mm: MainModel,
@@ -101,6 +104,19 @@ fun ProfileView(mm: MainModel,
             horizontalAlignment = Alignment.Start
         ) {
             Row(
+                horizontalArrangement = Arrangement.Center,
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                Text(
+                    "Your Profile",
+                    style = TextStyle(
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                )
+            }
+            Spacer(modifier = Modifier.padding(4.dp))
+            Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth())
             {
@@ -131,17 +147,70 @@ fun ProfileView(mm: MainModel,
             vm.user?.let { UserBadgeDisplay(it.questionsAnswered) }
 
             Spacer(modifier = Modifier.height(8.dp))
+            HorizontalDivider(thickness = 1.dp, color = Color.LightGray)
+            Spacer(modifier = Modifier.height(8.dp))
 
-//            HistoryChart()
+            Text(
+                text = "Your Selected Fields of Interest",
+                modifier = Modifier.padding(horizontal = 8.dp)
+            )
 
-            History(historyViewModel, hc)
+            val interestsText = buildString {
+                if (vm.user?.fieldsOfInterest?.isNotEmpty() == true) {
+                    vm.user!!.fieldsOfInterest.forEachIndexed { index, value ->
+                        if (index > 0) {
+                            append(", ")
+                        }
+                        append(value.v)
+                    }
+                } else {
+                    append("None")
+                }
+            }
 
+            if (vm.user?.fieldsOfInterest?.isNotEmpty() == true) {
+                FlowRow(
+                    modifier = Modifier
+                        .wrapContentHeight()
+                        .fillMaxWidth()
+                        .padding(8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    vm.user!!.fieldsOfInterest.forEachIndexed { _, value ->
+                        FilterChip(
+                            selected = true,
+                            onClick = { },
+                            label = { Text(value.v) })
+                    }
+                }
+            } else {
+                Text(text = "No interests selected", modifier = Modifier.padding(horizontal = 8.dp))
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+            HorizontalDivider(thickness = 1.dp, color = Color.LightGray)
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = "Leaderboard",
+                modifier = Modifier.padding(horizontal = 8.dp)
+            )
             Button(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = goToLeaderboard
             ) {
-                Text(text = "Leaderboards")
+                Text(text = "Go to Leaderboard →")
             }
+
+            Spacer(modifier = Modifier.height(8.dp))
+            HorizontalDivider(thickness = 1.dp, color = Color.LightGray)
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = "Your Reviewed Answers",
+                modifier = Modifier.padding(horizontal = 8.dp)
+            )
+            History(historyViewModel, hc)
         }
     }
 }
@@ -191,48 +260,9 @@ fun ProfilePicture(
 }
 
 @Composable
-fun HistoryButton() {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.clickable { /* Handle button click */ }
-    ) {
-        Text(
-            text = "History",
-            style = TextStyle(fontSize = 10.sp)
-        )
-        IconButton(
-            onClick = { /* Handle button click */ },
-            modifier = Modifier.size(30.dp)
-        ) {
-            Icon(Icons.Default.AccountBox, contentDescription = "History")
-        }
-    }
-}
-
-@Composable
-fun SettingsButton() {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.clickable { /* Handle button click */ }
-    ) {
-        Text(
-            text = "Settings",
-            style = TextStyle(fontSize = 10.sp)
-        )
-        IconButton(
-            onClick = { /* Handle button click */ },
-            modifier = Modifier.size(30.dp)
-        ) {
-            Icon(Icons.Default.Settings, contentDescription = "Settings")
-        }
-    }
-}
-
-@Composable
 fun LogoutButton(ac: AuthController) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.clickable { /* Handle button click */ }
     ) {
         Text(
             text = "Log out",

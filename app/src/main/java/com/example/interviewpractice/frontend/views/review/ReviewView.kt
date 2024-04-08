@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
@@ -49,6 +50,7 @@ import com.example.interviewpractice.controller.ReviewController
 import com.example.interviewpractice.frontend.components.playbar.PlayBar
 import com.example.interviewpractice.frontend.components.playbar.PlayBarViewModel
 import com.example.interviewpractice.frontend.components.question.DummyQuestion
+import com.example.interviewpractice.frontend.components.question.ReviewQuestion
 import com.example.interviewpractice.frontend.components.starselection.StarSelection
 import com.example.interviewpractice.frontend.components.starselection.StarSelectionViewModel
 import com.example.interviewpractice.model.MainModel
@@ -81,89 +83,37 @@ fun ReviewView(mm: MainModel, c: ReviewController){
     val rvvm: ReviewViewViewModel = viewModel()
     val clarityVM: StarSelectionViewModel = viewModel(key="clarity")
     val understandingVM: StarSelectionViewModel = viewModel(key="understanding")
-    val playBarViewModel: PlayBarViewModel = viewModel()
 
     val btnscope = rememberCoroutineScope()
-    var lastPage by remember { mutableStateOf(0) }
 
-
+    val pagerState = rememberPagerState(pageCount = { 11 })
     LaunchedEffect(Unit){
         rvvm.addModel(mm)
         clarityVM.addModel(mm)
         understandingVM.addModel(mm)
-        playBarViewModel.addModel(mm)
         c.fetchData(FetchType.TINDER)
         clarityVM.name = "Clarity"
-        understandingVM.name = "Understanding"
+        understandingVM.name = "Completeness"
+        pagerState.scrollToPage(0)
     }
     DisposableEffect(Unit) {
         onDispose {
-            Log.d("REVIEW","DISPOSING")
             rvvm.unsubscribe()
             clarityVM.unsubscribe()
             understandingVM.unsubscribe()
-            playBarViewModel.unsubscribe()
         }
     }
 
 
-
-
-
-
-//    val dummyQuestion = AnsweredQuestion(
-//        textResponse = "How do you manage the memory of an object in C++?",
-//        userID = c.getUser()
-//    )
-
-    val pagerState = rememberPagerState(pageCount = { 11 })
     LaunchedEffect(pagerState.currentPage) {
-        if (pagerState.currentPage < lastPage) {
-            pagerState.scrollToPage(pagerState.currentPage)
-        }
         if (pagerState.currentPage == 10) {
             // Refresh your content here, for example:
+            // Navigate back to the first page
             mm.invalidate(FetchType.TINDER)
             c.fetchData(FetchType.TINDER)
-
-            // Navigate back to the first page
-            pagerState.scrollToPage(0)
         }
-        lastPage = pagerState.currentPage
     }
 
-
-/*
-    val density = LocalDensity.current
-
-    val centerState by remember {
-        mutableStateOf(AnchoredDraggableState(
-            initialValue = 0f,
-            anchors = DraggableAnchors {
-                -1f at 1500f
-                0f at 0f
-                1f at -1500f
-            },
-            positionalThreshold = { distance: Float -> distance * 0.3f },
-            velocityThreshold = { with(density) { 100.dp.toPx() } },
-            animationSpec = tween()
-        ))
-    }
-
-    val rightState by remember {
-        mutableStateOf(AnchoredDraggableState(
-            initialValue = 1500f,
-            anchors = DraggableAnchors {
-                -1f at 1500f
-                0f at 0f
-                1f at -1500f
-            },
-            positionalThreshold = { distance: Float -> distance * 0.3f },
-            velocityThreshold = { with(density) { 100.dp.toPx() } },
-            animationSpec = tween()
-        ))
-    }
-    */
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -173,7 +123,19 @@ fun ReviewView(mm: MainModel, c: ReviewController){
         verticalArrangement = Arrangement.spacedBy(6.dp),
         horizontalAlignment = Alignment.Start
     ) {
-
+        Row(
+            horizontalArrangement = Arrangement.Center,
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            Text(
+                "Review Answers",
+                style = TextStyle(
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            )
+        }
+        Spacer(modifier = Modifier.padding(4.dp))
         HorizontalPager(
             state = pagerState,
             contentPadding = PaddingValues(horizontal = 16.dp),
@@ -198,12 +160,12 @@ fun ReviewView(mm: MainModel, c: ReviewController){
                 for (i in 0..9) {
                     if (i == page) {
                         if ((rvvm.currentReviewData.size > i)) {
-                            DummyQuestion(
-                                qText = rvvm.currentReviewData[i].textResponse
+                            ReviewQuestion(
+                                qText = rvvm.currentReviewData[i].questionText
                             )
                         }
                         else {
-                            DummyQuestion(qText = "NO QUESTION TO REVIEW RIGHT NOW")
+                            DummyQuestion(qText = "There are no more questions to review in your fields of interest. Check back later")
                         }
                     }
                 }
@@ -225,16 +187,12 @@ fun ReviewView(mm: MainModel, c: ReviewController){
 
          */
         if (rvvm.currentReviewData.size > pagerState.currentPage) {
-            playBarViewModel.audioURL = rvvm.currentReviewData[pagerState.currentPage].downloadUrl
-            playBarViewModel.audioLength = rvvm.currentReviewData[pagerState.currentPage].audioTime
+            PlayBar(mm, rvvm.currentReviewData[pagerState.currentPage].downloadUrl)
+            StarSelection(understandingVM)
+            StarSelection(clarityVM)
+            SimpleOutlinedTextField(rvvm)
         }
 
-        PlayBar(playBarViewModel)
-
-        StarSelection(understandingVM)
-        StarSelection(clarityVM)
-
-        SimpleOutlinedTextField(rvvm)
         if (rvvm.currentReviewData.size > pagerState.currentPage ) {
             if (rvvm.currentIDData[pagerState.currentPage] != "1") {
                 Button(

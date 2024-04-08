@@ -18,9 +18,9 @@ class UserController(mm: MainModel, am: AuthModel): Controller(mm,am,TAG) {
         }
     }
 
-    fun getQuestionsThisUserAnswered () {
-        handler("searchUserAnswered",false) {
-            mm.searchUserAnswered()
-        }
-    }
+//    fun getQuestionsThisUserAnswered () {
+//        handler("searchUserAnswered",false) {
+//            mm.getUserAnswered()
+//        }
+//    }
 }

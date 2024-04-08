@@ -1,6 +1,7 @@
 package com.example.interviewpractice.frontend.components.viewreviewscores
 
 import android.util.Log
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -27,6 +28,7 @@ import com.example.interviewpractice.frontend.components.review.Review
 import com.example.interviewpractice.frontend.components.review.ReviewScoreComponent
 import com.example.interviewpractice.frontend.components.review.ReviewViewModel
 import com.example.interviewpractice.types.History
+import com.example.interviewpractice.types.Notification
 import kotlin.math.floor
 
 
@@ -42,10 +44,9 @@ fun ViewReviewScores(history: History) {
             .fillMaxWidth(),
     ) {
         Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            modifier = Modifier.padding(16.dp).clickable(onClick = { }),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-
 
             Text(
                 text = history.questionText,
@@ -53,8 +54,12 @@ fun ViewReviewScores(history: History) {
             )
 
             HorizontalDivider(thickness = 1.dp, color = Color.LightGray)
+<<<<<<< app/src/main/java/com/example/interviewpractice/frontend/components/viewreviewscores/ViewReviewScores.kt
             PlayBar(playBarViewModel)
             HorizontalDivider(thickness = 1.dp, color = Color.LightGray)
+=======
+//            PlayBar(viewModel.playBarViewModel)
+>>>>>>> app/src/main/java/com/example/interviewpractice/frontend/components/viewreviewscores/ViewReviewScores.kt
 
             for (scoreComponent in history.reviewScores) {
                 ReviewScoreComponent(scoreComponent.first, scoreComponent.second.toInt())

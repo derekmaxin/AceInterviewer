@@ -10,10 +10,13 @@ import com.example.interviewpractice.helpers.verifyGenericString
 import com.example.interviewpractice.model.AuthModel
 import com.example.interviewpractice.model.MainModel
 import com.example.interviewpractice.types.AnsweredQuestion
+import com.example.interviewpractice.types.ErrorType
 import com.example.interviewpractice.types.FetchType
+import com.example.interviewpractice.types.Message
 import com.example.interviewpractice.types.Question
 import com.example.interviewpractice.types.Review
 import com.example.interviewpractice.types.Tag
+import com.example.interviewpractice.types.UIError
 import com.example.interviewpractice.types.UserException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -31,19 +34,17 @@ class QuestionController(mm: MainModel, am: AuthModel): Controller(mm,am, TAG) {
         }
     }
 
-    fun verifyAndAddNewQuestion(questionText: String, hasVoice: Boolean, hasText: Boolean,
+    fun verifyAndAddNewQuestion(questionText: String,
                                 tagList: List<Tag>, onSuccess: () -> Unit) {
 
         handler("verifyQuestion",false) {
             verifyQuestionText(questionText)
-            verifyAnswerFormat(hasVoice, hasText)
             verifyTags(tagList)
 
             val questionID = UUID.randomUUID().toString()
 
-            val newQuestion = Question(questionText, tagList,
-                hasVoice, hasText, false,
-                am.getUserID(), getCurrentDate(), mutableListOf(), questionID)
+            val newQuestion = Question(questionText=questionText, tags = tagList,
+                userID = am.getUserID(), date = getCurrentDate(), answers = mutableListOf(), questionID = questionID)
             mm.addQuestion(newQuestion)
 
             Log.d(TAG, "verifyQuestion:success")
@@ -51,18 +52,13 @@ class QuestionController(mm: MainModel, am: AuthModel): Controller(mm,am, TAG) {
         }
     }
 
-    fun verifySubmitAnswer(answerText:String,questionID: String, audioFile: File?, context: Context?, hasText: Boolean, hasVoice: Boolean, tags: List<Tag>, questionText: String) {
+    fun verifySubmitAnswer(answerText:String,questionID: String, audioFile: File?, context: Context?, tags: List<Tag>, questionText: String, goToHome: ()->Unit) {
         handler("verifySubmitAnswer") {
-            if (hasText) {
-                verifyGenericString(answerText, "Answer text")
-            }
             var fileUri: String = ""
-            if (hasVoice) {
-                if (audioFile == null || context == null) {
-                    throw UserException("No audio submitted on a question which requires it")
-                }
-                fileUri = FileProvider.getUriForFile(context, context.packageName + ".provider", audioFile).toString()
+            if (audioFile == null || context == null) {
+                throw UserException("No audio submitted but question which requires it")
             }
+            fileUri = FileProvider.getUriForFile(context, context.packageName + ".provider", audioFile).toString()
 
             var mediaPlayer = MediaPlayer()
             var audioLength: Int
@@ -84,7 +80,6 @@ class QuestionController(mm: MainModel, am: AuthModel): Controller(mm,am, TAG) {
 
             val question = AnsweredQuestion(
                 userID = uid,
-                textResponse = answerText,
                 questionID = questionID,
                 date = getCurrentDate(),
                 downloadUrl = "",
@@ -94,6 +89,10 @@ class QuestionController(mm: MainModel, am: AuthModel): Controller(mm,am, TAG) {
             )
 
             mm.addAnsweredQuestion(question, fileUri)
+            am.loading += 1
+            am.isInit = true
+            goToHome()
+            am.error = UIError("Question submitted successfully", errorType = ErrorType.INFO)
         }
 
     }
@@ -209,11 +208,11 @@ class QuestionController(mm: MainModel, am: AuthModel): Controller(mm,am, TAG) {
         }
     }
 
-    private fun verifyAnswerFormat(hasVoice: Boolean, hasText: Boolean) {
-        if (!hasText && !hasVoice) {
-            throw UserException("Must select at least one answer format")
-        }
-    }
+//    private fun verifyAnswerFormat(hasVoice: Boolean, hasText: Boolean) {
+//        if (!hasText && !hasVoice) {
+//            throw UserException("Must select at least one answer format")
+//        }
+//    }
 
     private fun verifyTags(tagList: List<Tag>) {
         if (tagList.isEmpty()) {

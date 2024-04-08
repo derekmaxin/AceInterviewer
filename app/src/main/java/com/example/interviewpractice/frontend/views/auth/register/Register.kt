@@ -25,6 +25,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.interviewpractice.model.AuthModel
+import com.example.interviewpractice.types.FetchType
 import com.example.interviewpractice.types.Tag
 
 
@@ -34,7 +35,7 @@ fun RegisterScreen(am: AuthModel, c: AuthController) {
     val vm: RegisterViewModel = viewModel()
     LaunchedEffect(Unit){
         vm.addModel(am)
-        am.loading = 0
+        c.fetchData(FetchType.FENCE)
     }
     DisposableEffect(Unit) {
         onDispose {
@@ -166,7 +167,7 @@ fun RegisterScreen(am: AuthModel, c: AuthController) {
 @Composable
 fun FieldsOfInterest(vm: RegisterViewModel){
     val options = listOf(
-        Tag.BIOLOGY, Tag.ENGLISH, Tag.CHEMISTRY, Tag.CS, Tag.MATH, Tag.FINANCE, Tag.PHYSICS, Tag.BUSINESS
+        Tag.BIOLOGY, Tag.ENGLISH, Tag.MATH, Tag.CS, Tag.PHYSICS, Tag.FINANCE, Tag.ART, Tag.BUSINESS, Tag.CHEMISTRY
     )
     Column {
         Text(

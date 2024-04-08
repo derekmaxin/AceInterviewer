@@ -132,10 +132,9 @@ fun History(viewModel: HistoryViewModel, hc: HistoryController) {
     ) {
         Row(
             verticalAlignment = Alignment.Bottom,
-            horizontalArrangement = Arrangement.spacedBy(6.dp)
-
+            horizontalArrangement = Arrangement.Center,
+            modifier = Modifier.fillMaxWidth(),
         ) {
-            Spacer(Modifier.weight(1f))
             listSelectionDropdown(
                 startingIndex = viewModel.selectedMonth,
                 optionsList = getMonthsAsStringList(),
@@ -148,7 +147,7 @@ fun History(viewModel: HistoryViewModel, hc: HistoryController) {
                 modifier = Modifier
                     .height(50.dp)
             )
-
+            Spacer(modifier = Modifier.padding(8.dp))
             OutlinedTextField (
                 value = viewModel.selectedYear,
                 onValueChange = {
@@ -164,19 +163,8 @@ fun History(viewModel: HistoryViewModel, hc: HistoryController) {
                     .height(58.dp)
             )
         }
-        HorizontalDivider(thickness = 1.dp, color = Color.LightGray)
         if (viewModel.localLoading) {
-            Spacer(modifier = Modifier.padding(8.dp))
-            Column(
-
-                modifier = Modifier.fillMaxSize(), // Ensures the Column takes up the available space
-                verticalArrangement = Arrangement.Center, // Centers its children vertically
-                horizontalAlignment = Alignment.CenterHorizontally // Centers its children horizontally
-            ) {
-                Loader()
-
-            }
-            Spacer(modifier = Modifier.padding(8.dp))
+            Loader()
         }
         else {
             for (history in viewModel.historyChartData) {

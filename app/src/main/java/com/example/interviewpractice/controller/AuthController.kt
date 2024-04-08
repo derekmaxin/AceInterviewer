@@ -42,7 +42,7 @@ class AuthController(mm: MainModel, am: AuthModel): Controller(mm,am,TAG) {
     ) {
     am.authLoading = true
     Log.d(TAG,"New register, started authLoading")
-        handler("verifyRegister",true) {
+        handler("verifyRegister",false) {
             verifyUsernameFormat(username)
             verifyPasswordFormat(password)
             verifyEmailFormat(email)
@@ -50,6 +50,8 @@ class AuthController(mm: MainModel, am: AuthModel): Controller(mm,am,TAG) {
             verifyFOI(foi)
             verifyConfirm(password,confirm)
 
+            am.loading += 1
+            am.isInit = true
             am.createAccount(
                 username = username,
                 email = email,
@@ -57,6 +59,7 @@ class AuthController(mm: MainModel, am: AuthModel): Controller(mm,am,TAG) {
                 foi=foi,
                 birthday = birthday
             )
+
             //User should now be authenticated, and data stored in the Firestore
 
             Log.d(TAG,"verifyRegister:success")
@@ -67,9 +70,11 @@ class AuthController(mm: MainModel, am: AuthModel): Controller(mm,am,TAG) {
         am.authLoading = true
         Log.d(TAG,"New sign-in, started authLoading")
         Log.d(TAG,"SIGNING IN AS: $email")
-        handler("verifySignIn",true) {
+        handler("verifySignIn",false) {
             verifyPasswordFormat(password)
             verifyEmailFormat(email)
+            am.loading += 1
+            am.isInit = true
             am.signIn(email = email, password = password)
             //User should now be authenticated
             Log.d(TAG,"verifySignIn:success")
@@ -81,12 +86,14 @@ class AuthController(mm: MainModel, am: AuthModel): Controller(mm,am,TAG) {
         am.authLoading = true
         Log.d(TAG,"New logout, started authLoading")
         handler("verifyLogout") {
+            am.loading += 1
+            am.isInit = true
             am.logout()
         }
     }
 
     fun verifyForgotPassword(email: String) {
-        handler("verifyForgotPassword",true) {
+        handler("verifyForgotPassword",false) {
             verifyEmailFormat(email)
 
             am.resetPassword(email)
@@ -94,26 +101,26 @@ class AuthController(mm: MainModel, am: AuthModel): Controller(mm,am,TAG) {
         }
     }
 
-    private fun verifyUsernameFormat(username: String) {
+    fun verifyUsernameFormat(username: String) {
         //Add more checks here as necessary
         verifyGenericString(username, "Username")
     }
-    private fun verifyEmailFormat(email: String) {
+    fun verifyEmailFormat(email: String) {
         //Add more checks here as necessary
         verifyGenericString(email, "Email")
     }
-    private fun verifyPasswordFormat(password: String) {
+    fun verifyPasswordFormat(password: String) {
         //Add more checks here as necessary
         verifyGenericString(password, "Password")
 
     }
 
-    private fun verifyFOI(foi: Set<Tag>) {
+    fun verifyFOI(foi: Set<Tag>) {
         if (foi.isEmpty()) throw UserException("Please select at least 1 field of interest")
         if (foi.size > 3) throw UserException("You can only choose at most 3 fields of interest")
     }
 
-    private fun verifyBirthday(birthday: Date) {
+    fun verifyBirthday(birthday: Date) {
         val today = Calendar.getInstance()
         val birthdate = Calendar.getInstance()
         birthdate.time = birthday
@@ -121,7 +128,7 @@ class AuthController(mm: MainModel, am: AuthModel): Controller(mm,am,TAG) {
         val years = today.get(Calendar.YEAR) - birthdate.get(Calendar.YEAR)
         if (years < 16) throw UserException("You must be over 16 to use this app")
     }
-    private fun verifyConfirm(password: String,confirm: String) {
+    fun verifyConfirm(password: String,confirm: String) {
         if (password != confirm) throw UserException("passwords")
     }
 

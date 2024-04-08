@@ -15,7 +15,7 @@ import com.google.firebase.firestore.auth.User
 
 class MainViewModel( ): AMViewModel() {
 
-    var loading: Int by mutableStateOf(1)
+    var loading: Int  by mutableStateOf(1)
     var error: UIError? by mutableStateOf(null)
     var authLoading: Boolean by mutableStateOf(true)
     var user: FirebaseUser? by mutableStateOf(null)
