@@ -238,36 +238,26 @@ class MainModel() : Presenter() {
         Log.d(TAG, "addReview::success")
     }
 
-    suspend fun searchQuestion(queryText: String,filters: List<Tag> = emptyList(),self:Boolean=false) {
+    suspend fun searchQuestion(queryText: String, filters: List<Tag> = emptyList(),self:Boolean=false) {
         val questionsRef = db.collection("questions")
-        var filty = filters
-
+        var filtersvar = filters
         if (self) {
+            getCurrentUserData()
             var currUser = user
-            if (currUser != null) {
-                filty = currUser.fieldsOfInterest
-            }
-            else {
-                getCurrentUserData()
-                currUser = user
-                if (currUser != null) {
-                    filty = currUser.fieldsOfInterest
-                }
-            }
+            if (currUser == null) throw CatastrophicException("No user found despite being logged in")
+            filtersvar = currUser.fieldsOfInterest
         }
-        Log.d(TAG,"THESE ARE THE USER TAGS: $filty, ${filty.isEmpty()}, qtext: $queryText")
-        var queryss = questionsRef
+        var searchRef = questionsRef
             .whereGreaterThanOrEqualTo("questionText", queryText)
             .whereLessThanOrEqualTo("questionText", queryText + "\uf8ff")
 
-        if (filty.isNotEmpty()) {
-            Log.d(TAG,"REASSIGNED")
-            queryss = questionsRef
+        if (filtersvar.isNotEmpty()) {
+            searchRef = questionsRef
                 .whereGreaterThanOrEqualTo("questionText", queryText)
                 .whereLessThanOrEqualTo("questionText", queryText + "\uf8ff")
-                .whereArrayContainsAny("tags", filty )
+                .whereArrayContainsAny("tags", filtersvar )
         }
-        val query = queryss.get().await()
+        val query = searchRef.get().await()
 
 
         searchResults.clear()
