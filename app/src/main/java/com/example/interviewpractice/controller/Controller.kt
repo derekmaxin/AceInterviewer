@@ -22,10 +22,7 @@ open class Controller(protected val mm: MainModel, val am: AuthModel, protected 
     fun fetchData(ft: FetchType) {
         handler("fetchData.${ft}",!mm.check(ft)) {
             when (ft) {
-                FetchType.PROFILE-> {
-                    am.loading+= 1
-                    mm.getCurrentUserData()
-                }
+                FetchType.PROFILE-> mm.getCurrentUserData()
 
 
                 FetchType.LEADERBOARD->mm.getLeaderboardData()
@@ -54,19 +51,20 @@ open class Controller(protected val mm: MainModel, val am: AuthModel, protected 
                 }
                 FetchType.QUESTION->mm.getQuestionData()
                 FetchType.TINDER->mm.getNextReview(am.getUserID())
+                FetchType.FENCE->{}
 
 
             }
-            if ( ft == FetchType.RECOMMENDATION || ft==FetchType.HISTORY ) {
-                am.loading = 0
-            }
+//            if ( ft == FetchType.RECOMMENDATION || ft==FetchType.HISTORY ) {
+//                am.loading = 0
+//            }
 
         }
     }
     protected fun handler(functionName: String, requiresLoad: Boolean = false, func: suspend () -> Unit) {
         MainScope().launch {
             try {
-                if (requiresLoad) am.loading +=1
+                if (requiresLoad) am.loading += 1
                 else mm.localLoading = true
                 func()
             } catch (ex: FirebaseAuthException) {
@@ -87,6 +85,15 @@ open class Controller(protected val mm: MainModel, val am: AuthModel, protected 
                 //Represents all user errors that are caught by us
                 am.error = UIError(ex.message!!, ErrorType.USER)
                 Log.w(TAG, "$functionName:userException -> ${ex.message}")
+            } catch (ex: SystemException){
+                if (ex.message == "No uid for signed in user") {
+                    Log.e(TAG, "$functionName:userException -> ${ex.message} (SILENT)")
+                }
+                else {
+                    am.error = UIError(ex.message!!, ErrorType.USER)
+                    Log.e(TAG, "$functionName:userException -> ${ex.message}")
+                }
+
             } catch (ex: Exception) {
                 //Represents all remaining errors that weren't caught by Firebase or us
                 //If we reach here, something very bad has happened
@@ -99,7 +106,14 @@ open class Controller(protected val mm: MainModel, val am: AuthModel, protected 
             } finally {
                 //Stop loading after we finished our task
                 if (requiresLoad) am.loading -= 1
+                if (am.isInit) {
+                    am.loading -= 1
+                    am.isInit = false
+                }
+
+
                 else mm.localLoading = false
+                if (am.authLoading) am.authLoading = false
             }
         }
     }

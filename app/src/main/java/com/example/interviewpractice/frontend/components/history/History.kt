@@ -166,17 +166,7 @@ fun History(viewModel: HistoryViewModel, hc: HistoryController) {
         }
         HorizontalDivider(thickness = 1.dp, color = Color.LightGray)
         if (viewModel.localLoading) {
-            Spacer(modifier = Modifier.padding(8.dp))
-            Column(
-
-                modifier = Modifier.fillMaxSize(), // Ensures the Column takes up the available space
-                verticalArrangement = Arrangement.Center, // Centers its children vertically
-                horizontalAlignment = Alignment.CenterHorizontally // Centers its children horizontally
-            ) {
                 Loader()
-
-            }
-            Spacer(modifier = Modifier.padding(8.dp))
         }
         else {
             for (history in viewModel.historyChartData) {

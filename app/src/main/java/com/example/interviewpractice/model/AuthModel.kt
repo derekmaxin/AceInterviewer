@@ -2,14 +2,12 @@ package com.example.interviewpractice.model
 
 import android.util.Log
 import com.example.interviewpractice.types.User
-import com.example.interviewpractice.frontend.Subscriber
-import com.example.interviewpractice.frontend.views.mainview.MainViewModel
 import com.example.interviewpractice.types.CatastrophicException
 import com.example.interviewpractice.types.SystemException
 import com.example.interviewpractice.types.Tag
 import com.example.interviewpractice.types.UIError
+import com.example.interviewpractice.types.UserException
 import com.google.firebase.Firebase
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.auth
 import com.google.firebase.auth.userProfileChangeRequest
 import com.google.firebase.firestore.firestore
@@ -26,11 +24,16 @@ class AuthModel: Presenter() {
     //loading
     var loading: Int = 1
         set(value) {
-            if (value < 0) field = 0
-            else field = value
+            field = value
+//            if (isInit) {
+//                isInit  = false
+//                field -= 1
+//            }
+
             notifySubscribers()
             Log.d(TAG,"Updated GLOBAL loading state: loading -> $loading")
         }
+    var isInit: Boolean = true
     //error state
     var error: UIError? = null
         set(value) {
@@ -102,11 +105,10 @@ class AuthModel: Presenter() {
     fun getUserID(): String {
         val user = auth.currentUser
         Log.d(TAG,"APPARENT USER: ${user?.email}")
-        val currentUser = user
-        if (currentUser != null) {
-            return currentUser.uid
+        if (user != null) {
+            return user.uid
         }
-        throw SystemException("No user found")
+        throw SystemException("No uid for signed in user")
     }
 
     companion object {

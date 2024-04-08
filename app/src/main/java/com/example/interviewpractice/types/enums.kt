@@ -8,7 +8,8 @@ enum class FetchType {
     NOTIFICATION,
     HISTORY,
     QUESTION,
-    TINDER
+    TINDER,
+    FENCE
 //    NAVBAR
 }
 
