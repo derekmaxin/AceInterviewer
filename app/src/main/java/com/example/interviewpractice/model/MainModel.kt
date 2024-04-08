@@ -44,8 +44,8 @@ import kotlin.coroutines.suspendCoroutine
 
 class MainModel(
     private val auth: FirebaseAuth = Firebase.auth,
-    private val db: FirebaseFirestore = Firebase.firestore,
-    private val storage: FirebaseStorage = Firebase.storage
+    val db: FirebaseFirestore = Firebase.firestore,
+    val storage: FirebaseStorage = Firebase.storage
     ) : Presenter() {
 
     var localLoading: Boolean = false

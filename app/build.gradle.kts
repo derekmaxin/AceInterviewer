@@ -8,6 +8,10 @@ android {
     namespace = "com.example.interviewpractice"
     compileSdk = 34
 
+    testOptions {
+        unitTests.isReturnDefaultValues = true
+    }
+
     defaultConfig {
         applicationId = "com.example.interviewpractice"
         minSdk = 26
@@ -78,4 +82,5 @@ dependencies {
     testImplementation("org.mockito:mockito-core:4.0.0")
     testImplementation("org.mockito:mockito-inline:4.0.0") // For final classes
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.4.2")
+    testImplementation("org.mockito.kotlin:mockito-kotlin:4.0.0")
 }

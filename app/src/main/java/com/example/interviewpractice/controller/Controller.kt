@@ -55,7 +55,7 @@ open class Controller(protected val mm: MainModel, val am: AuthModel, protected 
 
         }
     }
-    protected fun handler(functionName: String, requiresLoad: Boolean = false, func: suspend () -> Unit) {
+    fun handler(functionName: String, requiresLoad: Boolean = false, func: suspend () -> Unit) {
         MainScope().launch {
             try {
                 if (requiresLoad) am.loading += 1
