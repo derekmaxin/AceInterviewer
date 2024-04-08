@@ -182,7 +182,7 @@ fun QuestionAnswered(
                             append("Question: ")
                         }
                         withStyle(style = SpanStyle(fontWeight = FontWeight.Normal)) {
-                            append("${questionAnswer.questionText}")
+                            append(questionAnswer.questionText)
                         }
                     }
                     Text(
@@ -204,16 +204,6 @@ fun QuestionAnswered(
                             color = Color.Black
                         ),
                         modifier = Modifier.padding(8.dp),
-                    )
-                    Text(
-                        text = "${questionAnswer.textResponse}",
-                        style = TextStyle(
-                            fontSize = 14.sp,
-                            color = Color.Black,
-                        ),
-                        modifier = Modifier.padding(8.dp),
-                        overflow = TextOverflow.Ellipsis,
-                        maxLines = 1
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     PlayBar(mm, questionAnswer.downloadUrl)

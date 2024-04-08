@@ -93,7 +93,6 @@ class MainModel() : Presenter() {
     var homePageRecommendations: Question? = null
 
     //HISTORY
-    var historyHeatData = mutableMapOf<Date,Int>()
     var historyChartData = mutableListOf<History>()
 
     //NOTIFICATION
@@ -197,32 +196,23 @@ class MainModel() : Presenter() {
 
     suspend fun addReview(review: Review) {
         // Add review itself
-        val document = db.collection("reviews").add(review).await()
+        val reviewRef = db.collection("reviews").add(review).await()
 
         // Fetch answered data asynchronously
-        val document2 = db.collection("answered").document(review.answeredQuestionID)
-        var answeredData = AnsweredQuestion()
+        val answeredRef = db.collection("answered").document(review.answeredQuestionID)
+        val documentSnapshot = answeredRef.get().await()
 
-        try {
-            val documentSnapshot = document2.get().await()
-            if (documentSnapshot.exists()) {
-                answeredData = documentSnapshot.toObject(AnsweredQuestion::class.java)!!
-            } else {
-                // Document with the specified ID does not exist
-                // Handle this case accordingly
-            }
-        } catch (e: Exception) {
-            // Handle any errors that occur during the query
-            Log.e(TAG, "Error fetching answered data: ${e.message}", e)
-        }
+        val answeredData = documentSnapshot.toObject<AnsweredQuestion>()
+            ?: throw SystemException("No answered question with this ID found")
+
 
         // Add notification
         val notification = Notification(
-            notificationText = "A new review was added for your answer. Review: ${review.reviewText}",
+            notificationText = "A new review was added for your answer to question \"${answeredData.questionText}\"",
             type = NotificationType.NEWREVIEW,
             questionID = review.answeredQuestionID,
             userID = review.answeredQuestionAuthorID,
-            reviewID = document.id,
+            reviewID = documentSnapshot.id,
             review = review,
             answeredQuestion = answeredData
         )
@@ -279,7 +269,7 @@ class MainModel() : Presenter() {
             }
             else {
                 homePageRecommendations = Question("We have no questions in your field of interest!",
-                    emptyList(),false,false,false,"", getCurrentDate(), emptyList()
+                    emptyList(),"", getCurrentDate(), emptyList()
                 )
             }
 
@@ -508,8 +498,6 @@ class MainModel() : Presenter() {
                 .orderBy("date",Query.Direction.DESCENDING)
 
             val query = questionRef.get().await()
-
-            historyHeatData.clear()
             historyChartData.clear()
 
             for (document in query) {
@@ -532,13 +520,8 @@ class MainModel() : Presenter() {
 
                 val reviewScores = listOf(Pair("clarity",clarityData),Pair("completeness",understandingData))
 
-                val currentHistory: History = History(entry.questionText, entry.textResponse,document.id,reviewScores,"")
+                val currentHistory: History = History(entry.questionText,document.id,reviewScores,entry.downloadUrl)
                 historyChartData.add(currentHistory)
-                if (historyHeatData.containsKey(entry.date)) {
-                    historyHeatData[entry.date] = historyHeatData[entry.date]!! + 1
-                } else {
-                    historyHeatData[entry.date] = 1
-                }
             }
         }
     }

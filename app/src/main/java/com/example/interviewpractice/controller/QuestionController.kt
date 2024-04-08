@@ -26,19 +26,17 @@ class QuestionController(mm: MainModel, am: AuthModel): Controller(mm,am, TAG) {
         }
     }
 
-    fun verifyAndAddNewQuestion(questionText: String, hasVoice: Boolean, hasText: Boolean,
+    fun verifyAndAddNewQuestion(questionText: String,
                                 tagList: List<Tag>, onSuccess: () -> Unit) {
 
         handler("verifyQuestion",false) {
             verifyQuestionText(questionText)
-            verifyAnswerFormat(hasVoice, hasText)
             verifyTags(tagList)
 
             val questionID = UUID.randomUUID().toString()
 
-            val newQuestion = Question(questionText, tagList,
-                hasVoice, hasText, false,
-                am.getUserID(), getCurrentDate(), mutableListOf(), questionID)
+            val newQuestion = Question(questionText=questionText, tags = tagList,
+                userID = am.getUserID(), date = getCurrentDate(), answers = mutableListOf(), questionID = questionID)
             mm.addQuestion(newQuestion)
 
             Log.d(TAG, "verifyQuestion:success")
@@ -46,24 +44,18 @@ class QuestionController(mm: MainModel, am: AuthModel): Controller(mm,am, TAG) {
         }
     }
 
-    fun verifySubmitAnswer(answerText:String,questionID: String, audioFile: File?, context: Context?, hasText: Boolean, hasVoice: Boolean, tags: List<Tag>, questionText: String) {
+    fun verifySubmitAnswer(answerText:String,questionID: String, audioFile: File?, context: Context?, tags: List<Tag>, questionText: String) {
         handler("verifySubmitAnswer") {
-            if (hasText) {
-                verifyGenericString(answerText, "Answer text")
-            }
             var fileUri: String = ""
-            if (hasVoice) {
-                if (audioFile == null || context == null) {
-                    throw UserException("No audio submitted on a question which requires it")
-                }
-                fileUri = FileProvider.getUriForFile(context, context.packageName + ".provider", audioFile).toString()
+            if (audioFile == null || context == null) {
+                throw UserException("No audio submitted but question which requires it")
             }
+            fileUri = FileProvider.getUriForFile(context, context.packageName + ".provider", audioFile).toString()
 
             val uid = am.getUserID()
 
-            var question = AnsweredQuestion(
+            val question = AnsweredQuestion(
                 userID = uid,
-                textResponse = answerText,
                 questionID = questionID,
                 date = getCurrentDate(),
                 downloadUrl = "",
@@ -189,11 +181,11 @@ class QuestionController(mm: MainModel, am: AuthModel): Controller(mm,am, TAG) {
         }
     }
 
-    private fun verifyAnswerFormat(hasVoice: Boolean, hasText: Boolean) {
-        if (!hasText && !hasVoice) {
-            throw UserException("Must select at least one answer format")
-        }
-    }
+//    private fun verifyAnswerFormat(hasVoice: Boolean, hasText: Boolean) {
+//        if (!hasText && !hasVoice) {
+//            throw UserException("Must select at least one answer format")
+//        }
+//    }
 
     private fun verifyTags(tagList: List<Tag>) {
         if (tagList.isEmpty()) {

@@ -99,24 +99,8 @@ fun SeeReviewView(mm: MainModel, n : Notification) {
                         ),
                         modifier = Modifier.padding(8.dp),
                     )
-                    Text(
-                        text = "${n.answeredQuestion.textResponse}",
-                        style = TextStyle(
-                            fontSize = 14.sp,
-                            color = Color.Black,
-                        ),
-                        modifier = Modifier.padding(8.dp),
-                        overflow = TextOverflow.Ellipsis,
-                        maxLines = 1
-                    )
 
-
-                    val playBarVM: PlayBarViewModel = viewModel(key = n.answeredQuestion.downloadUrl)
-
-
-                    playBarVM.addModel(mm)
-                    playBarVM.audioURL = n.answeredQuestion.downloadUrl
-                    PlayBar(playBarVM)
+                    PlayBar(mm,n.answeredQuestion.downloadUrl)
 
                     HorizontalDivider(thickness = 1.dp, color = Color.LightGray)
 

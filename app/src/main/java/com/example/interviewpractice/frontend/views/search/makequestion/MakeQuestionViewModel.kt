@@ -9,9 +9,6 @@ import com.example.interviewpractice.types.Tag
 class MakeQuestionViewModel(): MMViewModel() {
     var questionText by mutableStateOf("")
 
-    var hasText by mutableStateOf(false)
-    var hasVoice by mutableStateOf(false)
-
     var biologyTag by mutableStateOf(false)
     var englishTag by mutableStateOf(false)
     var chemistryTag by mutableStateOf(false)
@@ -56,9 +53,6 @@ class MakeQuestionViewModel(): MMViewModel() {
 
     fun clearFields() {
         questionText = ""
-
-        hasText = false
-        hasVoice = false
 
         biologyTag = false
         englishTag = false

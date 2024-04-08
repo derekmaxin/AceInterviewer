@@ -60,36 +60,6 @@ fun MakeQuestionScreen(mm: MainModel, questionController: QuestionController, go
             Column(
                 horizontalAlignment = AbsoluteAlignment.Left
             ) {
-                Text("Type:")
-                Row(
-
-                ) {
-                    Checkbox(
-                        checked = vm.hasText,
-                        onCheckedChange = { vm.hasText = it }
-                    )
-                    Text(
-                        text = "Accept text answers",
-                        modifier = Modifier
-                            .align(Alignment.CenterVertically))
-                }
-                Row(
-
-                ) {
-                    Checkbox(
-                        checked = vm.hasVoice,
-                        onCheckedChange = { vm.hasVoice = it }
-                    )
-                    Text(
-                        text = "Accept audio answers",
-                        modifier = Modifier
-                            .align(Alignment.CenterVertically))
-                }
-            }
-
-            Column(
-                horizontalAlignment = AbsoluteAlignment.Left
-            ) {
                 Text("Tags:")
                 Box(
                     modifier = Modifier
@@ -169,8 +139,6 @@ fun MakeQuestionScreen(mm: MainModel, questionController: QuestionController, go
                 onClick = {
                     questionController.verifyAndAddNewQuestion(
                         vm.questionText,
-                        vm.hasVoice,
-                        vm.hasText,
                         vm.makeTagList(),
                         goToHome)
                 },

@@ -209,8 +209,7 @@ fun ReviewView(mm: MainModel, c: ReviewController){
                     if (i == page) {
                         if ((rvvm.currentReviewData.size > i)) {
                             ReviewQuestion(
-                                qText = rvvm.currentReviewData[i].questionText,
-                                aText = rvvm.currentReviewData[i].textResponse
+                                qText = rvvm.currentReviewData[i].questionText
                             )
                         }
                         else {
