@@ -43,7 +43,9 @@ class QuestionController(mm: MainModel, am: AuthModel): Controller(mm,am, TAG) {
             mm.addQuestion(newQuestion)
 
             Log.d(TAG, "verifyQuestion:success")
+
             onSuccess()
+            am.error = UIError("Successfully created question",ErrorType.INFO)
         }
     }
 
@@ -167,9 +169,9 @@ class QuestionController(mm: MainModel, am: AuthModel): Controller(mm,am, TAG) {
         }
     }
 
-    fun search(queryText: String, filters: List<Tag> = emptyList()) {
+    fun search(queryText: String, completed: Boolean, filters: List<Tag> = emptyList()) {
         handler("search",false) {
-            mm.searchQuestion(queryText, filters)
+            mm.searchQuestion(queryText, am.getUserID(), filters, completed = completed)
             Log.d(TAG,"search:success")
         }
     }

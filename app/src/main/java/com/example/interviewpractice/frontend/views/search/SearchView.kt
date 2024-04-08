@@ -96,6 +96,13 @@ fun SearchView(c: QuestionController, mm: MainModel, r: Router) {
                 )
             }
             Spacer(modifier = Modifier.padding(4.dp))
+            Text(
+                "Note: prefix search only",
+                style = TextStyle(
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            )
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -105,8 +112,8 @@ fun SearchView(c: QuestionController, mm: MainModel, r: Router) {
                 ) {
                     IconButton(
                         onClick = {
-                            if (vm.currentlyFilteredBy.isNotEmpty())c.search(vm.search, vm.currentlyFilteredBy)
-                            else c.search(vm.search)
+                            if (vm.currentlyFilteredBy.isNotEmpty())c.search(vm.search, filters = vm.currentlyFilteredBy, completed = vm.isCompletedFilter)
+                            else c.search(vm.search, completed = vm.isCompletedFilter)
 
                         },
                         modifier = Modifier
@@ -137,7 +144,7 @@ fun SearchView(c: QuestionController, mm: MainModel, r: Router) {
                         imeAction = ImeAction.Done,
                     ),
                     keyboardActions = KeyboardActions(
-                        onDone = { c.search(vm.search) }
+                        onDone = { c.search(vm.search, completed = vm.isCompletedFilter) }
                     )
                 )
             }
@@ -161,13 +168,13 @@ fun SearchView(c: QuestionController, mm: MainModel, r: Router) {
                 }
                 Spacer(modifier = Modifier.width(16.dp))
                 Button(
-                    onClick = { vm.isCompletedFilter.value = !vm.isCompletedFilter.value },
+                    onClick = { vm.isCompletedFilter = !vm.isCompletedFilter },
                     modifier = Modifier
                         .weight(1f)
                         .height(50.dp)
                         .padding(vertical = 4.dp)
                 ) {
-                    Text(if (vm.isCompletedFilter.value)  "☑ Completed" else "☐ Completed",
+                    Text(if (vm.isCompletedFilter)  "☑ Completed" else "☐ Completed",
                         style = TextStyle(
                             fontSize = 16.sp,
                             color = Color.White,
@@ -218,7 +225,7 @@ fun SearchView(c: QuestionController, mm: MainModel, r: Router) {
             Column(modifier = Modifier.verticalScroll(scrollState)) {
                 if (vm.localLoading) Loader()
                 for (question in vm.searchResults) {
-                    Question(question) { navToQuestion(r.goToAnswerQuestion,question,c) }
+                    Question(question.first,question.second) { navToQuestion(r.goToAnswerQuestion,question.first,c) }
                     Spacer(modifier = Modifier.padding(4.dp))
                 }
             }
@@ -229,10 +236,10 @@ fun SearchView(c: QuestionController, mm: MainModel, r: Router) {
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun FilterOptions(vm: SearchViewModel = viewModel(), c: QuestionController) {
-    fun search(){
-        if (vm.currentlyFilteredBy.isNotEmpty())c.search(vm.search, vm.currentlyFilteredBy)
-        else c.search(vm.search)
-    }
+//    fun search(){
+//        if (vm.currentlyFilteredBy.isNotEmpty())c.search(vm.search, vm.currentlyFilteredBy)
+//        else c.search(vm.search,, completed = vm.isCompletedFilter)
+//    }
     Box(
         modifier = Modifier
             .offset(y = (0).dp, x = (-95).dp)

@@ -84,7 +84,7 @@ class MainModel() : Presenter() {
     //FetchType:
 
     //SEARCH
-    var searchResults = mutableListOf<Question>()
+    var searchResults = mutableListOf<Pair<Question,Boolean>>()
 
     //LEADERBOARD
     var leaderBoardStandings = mutableListOf<User>()
@@ -238,9 +238,10 @@ class MainModel() : Presenter() {
         Log.d(TAG, "addReview::success")
     }
 
-    suspend fun searchQuestion(queryText: String, filters: List<Tag> = emptyList(),self:Boolean=false) {
+    suspend fun searchQuestion(queryText: String, uid: String, filters: List<Tag> = emptyList(),self:Boolean=false,completed: Boolean = false) {
         val questionsRef = db.collection("questions")
         var filtersvar = filters
+
         if (self) {
             getCurrentUserData()
             var currUser = user
@@ -261,13 +262,43 @@ class MainModel() : Presenter() {
 
 
         searchResults.clear()
-        for (question in query) {
-//            Log.d(TAG, "QUERY ${question.id} => ${question.data}")
-            searchResults.add(question.toObject<Question>())
+        for (entry in query) {
+            Log.d(TAG, "QUERY ${entry.id} => ${entry.data}")
+            val question = entry.toObject<Question>()
+                val answeredQuestionRef = db.collection("answered")
+                    .whereEqualTo("userID",uid)
+                    .whereEqualTo("questionID",entry.id)
+                val aquery = answeredQuestionRef.get().await()
+                if (aquery.isEmpty && !completed) {
+                    searchResults.add(Pair(question,false))
+                }
+                for (aq in aquery) {
+                    Log.d(TAG, "AQ ${aq.id} => ${aq.data}")
+                    if (!aq.exists()) {
+                        if (!completed) {
+                            searchResults.add(Pair(question,false))
+                            break
+                        }
+                    }
+                    else {
+                        searchResults.add(Pair(question,true))
+                        break
+                    }
+                }
+
+
         }
         if (self) {
             if (searchResults.isNotEmpty()) {
-                homePageRecommendations = searchResults[0]
+                for (question in searchResults) {
+                    if (!question.second) {
+                        homePageRecommendations = question.first
+                        return
+                    }
+                }
+                homePageRecommendations = Question("We have no questions in your field of interest!",
+                    emptyList(),"", getCurrentDate(), emptyList()
+                )
             }
             else {
                 homePageRecommendations = Question("We have no questions in your field of interest!",

@@ -141,6 +141,7 @@ fun MakeQuestionScreen(mm: MainModel, questionController: QuestionController, go
                         vm.questionText,
                         vm.makeTagList(),
                         goToHome)
+
                 },
                 modifier = Modifier
                     .fillMaxWidth()

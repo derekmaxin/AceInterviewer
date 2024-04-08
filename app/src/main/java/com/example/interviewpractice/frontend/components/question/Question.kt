@@ -1,6 +1,7 @@
 package com.example.interviewpractice.frontend.components.question
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.anchoredDraggable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
@@ -27,6 +29,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.interviewpractice.types.Question
 import com.example.interviewpractice.types.Tag
 
@@ -47,14 +50,32 @@ fun Tag(text: String) {
     }
 }
 @Composable
-fun Question(q: Question, boost: ()->Unit) {
+fun Question(q: Question, isAnswered: Boolean = false, boost: ()->Unit) {
+    var modif = Modifier.padding()
+    if (isAnswered) modif = Modifier.border(width = 3.dp, color = Color(0xFF4CAF50), shape = RoundedCornerShape(16.dp)) // Add a green border to the Card
+    Card(
+        onClick = {boost()},
 
-    Card(onClick = {boost()} ) {
+            modifier = modif
+            ) {
         Column(
             modifier = Modifier
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(6.dp)
         ) {
+            if (isAnswered) {
+                Text(
+                    text = "COMPLETED",
+                    modifier = Modifier
+                        .padding(4.dp, 0.dp, 4.dp, 0.dp),
+                    textAlign = TextAlign.Left,
+                    style = MaterialTheme.typography.bodyLarge.copy(
+                        fontSize = 12.sp, // Adjust the font size to make it smaller
+                        fontWeight = FontWeight.Bold, // Make the text bold
+                        color = Color(0xFF4CAF50) // Change the text color to green
+                    )
+                )
+            }
             Text(
                 text = q.questionText,
                 modifier = Modifier

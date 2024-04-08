@@ -16,10 +16,10 @@ class SearchViewModel(): LoaderMMViewModel() {
     var isFilterOptionsVisible = mutableStateOf(false)
     var currentlyFilteredBy = mutableStateListOf<Tag>()
 
-    var isCompletedFilter = mutableStateOf(false)
+    var isCompletedFilter by mutableStateOf(false)
 
     //DATA FROM BACKEND
-    var searchResults by mutableStateOf<List<Question>>(emptyList())
+    var searchResults by mutableStateOf<List<Pair<Question,Boolean>>>(emptyList())
 
     override fun update() {
         if (searchResults != model.searchResults) {

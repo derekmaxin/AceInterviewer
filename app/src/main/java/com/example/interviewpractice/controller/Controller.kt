@@ -26,12 +26,12 @@ open class Controller(protected val mm: MainModel, val am: AuthModel, protected 
                 FetchType.LEADERBOARD->mm.getLeaderboardData()
                 FetchType.SEARCH->{
                     if (mm.check(FetchType.SEARCH)) mm.notifySubscribers()
-                    else mm.searchQuestion("")
+                    else mm.searchQuestion("",am.getUserID())
 
                 }
                 FetchType.RECOMMENDATION-> {
                     if (mm.homePageRecommendations == null) {
-                        mm.searchQuestion("",self=true)
+                        mm.searchQuestion("",am.getUserID(),self=true)
                     }
 
                     mm.notifySubscribers()
