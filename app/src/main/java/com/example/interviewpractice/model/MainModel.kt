@@ -207,8 +207,6 @@ class MainModel() : Presenter() {
     suspend fun addReview(review: Review) {
         // Add review itself
         val reviewRef = db.collection("reviews").add(review).await()
-        invalidate(FetchType.NOTIFICATION)
-        invalidate(FetchType.HISTORY)
 
         // Fetch answered data asynchronously
         val answeredRef = db.collection("answered").document(review.answeredQuestionID)
@@ -314,6 +312,8 @@ class MainModel() : Presenter() {
     }
 
     fun addNotificationListener(currentUserID: String) {
+        invalidate(FetchType.NOTIFICATION)
+        invalidate(FetchType.HISTORY)
         //ASSUME ONLY NEW REVIEW NOTIFICATIONS (FOR NOW FOR SIMPLICITY)
         val docRef = db.collection(Collections.notifications.toString()).whereEqualTo("userID",currentUserID)
 
@@ -345,7 +345,14 @@ class MainModel() : Presenter() {
                         //MIGHT NEED TO CHANGE
                         Log.d(TAG, "Notification changed: ${dc.document.data}")
                     }
-                    DocumentChange.Type.REMOVED -> Log.d(TAG, "Notification removed: ${dc.document.data}")
+                    DocumentChange.Type.REMOVED -> {
+                        val notification = dc.document.toObject<Notification>()
+                        newReviewNotifications.remove(notification)
+                        notificationCount -= 1
+                        Log.d(TAG, "Notification removed: ${dc.document.data}")
+                    }
+
+
                 }
             }
             invalidate(FetchType.NOTIFICATION)

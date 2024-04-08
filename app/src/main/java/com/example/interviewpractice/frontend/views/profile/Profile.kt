@@ -82,6 +82,8 @@ fun ProfileView(mm: MainModel,
 //    For the pfp
     val context = LocalContext.current
     val launcher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri ->
+        c.am.loading +=1
+        c.am.isInit = true
         uri?.let {
             mm.invalidate(FetchType.PROFILE)
             mm.invalidate(FetchType.HISTORY)
@@ -121,7 +123,8 @@ fun ProfileView(mm: MainModel,
                 ProfilePicture(
                     painter = vm.user?.pfpURL?.let { rememberImagePainter(data = it) },
                     contentDescription = "Profile Picture",
-                    onClick = { launcher.launch("image/*") },
+                    onClick = {
+                        launcher.launch("image/*") },
                     hasNoPfp = vm.user?.pfpURL == ""
                 )
                 Spacer(modifier = Modifier.width(4.dp))
