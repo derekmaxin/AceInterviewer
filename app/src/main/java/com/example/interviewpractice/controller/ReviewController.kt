@@ -22,7 +22,6 @@ class ReviewController(mm: MainModel, am: AuthModel): Controller(mm,am, TAG) {
 
             mm.addReview(review)
         }
-
     }
 
     private fun verifyScore(clarity: Int, understanding: Int) {

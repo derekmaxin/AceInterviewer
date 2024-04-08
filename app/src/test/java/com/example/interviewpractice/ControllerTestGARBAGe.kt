@@ -1,8 +1,6 @@
 package com.example.interviewpractice
 
 import com.example.interviewpractice.controller.AuthController
-import com.example.interviewpractice.controller.TestAuthController
-import com.example.interviewpractice.controller.TestController
 import com.example.interviewpractice.model.AuthModel
 import com.example.interviewpractice.model.MainModel
 import com.example.interviewpractice.types.Tag
@@ -14,12 +12,8 @@ import com.google.firebase.storage.FirebaseStorage
 import org.junit.Before
 import org.junit.Test
 import org.junit.After
-import org.junit.Ignore
-import org.junit.runner.RunWith
 import org.mockito.Mockito
 
-import java.lang.Exception
-import java.util.Calendar
 import java.util.Date
 
 class AuthControllerTest {
