@@ -16,10 +16,10 @@ Students and professionals alike have limited access to valuable feedback on the
 
 _Release 4.1.0 was created to fix bugs and make minor changes to suit the reccommendations of our TA prior to submission._
 
-### Developer Journals
+### Development Journals
 * [Ryan Maxin](https://git.uwaterloo.ca/kotlin-gang/team-101-5/-/wikis/Ryan-Development-Journal)
 * [Derek Maxin](https://git.uwaterloo.ca/kotlin-gang/team-101-5/-/wikis/Derek-Development-Journal)
 * [Marcus Puntillo](https://git.uwaterloo.ca/kotlin-gang/team-101-5/-/wikis/Marcus-Development-Journal)
 * [Jia Wen Li](https://git.uwaterloo.ca/kotlin-gang/team-101-5/-/wikis/Jia-Wen-Development-Journal)
 
-**[Meeting Minutes](https://git.uwaterloo.ca/kotlin-gang/team-101-5/-/wikis/Meeting-Minutes)**
+**[Meeting Minutes](https://git.uwaterloo.ca/kotlin-gang/team-101-5/-/wikis/Meeting-Minutes)**: _Note that meeting minutes are also contained in each of our development journals_
