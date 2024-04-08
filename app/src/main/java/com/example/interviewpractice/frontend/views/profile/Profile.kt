@@ -1,10 +1,8 @@
 package com.example.interviewpractice.frontend.views.profile
 
-import android.os.Build
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -25,30 +23,20 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
-import androidx.compose.material.icons.filled.AccountBox
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import com.example.interviewpractice.controller.UserController
-import com.example.interviewpractice.frontend.components.historychart.HistoryChart
 import com.example.interviewpractice.frontend.components.userbadge.UserBadgeDisplay
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import com.example.interviewpractice.controller.AuthController
 import com.example.interviewpractice.model.MainModel
 import com.example.interviewpractice.types.FetchType
-import com.example.interviewpractice.controller.QuestionController
 import coil.compose.rememberImagePainter
 import com.example.interviewpractice.controller.HistoryController
 import com.example.interviewpractice.frontend.components.history.History
 import com.example.interviewpractice.frontend.components.history.HistoryViewModel
-import com.example.interviewpractice.helpers.Lifecycle
-import com.example.interviewpractice.model.AuthModel
-import com.example.interviewpractice.types.Tag
 
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -210,7 +198,7 @@ fun ProfileView(mm: MainModel,
                 text = "Your Reviewed Answers",
                 modifier = Modifier.padding(horizontal = 8.dp)
             )
-            History(historyViewModel, hc)
+            History(historyViewModel, hc, mm)
         }
     }
 }
