@@ -145,6 +145,10 @@ fun HomeScreen(
                 ) {
 
                     //Log.d("question downloadUrl", "${questionAnswer.downloadUrl}")
+                    val playBarVM: PlayBarViewModel = viewModel(key = questionAnswer.downloadUrl)
+                    playBarVM.addModel(mm)
+                    playBarVM.audioURL = questionAnswer.downloadUrl
+                    playBarVM.audioLength = questionAnswer.audioTime
 
                     QuestionAnswered(questionAnswer, mm)
                 }

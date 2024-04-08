@@ -1,5 +1,6 @@
 package com.example.interviewpractice.frontend.components.viewreviewscores
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -33,6 +34,11 @@ import kotlin.math.floor
 
 @Composable
 fun ViewReviewScores(history: History) {
+    val playBarViewModel = PlayBarViewModel()
+    playBarViewModel.audioURL = history.audioUrl
+    Log.d("vrs", "${history.audioUrl}")
+    playBarViewModel.audioLength = 20000
+
     Card(
         modifier = Modifier
             .fillMaxWidth(),
@@ -48,7 +54,12 @@ fun ViewReviewScores(history: History) {
             )
 
             HorizontalDivider(thickness = 1.dp, color = Color.LightGray)
+<<<<<<< app/src/main/java/com/example/interviewpractice/frontend/components/viewreviewscores/ViewReviewScores.kt
+            PlayBar(playBarViewModel)
+            HorizontalDivider(thickness = 1.dp, color = Color.LightGray)
+=======
 //            PlayBar(viewModel.playBarViewModel)
+>>>>>>> app/src/main/java/com/example/interviewpractice/frontend/components/viewreviewscores/ViewReviewScores.kt
 
             for (scoreComponent in history.reviewScores) {
                 ReviewScoreComponent(scoreComponent.first, scoreComponent.second.toInt())
