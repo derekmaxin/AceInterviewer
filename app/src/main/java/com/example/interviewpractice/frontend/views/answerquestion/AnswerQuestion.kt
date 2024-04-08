@@ -93,8 +93,8 @@ fun AnswerScreen(mm: MainModel, qc: QuestionController, router: Router) {
                     val file = vm.audioFile
                     val context = vm.context
                     if (question!= null) {
-                        qc.verifySubmitAnswer(answerText = vm.textAnswer,question.questionID, file, context, tags=question.tags, questionText = question.questionText)
-                        router.goToHome()
+                        qc.verifySubmitAnswer(answerText = vm.textAnswer,question.questionID, file, context, tags=question.tags, questionText = question.questionText, router.goToHome)
+                        Log.d("AnswerQuestion","Going to home screen after answering question")
                     }
 
                 },

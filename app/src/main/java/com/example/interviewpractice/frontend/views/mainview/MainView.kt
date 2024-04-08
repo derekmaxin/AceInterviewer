@@ -177,7 +177,6 @@ fun MainView(
                 //}
             }
 
-            Log.d("MAINVEW",vm.loading.toString())
             if (vm.loading > 0) {
                 LoadingOverlay()
             }

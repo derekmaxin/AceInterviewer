@@ -85,9 +85,8 @@ fun ReviewView(mm: MainModel, c: ReviewController){
     val understandingVM: StarSelectionViewModel = viewModel(key="understanding")
 
     val btnscope = rememberCoroutineScope()
-    var lastPage by remember { mutableStateOf(0) }
 
-
+    val pagerState = rememberPagerState(pageCount = { 11 })
     LaunchedEffect(Unit){
         rvvm.addModel(mm)
         clarityVM.addModel(mm)
@@ -95,6 +94,7 @@ fun ReviewView(mm: MainModel, c: ReviewController){
         c.fetchData(FetchType.TINDER)
         clarityVM.name = "Clarity"
         understandingVM.name = "Completeness"
+        pagerState.scrollToPage(0)
     }
     DisposableEffect(Unit) {
         onDispose {
@@ -105,63 +105,15 @@ fun ReviewView(mm: MainModel, c: ReviewController){
     }
 
 
-
-
-
-
-//    val dummyQuestion = AnsweredQuestion(
-//        textResponse = "How do you manage the memory of an object in C++?",
-//        userID = c.getUser()
-//    )
-
-    val pagerState = rememberPagerState(pageCount = { 11 })
     LaunchedEffect(pagerState.currentPage) {
-        if (pagerState.currentPage < lastPage) {
-            pagerState.scrollToPage(pagerState.currentPage)
-        }
         if (pagerState.currentPage == 10) {
             // Refresh your content here, for example:
+            // Navigate back to the first page
             mm.invalidate(FetchType.TINDER)
             c.fetchData(FetchType.TINDER)
-
-            // Navigate back to the first page
-            pagerState.scrollToPage(0)
         }
-        lastPage = pagerState.currentPage
     }
 
-
-/*
-    val density = LocalDensity.current
-
-    val centerState by remember {
-        mutableStateOf(AnchoredDraggableState(
-            initialValue = 0f,
-            anchors = DraggableAnchors {
-                -1f at 1500f
-                0f at 0f
-                1f at -1500f
-            },
-            positionalThreshold = { distance: Float -> distance * 0.3f },
-            velocityThreshold = { with(density) { 100.dp.toPx() } },
-            animationSpec = tween()
-        ))
-    }
-
-    val rightState by remember {
-        mutableStateOf(AnchoredDraggableState(
-            initialValue = 1500f,
-            anchors = DraggableAnchors {
-                -1f at 1500f
-                0f at 0f
-                1f at -1500f
-            },
-            positionalThreshold = { distance: Float -> distance * 0.3f },
-            velocityThreshold = { with(density) { 100.dp.toPx() } },
-            animationSpec = tween()
-        ))
-    }
-    */
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -213,7 +165,7 @@ fun ReviewView(mm: MainModel, c: ReviewController){
                             )
                         }
                         else {
-                            DummyQuestion(qText = "NO QUESTION TO REVIEW RIGHT NOW")
+                            DummyQuestion(qText = "There are no more questions to review in your fields of interest. Check back later")
                         }
                     }
                 }
@@ -236,17 +188,11 @@ fun ReviewView(mm: MainModel, c: ReviewController){
          */
         if (rvvm.currentReviewData.size > pagerState.currentPage) {
             PlayBar(mm, rvvm.currentReviewData[pagerState.currentPage].downloadUrl)
+            StarSelection(understandingVM)
+            StarSelection(clarityVM)
+            SimpleOutlinedTextField(rvvm)
         }
-        else {
-            PlayBar(mm)
-        }
 
-
-
-        StarSelection(understandingVM)
-        StarSelection(clarityVM)
-
-        SimpleOutlinedTextField(rvvm)
         if (rvvm.currentReviewData.size > pagerState.currentPage ) {
             if (rvvm.currentIDData[pagerState.currentPage] != "1") {
                 Button(

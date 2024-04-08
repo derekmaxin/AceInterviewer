@@ -63,9 +63,10 @@ fun HomeScreen(
 
     LaunchedEffect(Unit){
         vm.addModel(mm)
+        Log.d("HOMEVIEW","CONTAINS?: ${mm.subscribers.contains(vm)}")
         // playBarVM.addModel(mm)
-        c.fetchData(FetchType.RECOMMENDATION)
-        uc.getQuestionsThisUserAnswered()
+        qc.fetchData(FetchType.RECOMMENDATION)
+        qc.fetchData(FetchType.ANSWERED)
     }
     DisposableEffect(Unit) {
         onDispose {

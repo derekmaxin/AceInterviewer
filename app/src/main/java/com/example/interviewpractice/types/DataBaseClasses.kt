@@ -27,6 +27,7 @@ data class History(
     val questionId: String = "",
     val reviewScores: List<Pair<String,Double>> = emptyList(),
     val audioUrl: String = "",
+    val audioTime: Int = 0
 
 
 //    val playBarViewModel = PlayBarViewModel()

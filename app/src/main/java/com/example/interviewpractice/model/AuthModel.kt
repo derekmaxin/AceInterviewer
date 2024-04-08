@@ -25,11 +25,6 @@ class AuthModel: Presenter() {
     var loading: Int = 1
         set(value) {
             field = value
-//            if (isInit) {
-//                isInit  = false
-//                field -= 1
-//            }
-
             notifySubscribers()
             Log.d(TAG,"Updated GLOBAL loading state: loading -> $loading")
         }
@@ -104,7 +99,6 @@ class AuthModel: Presenter() {
 
     fun getUserID(): String {
         val user = auth.currentUser
-        Log.d(TAG,"APPARENT USER: ${user?.email}")
         if (user != null) {
             return user.uid
         }

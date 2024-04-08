@@ -9,10 +9,13 @@ import com.example.interviewpractice.helpers.verifyGenericString
 import com.example.interviewpractice.model.AuthModel
 import com.example.interviewpractice.model.MainModel
 import com.example.interviewpractice.types.AnsweredQuestion
+import com.example.interviewpractice.types.ErrorType
 import com.example.interviewpractice.types.FetchType
+import com.example.interviewpractice.types.Message
 import com.example.interviewpractice.types.Question
 import com.example.interviewpractice.types.Review
 import com.example.interviewpractice.types.Tag
+import com.example.interviewpractice.types.UIError
 import com.example.interviewpractice.types.UserException
 import java.io.File
 import java.util.Calendar
@@ -44,7 +47,7 @@ class QuestionController(mm: MainModel, am: AuthModel): Controller(mm,am, TAG) {
         }
     }
 
-    fun verifySubmitAnswer(answerText:String,questionID: String, audioFile: File?, context: Context?, tags: List<Tag>, questionText: String) {
+    fun verifySubmitAnswer(answerText:String,questionID: String, audioFile: File?, context: Context?, tags: List<Tag>, questionText: String, goToHome: ()->Unit) {
         handler("verifySubmitAnswer") {
             var fileUri: String = ""
             if (audioFile == null || context == null) {
@@ -66,6 +69,10 @@ class QuestionController(mm: MainModel, am: AuthModel): Controller(mm,am, TAG) {
 
 
             mm.addAnsweredQuestion(question, fileUri)
+            am.loading += 1
+            am.isInit = true
+            goToHome()
+            am.error = UIError("Question submitted successfully", errorType = ErrorType.INFO)
         }
 
     }

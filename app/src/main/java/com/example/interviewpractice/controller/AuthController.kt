@@ -86,6 +86,8 @@ class AuthController(mm: MainModel, am: AuthModel): Controller(mm,am,TAG) {
         am.authLoading = true
         Log.d(TAG,"New logout, started authLoading")
         handler("verifyLogout") {
+            am.loading += 1
+            am.isInit = true
             am.logout()
         }
     }
