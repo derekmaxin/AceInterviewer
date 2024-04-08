@@ -20,7 +20,6 @@ class HomeViewModel: LoaderMMViewModel(), Subscriber {
     var user by mutableStateOf<User?>(null)
 
     override fun update() {
-        Log.d(TAG,"NEW POTENTIAL UPDATE DATA FOR HOME: ${model.userAnswered}")
         if (algoResults != model.homePageRecommendations) {
             algoResults = model.homePageRecommendations
             Log.d(TAG, "updated search results on frontend: ${algoResults.toString()}")

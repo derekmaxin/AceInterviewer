@@ -25,7 +25,6 @@ import com.example.interviewpractice.types.History
 fun ViewReviewScores(history: History, mm: MainModel) {
     val playBarViewModel = PlayBarViewModel()
     playBarViewModel.audioURL = history.audioUrl
-    Log.d("vrs", "${history.audioUrl}")
     playBarViewModel.audioLength = 20000
 
     Card(

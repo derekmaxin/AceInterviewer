@@ -337,7 +337,7 @@ class MainModel() : Presenter() {
 //                        Log.d(TAG,"NOTIFICATION DATA: $notification")
                         newReviewNotifications.add(notification)
                         if (notificationCount == -1) {
-                            notificationCount += 0
+                            notificationCount = 0
                         }
                         notificationCount += 1
                     }
