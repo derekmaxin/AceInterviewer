@@ -45,7 +45,8 @@ fun PlayBar(mm: MainModel, url: String = "", length: Int) {
 
     val playBarViewModel: PlayBarViewModel = viewModel(key = url)
     if (playBarViewModel.audioURL != url) playBarViewModel.audioURL = url
-    if (playBarViewModel.audioLength != length)
+    playBarViewModel.audioLength = length
+    // if (playBarViewModel.audioLength != length)
 
 
     Log.d("PlayBarView", "${playBarViewModel.audioURL} + ${playBarViewModel.audioLength}")

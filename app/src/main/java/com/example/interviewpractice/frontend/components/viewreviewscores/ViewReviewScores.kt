@@ -44,7 +44,6 @@ fun ViewReviewScores(history: History, mm: MainModel) {
             HorizontalDivider(thickness = 1.dp, color = Color.LightGray)
             PlayBar(mm, history.audioUrl,history.audioTime)
             HorizontalDivider(thickness = 1.dp, color = Color.LightGray)
-//            PlayBar(viewModel.playBarViewModel)
 
             for (scoreComponent in history.reviewScores) {
                 ReviewScoreComponent(scoreComponent.first, scoreComponent.second.toInt())
