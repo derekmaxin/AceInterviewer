@@ -74,4 +74,8 @@ dependencies {
     implementation("com.google.firebase:firebase-firestore")
     implementation("io.coil-kt:coil-compose:1.4.0")
     implementation("com.google.firebase:firebase-storage")
+    // For unit tests
+    testImplementation("org.mockito:mockito-core:4.0.0")
+    testImplementation("org.mockito:mockito-inline:4.0.0") // For final classes
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.4.2")
 }

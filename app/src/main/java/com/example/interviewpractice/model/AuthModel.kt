@@ -8,16 +8,19 @@ import com.example.interviewpractice.types.Tag
 import com.example.interviewpractice.types.UIError
 import com.example.interviewpractice.types.UserException
 import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.google.firebase.auth.userProfileChangeRequest
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.tasks.await
 import java.util.Date
 
-class AuthModel: Presenter() {
-    //Variables necessary to make the model work
-    val auth = Firebase.auth
-    private val db = Firebase.firestore
+class AuthModel(
+    private val auth: FirebaseAuth = Firebase.auth,
+    private val db: FirebaseFirestore = Firebase.firestore
+): Presenter() {
+
 
     //----------------DATA----------------
     //systemData

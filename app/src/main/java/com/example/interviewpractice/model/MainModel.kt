@@ -19,16 +19,19 @@ import com.example.interviewpractice.types.SystemException
 import com.example.interviewpractice.types.Tag
 import com.example.interviewpractice.types.User
 import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.AggregateField
 import com.google.firebase.firestore.AggregateSource
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.toObject
+import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.storage
 import kotlinx.coroutines.tasks.await
 import java.io.InputStream
@@ -39,11 +42,11 @@ import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
 
-class MainModel() : Presenter() {
-
-    private val auth = Firebase.auth
-    private val db = Firebase.firestore
-    private val storage = Firebase.storage
+class MainModel(
+    private val auth: FirebaseAuth = Firebase.auth,
+    private val db: FirebaseFirestore = Firebase.firestore,
+    private val storage: FirebaseStorage = Firebase.storage
+    ) : Presenter() {
 
     var localLoading: Boolean = false
         set(value) {

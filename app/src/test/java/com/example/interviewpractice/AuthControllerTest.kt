@@ -1,16 +1,22 @@
 package com.example.interviewpractice
 
 import com.example.interviewpractice.controller.AuthController
+import com.example.interviewpractice.controller.TestAuthController
+import com.example.interviewpractice.controller.TestController
 import com.example.interviewpractice.model.AuthModel
 import com.example.interviewpractice.model.MainModel
 import com.example.interviewpractice.types.Tag
 import com.example.interviewpractice.types.UserException
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
 
 import org.junit.Before
 import org.junit.Test
 import org.junit.After
 import org.junit.Ignore
 import org.junit.runner.RunWith
+import org.mockito.Mockito
 
 import java.lang.Exception
 import java.util.Calendar
@@ -21,14 +27,20 @@ class AuthControllerTest {
     lateinit var mainmodel: MainModel
     lateinit var authcontroller: AuthController
 
+    private lateinit var authModel: AuthModel
+    private val mockAuth: FirebaseAuth = Mockito.mock(FirebaseAuth::class.java)
+    private val mockDb: FirebaseFirestore = Mockito.mock(FirebaseFirestore::class.java)
+    private val mockStorage: FirebaseStorage = Mockito.mock(FirebaseStorage::class.java)
+
     val validDate = Date(100, 11, 23)
     val validTags = setOf(Tag.BUSINESS, Tag.PHYSICS, Tag.ENGLISH)
 
     @Before
     fun setup() {
-        authmodel = AuthModel()
-        mainmodel = MainModel()
-        authcontroller= AuthController(mainmodel, authmodel)
+        authModel = AuthModel(mockAuth,mockDb)
+        mainmodel = MainModel(mockAuth,mockDb,mockStorage)
+        authcontroller = AuthController(mainmodel,authModel)
+
     }
 
     @Test(expected = UserException::class)
@@ -45,13 +57,6 @@ class AuthControllerTest {
     fun passwordBlank() {
         authcontroller.verifyPasswordFormat("")
     }
-
-    @Ignore
-    @Test(expected = UserException::class)
-    fun passwordTooShort() {
-        authcontroller.verifyPasswordFormat("1")
-    }
-
     @Test
     fun passwordPerfect() {
         authcontroller.verifyPasswordFormat("pass06")
@@ -69,7 +74,7 @@ class AuthControllerTest {
 
     @Test
     fun emailPerfect() {
-        authcontroller.verifyEmailFormat("")
+        authcontroller.verifyEmailFormat("ryan@gmail.com")
     }
 
     @Test(expected = UserException::class)
