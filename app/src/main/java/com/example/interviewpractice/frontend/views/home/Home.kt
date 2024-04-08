@@ -144,11 +144,8 @@ fun HomeScreen(
                 ) {
 
                     //Log.d("question downloadUrl", "${questionAnswer.downloadUrl}")
-                    val playBarVM: PlayBarViewModel = viewModel(key = questionAnswer.downloadUrl)
-                    playBarVM.addModel(mm)
-                    playBarVM.audioURL = questionAnswer.downloadUrl
 
-                    QuestionAnswered(questionAnswer, playBarVM)
+                    QuestionAnswered(questionAnswer, mm)
                 }
             }
 
@@ -159,9 +156,8 @@ fun HomeScreen(
 @Composable
 fun QuestionAnswered(
     questionAnswer: AnsweredQuestion,
-    playBarVM: PlayBarViewModel
+    mm: MainModel
 ) {
-    Log.d("playbar downloadUrl", "${playBarVM.audioURL}")
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -220,7 +216,7 @@ fun QuestionAnswered(
                         maxLines = 1
                     )
                     Spacer(modifier = Modifier.height(8.dp))
-                    PlayBar(playBarVM)
+                    PlayBar(mm, questionAnswer.downloadUrl)
                 }
             }
             }

@@ -42,7 +42,7 @@ class AuthController(mm: MainModel, am: AuthModel): Controller(mm,am,TAG) {
     ) {
     am.authLoading = true
     Log.d(TAG,"New register, started authLoading")
-        handler("verifyRegister",true) {
+        handler("verifyRegister",false) {
             verifyUsernameFormat(username)
             verifyPasswordFormat(password)
             verifyEmailFormat(email)
@@ -50,6 +50,8 @@ class AuthController(mm: MainModel, am: AuthModel): Controller(mm,am,TAG) {
             verifyFOI(foi)
             verifyConfirm(password,confirm)
 
+            am.loading += 1
+            am.isInit = true
             am.createAccount(
                 username = username,
                 email = email,
@@ -57,6 +59,7 @@ class AuthController(mm: MainModel, am: AuthModel): Controller(mm,am,TAG) {
                 foi=foi,
                 birthday = birthday
             )
+
             //User should now be authenticated, and data stored in the Firestore
 
             Log.d(TAG,"verifyRegister:success")
@@ -67,9 +70,11 @@ class AuthController(mm: MainModel, am: AuthModel): Controller(mm,am,TAG) {
         am.authLoading = true
         Log.d(TAG,"New sign-in, started authLoading")
         Log.d(TAG,"SIGNING IN AS: $email")
-        handler("verifySignIn",true) {
+        handler("verifySignIn",false) {
             verifyPasswordFormat(password)
             verifyEmailFormat(email)
+            am.loading += 1
+            am.isInit = true
             am.signIn(email = email, password = password)
             //User should now be authenticated
             Log.d(TAG,"verifySignIn:success")
@@ -86,7 +91,7 @@ class AuthController(mm: MainModel, am: AuthModel): Controller(mm,am,TAG) {
     }
 
     fun verifyForgotPassword(email: String) {
-        handler("verifyForgotPassword",true) {
+        handler("verifyForgotPassword",false) {
             verifyEmailFormat(email)
 
             am.resetPassword(email)

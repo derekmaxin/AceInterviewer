@@ -24,6 +24,7 @@ import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
@@ -33,17 +34,28 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.interviewpractice.model.MainModel
+import com.example.interviewpractice.types.FetchType
 import com.example.interviewpractice.types.Question
 
 
 @Composable
-fun PlayBar(playBarViewModel: PlayBarViewModel) {
+fun PlayBar(mm: MainModel, url: String = "") {
 
+    val playBarViewModel: PlayBarViewModel = viewModel(key = url)
+
+    LaunchedEffect(Unit){
+        playBarViewModel.addModel(mm)
+        playBarViewModel.audioURL = url
+        Log.d("PlayBarView", playBarViewModel.audioURL)
+    }
     DisposableEffect(Unit) {
         onDispose {
             playBarViewModel.mps.stop()
             playBarViewModel.mps.release()
             Log.d("MPS", "Released")
+            playBarViewModel.unsubscribe()
         }
     }
 

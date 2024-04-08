@@ -164,15 +164,7 @@ fun History(viewModel: HistoryViewModel, hc: HistoryController) {
             )
         }
         if (viewModel.localLoading) {
-            Spacer(modifier = Modifier.padding(8.dp))
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Loader()
-            }
-            Spacer(modifier = Modifier.padding(8.dp))
+            Loader()
         }
         else {
             for (history in viewModel.historyChartData) {

@@ -15,6 +15,7 @@ import com.example.interviewpractice.types.Notification
 import com.example.interviewpractice.types.NotificationType
 import com.example.interviewpractice.types.Question
 import com.example.interviewpractice.types.Review
+import com.example.interviewpractice.types.SystemException
 import com.example.interviewpractice.types.Tag
 import com.example.interviewpractice.types.User
 import com.google.firebase.Firebase
@@ -24,6 +25,7 @@ import com.google.firebase.firestore.AggregateSource
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.toObject
@@ -97,6 +99,7 @@ class MainModel() : Presenter() {
     //NOTIFICATION
     var newReviewNotifications = mutableListOf<Notification>()
     var notificationCount = 0
+    var notificationListener: ListenerRegistration? = null
 
     //PROFILE
     var user: User? = null
@@ -291,7 +294,7 @@ class MainModel() : Presenter() {
         //ASSUME ONLY NEW REVIEW NOTIFICATIONS (FOR NOW FOR SIMPLICITY)
         val docRef = db.collection(Collections.notifications.toString()).whereEqualTo("userID",currentUserID)
 
-        docRef.addSnapshotListener { snapshots, e ->
+        notificationListener = docRef.addSnapshotListener { snapshots, e ->
             if (e != null) {
                 Log.w(TAG, "Listen failed.", e)
                 return@addSnapshotListener
@@ -368,7 +371,7 @@ class MainModel() : Presenter() {
             invalidate(FetchType.LEADERBOARD)
         }
         else {
-            throw CatastrophicException("No uid for signed in user")
+            throw SystemException("No uid for signed in user")
         }
     }
 
@@ -388,7 +391,7 @@ class MainModel() : Presenter() {
                 Log.d(TAG,"RESULTS OF USER SEARCH: ${user.toString()}")
             }
             else {
-                throw CatastrophicException("No uid for signed in user")
+                throw SystemException("No uid for signed in user")
             }
         }
     }
