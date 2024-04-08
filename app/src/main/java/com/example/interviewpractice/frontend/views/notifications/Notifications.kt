@@ -25,10 +25,11 @@ import com.example.interviewpractice.controller.NotificationController
 import com.example.interviewpractice.frontend.components.notification.NotificationGroup
 import com.example.interviewpractice.model.MainModel
 import com.example.interviewpractice.types.FetchType
+import com.example.interviewpractice.types.Notification
 
 @Composable
 
-fun Notifications(mm: MainModel, c: NotificationController, goToSeeReview: (String) -> Unit) {
+fun Notifications(mm: MainModel, c: NotificationController, goToSeeReview: (Notification) -> Unit) {
     val vm: NotificationsViewModel = viewModel()
 
 

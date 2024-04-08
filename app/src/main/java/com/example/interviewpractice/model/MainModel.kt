@@ -193,27 +193,44 @@ class MainModel() : Presenter() {
     }
 
     suspend fun addReview(review: Review) {
-        //Add review itself
+        // Add review itself
         val document = db.collection("reviews").add(review).await()
-        //TODO: invalidate reviews
 
+        // Fetch answered data asynchronously
+        val document2 = db.collection("answered").document(review.answeredQuestionID)
+        var answeredData = AnsweredQuestion()
 
-        //Add notification
+        try {
+            val documentSnapshot = document2.get().await()
+            if (documentSnapshot.exists()) {
+                answeredData = documentSnapshot.toObject(AnsweredQuestion::class.java)!!
+            } else {
+                // Document with the specified ID does not exist
+                // Handle this case accordingly
+            }
+        } catch (e: Exception) {
+            // Handle any errors that occur during the query
+            Log.e(TAG, "Error fetching answered data: ${e.message}", e)
+        }
+
+        // Add notification
         val notification = Notification(
             notificationText = "A new review was added for your answer. Review: ${review.reviewText}",
             type = NotificationType.NEWREVIEW,
             questionID = review.answeredQuestionID,
             userID = review.answeredQuestionAuthorID,
-            reviewID = document.id)
+            reviewID = document.id,
+            review = review,
+            answeredQuestion = answeredData
+        )
         db.collection("notifications").add(notification).await()
 
         db.collection("users").document(review.userID).collection("hasReviewed").document(review.answeredQuestionID).set(HasReviewed())
 
-
         db.collection("answered").document(review.answeredQuestionID).update("reviewCount", FieldValue.increment(1))
         invalidate(FetchType.NOTIFICATION)
         invalidate(FetchType.HISTORY)
-        Log.d(TAG,"addReview::success")
+        Log.d(TAG, "addReview::success")
     }
 
     suspend fun searchQuestion(queryText: String,filters: List<Tag> = emptyList(),self:Boolean=false) {

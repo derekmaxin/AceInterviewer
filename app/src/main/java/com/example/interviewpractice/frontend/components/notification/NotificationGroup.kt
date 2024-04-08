@@ -34,7 +34,7 @@ import androidx.compose.ui.unit.dp
 import com.example.interviewpractice.types.Notification
 
 @Composable
-fun NotificationGroup(type: String, notifications: List<Notification>, goToSeeReview: (String) -> Unit) {
+fun NotificationGroup(type: String, notifications: List<Notification>, goToSeeReview: (Notification) -> Unit) {
 //    var expanded by MutableState<Boolean>(false)
     var expanded by remember {mutableStateOf(false)}
     BadgedBox(
@@ -78,7 +78,7 @@ fun NotificationGroup(type: String, notifications: List<Notification>, goToSeeRe
                                 .fillMaxWidth()
                                 .clickable {
                                     Log.d("ReviewIdInitial ","$notification.reviewID")
-                                    goToSeeReview(notification.reviewID)
+                                    goToSeeReview(notification)
                                 },
                             elevation = CardDefaults.cardElevation(
                                 defaultElevation = 6.dp

@@ -40,6 +40,7 @@ import com.example.interviewpractice.frontend.components.LoadingOverlay
 import com.example.interviewpractice.frontend.views.answerquestion.AnswerScreen
 import com.google.firebase.auth.FirebaseAuth
 import com.example.interviewpractice.frontend.views.seereview.SeeReviewView
+import com.example.interviewpractice.types.Notification
 
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable
@@ -93,8 +94,8 @@ fun MainView(
 
 
 
-    val (dataForSeeReview, setDataForSeeReview) = remember { mutableStateOf("default id") }
-    val navigateToSeeReview: (String) -> Unit = { data ->
+    val (dataForSeeReview, setDataForSeeReview) = remember { mutableStateOf(Notification()) }
+    val navigateToSeeReview: (Notification) -> Unit = { data ->
         setDataForSeeReview(data)
         anc.navigate("see review") // Navigate to the "see review" screen when data is set
     }
@@ -128,7 +129,7 @@ fun MainView(
                     AnswerScreen(mm=mm,qc=qc, router=router)
                 }
                 composable("see review") {
-                    SeeReviewView(mm = mm, reviewId = dataForSeeReview)
+                    SeeReviewView(mm = mm, n = dataForSeeReview)
                 }
 //            composable("best questions") {
 //                BestQuestionsView(vm= bestQuestionsViewModel)
