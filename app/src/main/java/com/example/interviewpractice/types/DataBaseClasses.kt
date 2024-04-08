@@ -27,6 +27,7 @@ data class Question(
 
 data class History(
     val questionText: String = "",
+    val questionAns: String = "",
     val questionId: String = "",
     val reviewScores: List<Pair<String,Double>> = emptyList(),
     val audioUrl: String = "",
@@ -71,7 +72,9 @@ data class Notification(
     val type: NotificationType = NotificationType.NEWREVIEW,
     val questionID: String = "",
     val reviewID: String = "",
-    val userID: String = "" //Who the notification is for
+    val userID: String = "", //Who the notification is for
+    val review: Review = Review(),
+    val answeredQuestion: AnsweredQuestion = AnsweredQuestion()
 )
 
 enum class Tag(val v: String) {

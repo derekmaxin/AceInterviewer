@@ -34,9 +34,13 @@ import com.example.interviewpractice.model.MainModel
 import com.example.interviewpractice.types.FetchType
 import androidx.compose.foundation.layout.Box
 import com.example.interviewpractice.frontend.components.Loader
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import com.example.interviewpractice.frontend.components.LoadingOverlay
 import com.example.interviewpractice.frontend.views.answerquestion.AnswerScreen
 import com.google.firebase.auth.FirebaseAuth
+import com.example.interviewpractice.frontend.views.seereview.SeeReviewView
+import com.example.interviewpractice.types.Notification
 
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable
@@ -90,6 +94,12 @@ fun MainView(
 
 
 
+    val (dataForSeeReview, setDataForSeeReview) = remember { mutableStateOf(Notification()) }
+    val navigateToSeeReview: (Notification) -> Unit = { data ->
+        setDataForSeeReview(data)
+        anc.navigate("see review") // Navigate to the "see review" screen when data is set
+    }
+
     vm.error?.let {err ->
 
         //TODO: Work with snackbars instead of Toasts. This is just a placeholder
@@ -108,16 +118,19 @@ fun MainView(
             if (vm.user != null) {
                 //If user is signed in
 
-                NavHost(navController = anc, startDestination = "home") {
-                    composable("reviews") {
-                        ReviewView(mm=mm,c=rc)
-                    }
-                    composable("leaderboard") {
-                        LeaderboardView(mm=mm,c=uc)
-                    }
-                    composable("answer question") {
-                        AnswerScreen(mm=mm,qc=qc, router=router)
-                    }
+            NavHost(navController = anc, startDestination = "home") {
+                composable("reviews") {
+                    ReviewView(mm=mm,c=rc)
+                }
+                composable("leaderboard") {
+                    LeaderboardView(mm=mm,c=uc)
+                }
+                composable("answer question") {
+                    AnswerScreen(mm=mm,qc=qc, router=router)
+                }
+                composable("see review") {
+                    SeeReviewView(mm = mm, n = dataForSeeReview)
+                }
 //            composable("best questions") {
 //                BestQuestionsView(vm= bestQuestionsViewModel)
 //            }
@@ -129,7 +142,7 @@ fun MainView(
                     HomeScreen(c = ac, mm=mm,qc=qc,uc=uc,r=router)
                 }
                 composable("notifications") {
-                    Notifications(mm=mm, c=nc)
+                    Notifications(mm=mm, c=nc, goToSeeReview =  navigateToSeeReview)
                 }
                 composable("search") {
                     SearchView(

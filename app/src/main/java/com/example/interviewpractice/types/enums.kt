@@ -9,7 +9,8 @@ enum class FetchType {
     HISTORY,
     QUESTION,
     TINDER,
-    FENCE
+    FENCE,
+    REVIEW
 //    NAVBAR
 }
 

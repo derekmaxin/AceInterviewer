@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -17,7 +18,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.interviewpractice.types.Question
@@ -56,13 +61,16 @@ fun Question(q: Question, boost: ()->Unit) {
                 style = MaterialTheme.typography.bodyLarge,
             )
             if (q.tags.isNotEmpty()) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(6.dp)
-                ) {
-                    for (tag in q.tags) {
-                        Tag(tag.toString())
+                val chunkedTags = q.tags.chunked(4)
+                for (chunk in chunkedTags) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+                    ) {
+                        for (tag in chunk) {
+                            Tag(tag.toString())
+                        }
                     }
                 }
             }
@@ -70,7 +78,61 @@ fun Question(q: Question, boost: ()->Unit) {
     }
 }
 
-
+@Composable
+fun ReviewQuestion(qText: String, aText: String, tags: List<String> = emptyList()) {
+    Card(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(6.dp)
+        ) {
+            val questionText = buildAnnotatedString {
+                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                    append("Question: ")
+                }
+                withStyle(style = SpanStyle(fontWeight = FontWeight.Normal)) {
+                    append("$qText")
+                }
+            }
+            Text(
+                text = questionText,
+                modifier = Modifier
+                    .padding(4.dp, 0.dp, 4.dp, 0.dp),
+                textAlign = TextAlign.Left,
+                style = MaterialTheme.typography.bodyLarge,
+            )
+            HorizontalDivider(modifier = Modifier.fillMaxWidth())
+            val answerText = buildAnnotatedString {
+                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                    append("Answer: ")
+                }
+                withStyle(style = SpanStyle(fontWeight = FontWeight.Normal)) {
+                    append("$aText")
+                }
+            }
+            Text(
+                text = answerText,
+                modifier = Modifier
+                    .padding(4.dp, 0.dp, 4.dp, 0.dp),
+                textAlign = TextAlign.Left,
+                style = MaterialTheme.typography.bodyLarge,
+            )
+            if (tags.isNotEmpty()) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    for (tag in tags) {
+                        Tag(tag)
+                    }
+                }
+            }
+        }
+    }
+}
 
 @Composable
 fun DummyQuestion(qText: String, tags: List<String> = emptyList()) {

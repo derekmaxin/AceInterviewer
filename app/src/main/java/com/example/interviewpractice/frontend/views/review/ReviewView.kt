@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
@@ -49,6 +50,7 @@ import com.example.interviewpractice.controller.ReviewController
 import com.example.interviewpractice.frontend.components.playbar.PlayBar
 import com.example.interviewpractice.frontend.components.playbar.PlayBarViewModel
 import com.example.interviewpractice.frontend.components.question.DummyQuestion
+import com.example.interviewpractice.frontend.components.question.ReviewQuestion
 import com.example.interviewpractice.frontend.components.starselection.StarSelection
 import com.example.interviewpractice.frontend.components.starselection.StarSelectionViewModel
 import com.example.interviewpractice.model.MainModel
@@ -92,7 +94,7 @@ fun ReviewView(mm: MainModel, c: ReviewController){
         understandingVM.addModel(mm)
         c.fetchData(FetchType.TINDER)
         clarityVM.name = "Clarity"
-        understandingVM.name = "Understanding"
+        understandingVM.name = "Completeness"
     }
     DisposableEffect(Unit) {
         onDispose {
@@ -169,7 +171,19 @@ fun ReviewView(mm: MainModel, c: ReviewController){
         verticalArrangement = Arrangement.spacedBy(6.dp),
         horizontalAlignment = Alignment.Start
     ) {
-
+        Row(
+            horizontalArrangement = Arrangement.Center,
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            Text(
+                "Review Answers",
+                style = TextStyle(
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            )
+        }
+        Spacer(modifier = Modifier.padding(4.dp))
         HorizontalPager(
             state = pagerState,
             contentPadding = PaddingValues(horizontal = 16.dp),
@@ -194,8 +208,9 @@ fun ReviewView(mm: MainModel, c: ReviewController){
                 for (i in 0..9) {
                     if (i == page) {
                         if ((rvvm.currentReviewData.size > i)) {
-                            DummyQuestion(
-                                qText = rvvm.currentReviewData[i].textResponse
+                            ReviewQuestion(
+                                qText = rvvm.currentReviewData[i].questionText,
+                                aText = rvvm.currentReviewData[i].textResponse
                             )
                         }
                         else {

@@ -136,6 +136,7 @@ fun UserBadgeDisplay(questionsAnswered: Int){
                         description = "To unlock this badge, answer 10 questions! " +
                                 "Current: $questionsAnswered /10"
                     )
+                    HorizontalDivider(modifier = Modifier.fillMaxWidth())
                 }
                 if ((questionsAnswered ?: 0) >= 25) {
                     UserBadge(
@@ -152,6 +153,7 @@ fun UserBadgeDisplay(questionsAnswered: Int){
                         description = "To unlock this badge, answer 25 questions! " +
                                 "Current: $questionsAnswered /25"
                     )
+                    HorizontalDivider(modifier = Modifier.fillMaxWidth())
                 }
                 if ((questionsAnswered ?: 0) >= 100) {
                     UserBadge(
@@ -168,6 +170,7 @@ fun UserBadgeDisplay(questionsAnswered: Int){
                         description = "To unlock this badge, answer 100 questions! " +
                                 "Current: $questionsAnswered /100"
                     )
+                    Spacer(modifier = Modifier.width(8.dp))
                 }
             }
         }
