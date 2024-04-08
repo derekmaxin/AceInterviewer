@@ -538,6 +538,7 @@ class MainModel() : Presenter() {
 
                 val reviewScores = listOf(Pair("clarity",clarityData),Pair("completeness",understandingData))
 
+                Log.d(TAG,"DOWNLOADURL: ${entry.downloadUrl}")
                 val currentHistory: History = History(entry.questionText,document.id,reviewScores,entry.downloadUrl, entry.audioTime)
                 historyChartData.add(currentHistory)
             }

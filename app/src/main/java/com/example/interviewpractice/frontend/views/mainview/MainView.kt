@@ -120,7 +120,7 @@ fun MainView(
 
             NavHost(navController = anc, startDestination = "home") {
                 composable("reviews") {
-                    ReviewView(mm=mm,c=rc)
+                    ReviewView(mm=mm,c=rc,router=router)
                 }
                 composable("leaderboard") {
                     LeaderboardView(mm=mm,c=uc)

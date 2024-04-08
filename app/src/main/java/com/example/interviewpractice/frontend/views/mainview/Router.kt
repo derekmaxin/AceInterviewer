@@ -12,4 +12,7 @@ class Router(anc: NavHostController) {
     val goToHome: () -> Unit = {
         anc.navigate("home")
     }
+    val goToReview: () -> Unit = {
+        anc.navigate("reviews")
+    }
 }

@@ -1,5 +1,6 @@
 package com.example.interviewpractice.frontend.components.question
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.anchoredDraggable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -18,6 +19,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -134,6 +136,44 @@ fun DummyQuestion(qText: String, tags: List<String> = emptyList()) {
                     .padding(4.dp, 0.dp, 4.dp, 0.dp),
                 textAlign = TextAlign.Left,
                 style = MaterialTheme.typography.bodyLarge,
+            )
+            if (tags.isNotEmpty()) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    for (tag in tags) {
+                        Tag(tag)
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun DummyQuestion3(qText: String, goToReview: ()->Unit, tags: List<String> = emptyList()) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = Color.DarkGray,
+        ),
+        onClick = {goToReview()}
+
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(16.dp).background(Color.DarkGray),
+            verticalArrangement = Arrangement.spacedBy(6.dp)
+        ) {
+            Text(
+                text = qText,
+                modifier = Modifier
+                    .padding(4.dp, 0.dp, 4.dp, 0.dp),
+                textAlign = TextAlign.Left,
+                style = MaterialTheme.typography.bodyLarge,
+                color = Color.White
             )
             if (tags.isNotEmpty()) {
                 Row(

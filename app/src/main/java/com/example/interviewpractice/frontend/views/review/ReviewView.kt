@@ -50,9 +50,11 @@ import com.example.interviewpractice.controller.ReviewController
 import com.example.interviewpractice.frontend.components.playbar.PlayBar
 import com.example.interviewpractice.frontend.components.playbar.PlayBarViewModel
 import com.example.interviewpractice.frontend.components.question.DummyQuestion
+import com.example.interviewpractice.frontend.components.question.DummyQuestion3
 import com.example.interviewpractice.frontend.components.question.ReviewQuestion
 import com.example.interviewpractice.frontend.components.starselection.StarSelection
 import com.example.interviewpractice.frontend.components.starselection.StarSelectionViewModel
+import com.example.interviewpractice.frontend.views.mainview.Router
 import com.example.interviewpractice.model.MainModel
 import com.example.interviewpractice.types.AnsweredQuestion
 import com.example.interviewpractice.types.FetchType
@@ -78,7 +80,7 @@ fun SimpleOutlinedTextField(rvvm: ReviewViewViewModel) {
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ReviewView(mm: MainModel, c: ReviewController){
+fun ReviewView(mm: MainModel, c: ReviewController, router: Router){
 
     val rvvm: ReviewViewViewModel = viewModel()
     val clarityVM: StarSelectionViewModel = viewModel(key="clarity")
@@ -94,7 +96,6 @@ fun ReviewView(mm: MainModel, c: ReviewController){
         c.fetchData(FetchType.TINDER)
         clarityVM.name = "Clarity"
         understandingVM.name = "Completeness"
-        pagerState.scrollToPage(0)
     }
     DisposableEffect(Unit) {
         onDispose {
@@ -106,11 +107,16 @@ fun ReviewView(mm: MainModel, c: ReviewController){
 
 
     LaunchedEffect(pagerState.currentPage) {
-        if (pagerState.currentPage == 10) {
+        Log.d("REVIEWVIEW", "CURRENT PAGE: ${pagerState.currentPage}, ${pagerState.currentPage >= 10}")
+        if (pagerState.currentPage >= 10 || pagerState.targetPage >= 10) {
+            Log.d("REVIEWVIEW","INSIDE")
             // Refresh your content here, for example:
             // Navigate back to the first page
+            pagerState.scrollToPage(0)
             mm.invalidate(FetchType.TINDER)
             c.fetchData(FetchType.TINDER)
+
+
         }
     }
 
@@ -157,15 +163,18 @@ fun ReviewView(mm: MainModel, c: ReviewController){
                     }
                     .padding(end = 16.dp)
             ) {
-                for (i in 0..9) {
+                for (i in 0..10) {
                     if (i == page) {
                         if ((rvvm.currentReviewData.size > i)) {
                             ReviewQuestion(
                                 qText = rvvm.currentReviewData[i].questionText
                             )
                         }
-                        else {
+                        else if (i != 10) {
                             DummyQuestion(qText = "There are no more questions to review in your fields of interest. Check back later")
+                        }
+                        else {
+                            DummyQuestion3(qText = "REFRESH", router.goToReview)
                         }
                     }
                 }
