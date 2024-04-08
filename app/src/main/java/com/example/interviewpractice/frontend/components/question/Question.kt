@@ -103,19 +103,6 @@ fun ReviewQuestion(qText: String, tags: List<String> = emptyList()) {
                 textAlign = TextAlign.Left,
                 style = MaterialTheme.typography.bodyLarge,
             )
-            HorizontalDivider(modifier = Modifier.fillMaxWidth())
-            val answerText = buildAnnotatedString {
-                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                    append("Answer: ")
-                }
-            }
-            Text(
-                text = answerText,
-                modifier = Modifier
-                    .padding(4.dp, 0.dp, 4.dp, 0.dp),
-                textAlign = TextAlign.Left,
-                style = MaterialTheme.typography.bodyLarge,
-            )
             if (tags.isNotEmpty()) {
                 Row(
                     modifier = Modifier

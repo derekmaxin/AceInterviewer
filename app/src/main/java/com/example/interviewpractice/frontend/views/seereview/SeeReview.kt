@@ -76,7 +76,7 @@ fun SeeReviewView(mm: MainModel, n : Notification) {
                             append("Question: ")
                         }
                         withStyle(style = SpanStyle(fontWeight = FontWeight.Normal)) {
-                            append("${n.answeredQuestion.questionText}")
+                            append(n.answeredQuestion.questionText)
                         }
                     }
                     Text(

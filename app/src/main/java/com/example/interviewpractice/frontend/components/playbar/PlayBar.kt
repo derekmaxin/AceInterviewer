@@ -48,7 +48,7 @@ fun PlayBar(mm: MainModel, url: String = "") {
     LaunchedEffect(Unit){
         playBarViewModel.addModel(mm)
         playBarViewModel.audioURL = url
-        Log.d("PlayBarView", playBarViewModel.audioURL)
+//        Log.d("PlayBarView", playBarViewModel.audioURL)
     }
     DisposableEffect(Unit) {
         onDispose {

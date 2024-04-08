@@ -63,7 +63,7 @@ fun Notifications(mm: MainModel, c: NotificationController, goToSeeReview: (Noti
             }
             Spacer(modifier = Modifier.padding(4.dp))
             if (vm.newReviewNotification.isNotEmpty()) {
-                NotificationGroup("You have new reviews on your answers!", vm.newReviewNotification, goToSeeReview)
+                NotificationGroup("You have new reviews on your answers!", vm.newReviewNotification, c, goToSeeReview)
             }
             else {
                 Text("No new notifications!",

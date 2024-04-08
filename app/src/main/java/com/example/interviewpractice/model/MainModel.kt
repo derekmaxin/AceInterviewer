@@ -112,6 +112,8 @@ class MainModel() : Presenter() {
 
     //
     var userQuestions = mutableListOf<Question>()
+
+    //ANSWER
     var userAnswered = mutableListOf<AnsweredQuestion>()
 
     //USER FUNCTIONS
@@ -123,6 +125,7 @@ class MainModel() : Presenter() {
 
         // Open an input stream from the content URI
         val inputStream = context.contentResolver?.openInputStream(uri)
+        invalidate(FetchType.PROFILE)
 
         // Upload file to Firebase Storage
         inputStream?.let { stream : InputStream ->
@@ -146,8 +149,24 @@ class MainModel() : Presenter() {
         } ?: run {
             Log.e(TAG, "Failed to open input stream for URI: $uri")
         }
-        invalidate(FetchType.PROFILE)
+
         notifySubscribers()
+    }
+
+    suspend fun removeNotification(reviewID: String, uid: String) {
+        val notificationRef = db.collection("notifications")
+            .whereEqualTo("reviewID",reviewID)
+            .whereEqualTo("userID", uid)
+            .limit(1)
+        invalidate(FetchType.NOTIFICATION)
+        val documentRef = notificationRef.get().await()
+        for (doc in documentRef) {
+            //SHOULD ONLY RUN ONCE
+            if (!doc.exists()) throw CatastrophicException("No notification found with the specifications")
+            db.collection("notifications").document(doc.id).delete().await()
+        }
+
+        Log.d(TAG,"Remove notification successful")
     }
 
     suspend fun addQuestion(question: Question) {
@@ -161,6 +180,10 @@ class MainModel() : Presenter() {
     }
 
     suspend fun addAnsweredQuestion(question: AnsweredQuestion, fileUri: String) {
+        invalidate(FetchType.HISTORY)
+        invalidate(FetchType.TINDER)
+        invalidate(FetchType.ANSWERED)
+//        Log.d(TAG,"INVALIDATED ANSWERED: ${isCached[FetchType.ANSWERED]}")
         val ref: DocumentReference = db.collection("answered").document()
         val myId = ref.id
         //val document = db.collection("answered").add(question).await()
@@ -172,8 +195,7 @@ class MainModel() : Presenter() {
         db.collection("answered").add(question).await()
         db.collection("users").document(question.userID)
             .update("questionsAnswered", FieldValue.increment(1)).await()
-        invalidate(FetchType.HISTORY)
-        invalidate(FetchType.TINDER)
+
         Log.d(TAG,"addAnsweredQuestion:success")
     }
 
@@ -197,6 +219,8 @@ class MainModel() : Presenter() {
     suspend fun addReview(review: Review) {
         // Add review itself
         val reviewRef = db.collection("reviews").add(review).await()
+        invalidate(FetchType.NOTIFICATION)
+        invalidate(FetchType.HISTORY)
 
         // Fetch answered data asynchronously
         val answeredRef = db.collection("answered").document(review.answeredQuestionID)
@@ -216,13 +240,13 @@ class MainModel() : Presenter() {
             review = review,
             answeredQuestion = answeredData
         )
+
         db.collection("notifications").add(notification).await()
 
         db.collection("users").document(review.userID).collection("hasReviewed").document(review.answeredQuestionID).set(HasReviewed())
 
         db.collection("answered").document(review.answeredQuestionID).update("reviewCount", FieldValue.increment(1))
-        invalidate(FetchType.NOTIFICATION)
-        invalidate(FetchType.HISTORY)
+
         Log.d(TAG, "addReview::success")
     }
 
@@ -260,7 +284,7 @@ class MainModel() : Presenter() {
 
         searchResults.clear()
         for (question in query) {
-            Log.d(TAG, "QUERY ${question.id} => ${question.data}")
+//            Log.d(TAG, "QUERY ${question.id} => ${question.data}")
             searchResults.add(question.toObject<Question>())
         }
         if (self) {
@@ -315,23 +339,10 @@ class MainModel() : Presenter() {
                     DocumentChange.Type.REMOVED -> Log.d(TAG, "Notification removed: ${dc.document.data}")
                 }
             }
-            notifySubscribers()
             invalidate(FetchType.NOTIFICATION)
-        }
-    }
+            notifySubscribers()
 
-    suspend fun searchUserAnswered() {
-        val questionsRef = db.collection("answered")
-
-        val query = questionsRef.whereEqualTo("userID", auth.currentUser?.uid)
-            .get()
-            .await()
-        userAnswered.clear()
-        for (question in query) {
-            Log.d(TAG, "QUERY ${question.id} => ${question.data}")
-            userAnswered.add(question.toObject(AnsweredQuestion::class.java))
         }
-        notifySubscribers()
     }
 
     suspend fun searchUserQuestion() {
@@ -351,6 +362,7 @@ class MainModel() : Presenter() {
     //------------[TEST METHODS]------------
     suspend fun boost() {
         val uid = auth.currentUser?.uid
+        invalidate(FetchType.LEADERBOARD)
         if (uid != null) {
             val userRef = db.collection("users").document(uid)
             // Atomically increment the population of the city by 50.
@@ -358,7 +370,7 @@ class MainModel() : Presenter() {
 
             leaderBoardStandings.clear()
             notifySubscribers()
-            invalidate(FetchType.LEADERBOARD)
+
         }
         else {
             throw SystemException("No uid for signed in user")
@@ -369,16 +381,13 @@ class MainModel() : Presenter() {
 
     //------------[FETCH METHODS]------------
     suspend fun getCurrentUserData() {
-        Log.d(TAG,"STARTING FETCH OF USER DATA")
         fetch(FetchType.PROFILE) {
             val uid = auth.currentUser?.uid
-            Log.d(TAG,"FOUND USER: ${auth.currentUser?.email}")
             if (uid != null) {
                 val userDoc = db.collection("users").document(uid)
                 val query = userDoc.get().await()
 
                 user = query.toObject<User>()
-                Log.d(TAG,"RESULTS OF USER SEARCH: ${user.toString()}")
             }
             else {
                 throw SystemException("No uid for signed in user")
@@ -386,19 +395,19 @@ class MainModel() : Presenter() {
         }
     }
 
-    suspend fun getReviewData(reviewId : String){
-        fetch(FetchType.REVIEW) {
-            if (reviewId != null) {
-                val userDoc = db.collection("reviews").document(reviewId)
-                val query = userDoc.get().await()
-
-                //review = query.toObject<User>()
-            }
-            else {
-                throw CatastrophicException("Review with this id does not exist")
-            }
-        }
-    }
+//    suspend fun getReviewData(reviewId : String){
+//        fetch(FetchType.REVIEW) {
+//            if (reviewId != null) {
+//                val userDoc = db.collection("reviews").document(reviewId)
+//                val query = userDoc.get().await()
+//
+//                //review = query.toObject<User>()
+//            }
+//            else {
+//                throw CatastrophicException("Review with this id does not exist")
+//            }
+//        }
+//    }
     suspend fun getQuestionData() {
         fetch(FetchType.QUESTION) {}
     }
@@ -442,8 +451,6 @@ class MainModel() : Presenter() {
 
             val questionRef = db.collection("answered")
                 .orderBy("reviewCount",Query.Direction.ASCENDING)
-//                .whereNotEqualTo("userID", currentUser)
-                //ADD BACK IN after
                 .limit(10)
 
             val query = questionRef.get().await()
@@ -455,8 +462,7 @@ class MainModel() : Presenter() {
             currentReviewData.clear()
             for (entry in query ) {
                 val answered = entry.toObject<AnsweredQuestion>()
-                Log.d(TAG,"REVIEW QUERY: $answered")
-                if (answered.tags.any { it in foi }) {
+                if (answered.tags.any { it in foi } && answered.userID != currentUser) {
 
                     var docRef = db.collection("users")
                         .document(currentUser)
@@ -487,6 +493,18 @@ class MainModel() : Presenter() {
                     The results should then be displayed in the order that they were collected (matches found in Iteration 1 come before Iteration 2, for example).
             */
         }
+    }
+    suspend fun getUserAnswered() {
+        fetch(FetchType.ANSWERED) {
+            val questionsRef = db.collection("answered").whereEqualTo("userID", auth.currentUser?.uid)
+            val query = questionsRef.get().await()
+            userAnswered.clear()
+            for (question in query) {
+//                Log.d(TAG, "QUERY ${question.id} => ${question.data}")
+                userAnswered.add(question.toObject(AnsweredQuestion::class.java))
+            }
+        }
+
     }
     suspend fun getHistoryData(from: Date, to: Date, currentUser: String) {
         fetch(FetchType.HISTORY) {
@@ -520,7 +538,7 @@ class MainModel() : Presenter() {
 
                 val reviewScores = listOf(Pair("clarity",clarityData),Pair("completeness",understandingData))
 
-                val currentHistory: History = History(entry.questionText,document.id,reviewScores,entry.downloadUrl)
+                val currentHistory: History = History(entry.questionText,document.id,reviewScores,entry.downloadUrl, entry.audioTime)
                 historyChartData.add(currentHistory)
             }
         }

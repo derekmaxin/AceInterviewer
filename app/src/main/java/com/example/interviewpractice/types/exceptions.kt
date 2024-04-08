@@ -8,5 +8,7 @@ class CatastrophicException(message:String): Exception(message)
 class UIError(val message: String, val errorType: ErrorType )
 
 enum class ErrorType {
-    USER, SYSTEM, CATASTROPHIC
+    USER, SYSTEM, CATASTROPHIC, INFO
 }
+
+class Message(message: String): Exception(message)

@@ -31,10 +31,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.example.interviewpractice.controller.NotificationController
 import com.example.interviewpractice.types.Notification
 
 @Composable
-fun NotificationGroup(type: String, notifications: List<Notification>, goToSeeReview: (Notification) -> Unit) {
+fun NotificationGroup(type: String, notifications: List<Notification>, c: NotificationController, goToSeeReview: (Notification) -> Unit) {
 //    var expanded by MutableState<Boolean>(false)
     var expanded by remember {mutableStateOf(false)}
     BadgedBox(
@@ -79,6 +80,8 @@ fun NotificationGroup(type: String, notifications: List<Notification>, goToSeeRe
                                 .clickable {
                                     Log.d("ReviewIdInitial ","$notification.reviewID")
                                     goToSeeReview(notification)
+                                    c.removeNotification(notification.reviewID)
+
                                 },
                             elevation = CardDefaults.cardElevation(
                                 defaultElevation = 6.dp

@@ -23,8 +23,6 @@ open class Controller(protected val mm: MainModel, val am: AuthModel, protected 
         handler("fetchData.${ft}",!mm.check(ft)) {
             when (ft) {
                 FetchType.PROFILE-> mm.getCurrentUserData()
-
-
                 FetchType.LEADERBOARD->mm.getLeaderboardData()
                 FetchType.SEARCH->{
                     if (mm.check(FetchType.SEARCH)) mm.notifySubscribers()
@@ -52,13 +50,8 @@ open class Controller(protected val mm: MainModel, val am: AuthModel, protected 
                 FetchType.QUESTION->mm.getQuestionData()
                 FetchType.TINDER->mm.getNextReview(am.getUserID())
                 FetchType.FENCE->{}
-
-
-                else -> {}
+                FetchType.ANSWERED->{mm.getUserAnswered()}
             }
-//            if ( ft == FetchType.RECOMMENDATION || ft==FetchType.HISTORY ) {
-//                am.loading = 0
-//            }
 
         }
     }

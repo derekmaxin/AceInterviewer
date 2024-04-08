@@ -20,6 +20,14 @@ class NotificationController(mm: MainModel, am: AuthModel): Controller(mm,am, TA
 
         }
     }
+
+    fun removeNotification(reviewID: String) {
+        handler("removeNotification",false) {
+            val currentUser = am.getUserID()
+            mm.removeNotification(reviewID, currentUser)
+        }
+    }
+
     companion object {
         private const val TAG = "NotificationController"
     }
