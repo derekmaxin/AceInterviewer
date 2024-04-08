@@ -79,7 +79,7 @@ fun Question(q: Question, boost: ()->Unit) {
 }
 
 @Composable
-fun ReviewQuestion(qText: String, aText: String, tags: List<String> = emptyList()) {
+fun ReviewQuestion(qText: String, tags: List<String> = emptyList()) {
     Card(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -107,9 +107,6 @@ fun ReviewQuestion(qText: String, aText: String, tags: List<String> = emptyList(
             val answerText = buildAnnotatedString {
                 withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
                     append("Answer: ")
-                }
-                withStyle(style = SpanStyle(fontWeight = FontWeight.Normal)) {
-                    append("$aText")
                 }
             }
             Text(

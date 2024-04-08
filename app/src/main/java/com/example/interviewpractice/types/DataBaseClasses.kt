@@ -16,9 +16,6 @@ data class User(
 data class Question(
     val questionText: String = "",
     val tags: List<Tag> = emptyList(),
-    val hasVoice: Boolean = false,
-    val hasText: Boolean = false,
-    val deprecated: Boolean = false,
     val userID: String = "",
     val date: Date = Date(),
     val answers: List<String> = emptyList(),
@@ -27,7 +24,6 @@ data class Question(
 
 data class History(
     val questionText: String = "",
-    val questionAns: String = "",
     val questionId: String = "",
     val reviewScores: List<Pair<String,Double>> = emptyList(),
     val audioUrl: String = "",
@@ -52,10 +48,8 @@ data class Review(
 data class AnsweredQuestion(
     val questionText: String = "",
     val userID: String = "", //Who answered the question
-    val textResponse: String = "",
     var downloadUrl: String = "", //Some sort of link to the Google Cloud storage
     val audioTime: Int = 0, //In seconds
-    val isPrivate: Boolean = false,
     val questionID: String = "",
     val date: Date = Date(),
     val reviewCount: Int = 0, //Number of reviews this question has

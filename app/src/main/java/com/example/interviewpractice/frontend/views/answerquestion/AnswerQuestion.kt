@@ -83,23 +83,17 @@ fun AnswerScreen(mm: MainModel, qc: QuestionController, router: Router) {
             if (question == null || vm.localLoading) Loader()
             else {
                 Question(question) {}
-                if (question.hasText) {
-                    SimpleOutlinedTextField(vm)
-                }
 
+                SubmitAnswer(qc = qc, vm=vm)
 
-                if (question.hasVoice) {
-                    SubmitAnswer(qc = qc, vm=vm)
-                }
 
             }
             Button(
                 onClick = {
-                    val question = vm.currentQuestion
                     val file = vm.audioFile
                     val context = vm.context
                     if (question!= null) {
-                        qc.verifySubmitAnswer(answerText = vm.textAnswer,question.questionID, file, context ,hasVoice = question.hasVoice,hasText = question.hasText, tags=question.tags, questionText = question.questionText)
+                        qc.verifySubmitAnswer(answerText = vm.textAnswer,question.questionID, file, context, tags=question.tags, questionText = question.questionText)
                         router.goToHome()
                     }
 
