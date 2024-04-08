@@ -62,22 +62,7 @@ class QuestionController(mm: MainModel, am: AuthModel): Controller(mm,am, TAG) {
             }
             fileUri = FileProvider.getUriForFile(context, context.packageName + ".provider", audioFile).toString()
 
-            var mediaPlayer = MediaPlayer()
-            var audioLength: Int
-
-            mediaPlayer.let {
-                if (it.isPlaying) {
-                    mediaPlayer.stop()
-                    mediaPlayer.reset()
-                }
-            }
-            mediaPlayer.release()
-            mediaPlayer = MediaPlayer().apply {
-                setDataSource(fileUri)
-                prepare()
-            }
-
-            audioLength = mediaPlayer.duration
+            val audioLength = getAudioFileDuration(audioFile.absolutePath)
             val uid = am.getUserID()
 
             val question = AnsweredQuestion(
@@ -97,6 +82,21 @@ class QuestionController(mm: MainModel, am: AuthModel): Controller(mm,am, TAG) {
             am.error = UIError("Question submitted successfully", errorType = ErrorType.INFO)
         }
 
+    }
+
+    private fun getAudioFileDuration(filePath: String): Int {
+        val mediaPlayer = MediaPlayer()
+        try {
+            mediaPlayer.setDataSource(filePath) // Set the data source of the audio file
+            mediaPlayer.prepare() // Prepare the MediaPlayer
+            val duration = mediaPlayer.duration // Get the duration of the audio file in milliseconds
+            mediaPlayer.release() // Release the MediaPlayer
+            return duration
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+        Log.d(TAG,"ERROR IN GETTING AUDIO DURATION")
+        return 0 // Return -1 if there was an error
     }
 
     fun loadNextQuestion(question: Question) {
