@@ -167,7 +167,7 @@ fun RegisterScreen(am: AuthModel, c: AuthController) {
 @Composable
 fun FieldsOfInterest(vm: RegisterViewModel){
     val options = listOf(
-        Tag.BIOLOGY, Tag.ENGLISH, Tag.CHEMISTRY, Tag.CS, Tag.MATH, Tag.FINANCE, Tag.PHYSICS, Tag.BUSINESS
+        Tag.BIOLOGY, Tag.ENGLISH, Tag.MATH, Tag.CS, Tag.PHYSICS, Tag.FINANCE, Tag.ART, Tag.BUSINESS, Tag.CHEMISTRY
     )
     Column {
         Text(
