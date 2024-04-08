@@ -14,6 +14,9 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.example.interviewpractice.frontend.MMViewModel
+import java.io.IOException
+import java.util.Timer
+import java.util.TimerTask
 
 enum class PlayState {
     PLAY, // If play, show pause icon
@@ -21,12 +24,53 @@ enum class PlayState {
 }
 
 class PlayerService(private val url: String) {
-    var mediaPlayer: MediaPlayer? = null
-    var currentPosition by mutableFloatStateOf(0F)
-    var audioLength by mutableIntStateOf(0)
-    var isSetup = false
 
-    fun setup() {
+    private var mediaPlayer: MediaPlayer? = null
+    var currentPosition = 0
+
+    var audioLength: Int = 0
+        set(value) {
+            if (value != field) {
+                audioLengthListener(value)
+                field = value
+            }
+        }
+
+    var playState: PlayState = PlayState.PAUSE
+        set(value) {
+            currentPlayStateListener(value)
+            field = value
+        }
+
+    private var currentPositionTimer: Timer? = null
+    private var currentPositionListener: (Int) -> Unit = {}
+    private var currentPlayStateListener: (PlayState) -> Unit = {}
+    private var audioLengthListener: (Int) -> Unit = {}
+
+    private fun startPositionListener() {
+        currentPositionTimer = Timer()
+
+        currentPositionTimer?.scheduleAtFixedRate(object : TimerTask() {
+            override fun run() {
+                if ( (mediaPlayer?.currentPosition ?: 0) != currentPosition) {
+                    currentPosition = mediaPlayer?.currentPosition ?: 0
+                    currentPositionListener(currentPosition)
+                }
+            }
+        }, 0, 30)
+    }
+
+    private fun stopPositionListener() {
+        Log.d("mps", "Stopped position timer")
+        currentPositionTimer?.cancel()
+        currentPositionTimer = null
+    }
+
+    fun setCurrentPositionListener(listener: (Int) -> Unit) { this.currentPositionListener = listener }
+    fun setAudioLengthListener(listener: (Int) -> Unit) { this.audioLengthListener = listener }
+    fun setPlayStateListener(listener: (PlayState) -> Unit) { this.currentPlayStateListener = listener }
+
+    fun play() {
         mediaPlayer?.let {
             if (it.isPlaying) {
                 mediaPlayer?.stop()
@@ -35,52 +79,55 @@ class PlayerService(private val url: String) {
         }
         mediaPlayer?.release()
         mediaPlayer = MediaPlayer().apply {
-            setDataSource(url)
-            prepareAsync()
+            try {
+                setDataSource(url)
+                prepareAsync()
+            } catch(e: IOException) {
+                Log.e("mps", "No audio file submitted for this question")
+            }
         }
 
         mediaPlayer?.setOnPreparedListener { mediaPlayer ->
-
-            Log.d("PlayerService","$audioLength")
-        }
-
-        play()
-    }
-
-    fun play() {
-        mediaPlayer?.setOnPreparedListener { mediaPlayer ->
-            //audioLength = mediaPlayer.duration
-            Log.d("PlayerService","$audioLength")
+            playState = PlayState.PLAY
+            audioLength = mediaPlayer.duration
             mediaPlayer.seekTo(currentPosition.toInt())
+            startPositionListener()
             mediaPlayer.start()
+
+        }
+
+        mediaPlayer?.setOnCompletionListener {
+            playState = PlayState.PAUSE
+            mediaPlayer?.pause()
+            currentPosition = 0
+            stopPositionListener()
         }
     }
 
     fun pause() {
-        mediaPlayer?.let {
-            currentPosition = it.currentPosition.toFloat()
-            it.pause()
-        }
+        playState = PlayState.PAUSE
+        mediaPlayer?.pause()
+        stopPositionListener()
     }
 
-    fun stop() {
-        mediaPlayer?.stop()
-        mediaPlayer?.reset()
-        currentPosition = 0F
+    fun seekTo(time: Int) {
+        currentPosition = time
     }
 
     fun release() {
+        playState = PlayState.PAUSE
+        mediaPlayer?.stop()
         mediaPlayer?.reset()
         mediaPlayer?.release()
         mediaPlayer = null
-        currentPosition = 0F
+        currentPosition = 0
     }
 
 }
 
 
 class PlayBarViewModel(): MMViewModel() {
-    var audioURLState: MutableState<String> = mutableStateOf("")
+    private var audioURLState: MutableState<String> = mutableStateOf("")
     var audioURL: String
         get() = audioURLState.value
         set(value) {
@@ -90,40 +137,42 @@ class PlayBarViewModel(): MMViewModel() {
 
     var mps: PlayerService = PlayerService(audioURL)
 
+    var audioLength by mutableIntStateOf(0)
+    var currentPosition by mutableIntStateOf(0)
+    var playState by mutableStateOf(mps.playState)
+
     private fun updatePlayerService() {
         mps = PlayerService(audioURL)
-    }
 
-    var playState by mutableStateOf(PlayState.PAUSE)
-    var audioLengthSeconds by mutableIntStateOf(mps.audioLength)
-
-
-    fun switchState() {
-         if (playState == PlayState.PLAY) {
-             Log.d("mps", "${mps.audioLength}")
-             Log.d("mps", "pausing!")
-             playState = PlayState.PAUSE
-             pause()
-         } else {
-             Log.d("mps", "playing!")
-             playState = PlayState.PLAY
-            play()
-         }
-    }
-
-    private fun play() {
-        if (mps.isSetup) {
-            mps.play()
-        } else {
-            mps.setup()
+        mps.setAudioLengthListener {
+            Log.d("mps", "audio length changed to $it")
+            audioLength = it
+        }
+        mps.setCurrentPositionListener {
+            //Log.d("mps", "current position changed to $it")
+            currentPosition = it
+        }
+        mps.setPlayStateListener {
+            Log.d("mps", "playstate changed")
+            playState = it
         }
     }
 
-    private fun pause() {
-        mps.pause()
+    fun switchState() {
+         if (playState == PlayState.PLAY) {
+             Log.d("mps", "Pausing!")
+             pause()
+         } else {
+             Log.d("mps", "Playing!")
+             play()
+         }
     }
 
-    private fun goTo(time: Float) {
-
+    fun seek(time: Int) {
+        pause()
+        mps.seekTo(time)
     }
+    private fun play() { mps.play() }
+    private fun pause() { mps.pause() }
+
 }

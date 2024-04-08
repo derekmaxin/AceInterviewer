@@ -41,7 +41,7 @@ fun PlayBar(playBarViewModel: PlayBarViewModel) {
 
     DisposableEffect(Unit) {
         onDispose {
-            playBarViewModel.mps.stop()
+            //playBarViewModel.mps.stop()
             playBarViewModel.mps.release()
             Log.d("MPS", "Released")
         }
@@ -64,19 +64,20 @@ fun PlayBar(playBarViewModel: PlayBarViewModel) {
         }
         Slider(
             modifier = Modifier.weight(1f),
-            value = playBarViewModel.mps.currentPosition,
+            value = playBarViewModel.currentPosition.toFloat(),
             onValueChange = {
-                playBarViewModel.mps.currentPosition = it
+                playBarViewModel.currentPosition = it.toInt()
+                playBarViewModel.seek(playBarViewModel.currentPosition)
             },
             colors = SliderDefaults.colors(
                 thumbColor = MaterialTheme.colorScheme.secondary,
                 activeTrackColor = MaterialTheme.colorScheme.secondary,
                 inactiveTrackColor = Color(0xffd4c7eb),
             ),
-            valueRange = 0f..(playBarViewModel.mps.audioLength.toFloat())
+            valueRange = 0f..(playBarViewModel.audioLength.toFloat())
         )
         Text(
-            text = (playBarViewModel.mps.audioLength / 60000).toString() + ":" + String.format("%02d",((playBarViewModel.mps.audioLength / 1000) % 60)).toString(),
+            text = (playBarViewModel.audioLength / 60000).toString() + ":" + String.format("%02d",((playBarViewModel.audioLength / 1000) % 60)).toString(),
             modifier = Modifier
                 .widthIn(64.dp),
             textAlign = TextAlign.Center,
