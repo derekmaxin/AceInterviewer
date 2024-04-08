@@ -83,12 +83,10 @@ fun ProfileView(mm: MainModel,
     val context = LocalContext.current
     val launcher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri ->
         uri?.let {
-            uc.addUserPfp(it, context)
             mm.invalidate(FetchType.PROFILE)
             mm.invalidate(FetchType.HISTORY)
-            uc.fetchData(FetchType.PROFILE)
-            uc.fetchData(FetchType.HISTORY)
-            mm.notifySubscribers()
+            uc.addUserPfp(it, context)
+
         }
     }
     Surface() {

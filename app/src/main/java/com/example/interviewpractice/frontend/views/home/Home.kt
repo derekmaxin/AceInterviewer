@@ -63,7 +63,6 @@ fun HomeScreen(
 
     LaunchedEffect(Unit){
         vm.addModel(mm)
-        Log.d("HOMEVIEW","CONTAINS?: ${mm.subscribers.contains(vm)}")
         // playBarVM.addModel(mm)
         qc.fetchData(FetchType.RECOMMENDATION)
         qc.fetchData(FetchType.ANSWERED)

@@ -125,32 +125,20 @@ class MainModel() : Presenter() {
 
         // Open an input stream from the content URI
         val inputStream = context.contentResolver?.openInputStream(uri)
-        invalidate(FetchType.PROFILE)
 
         // Upload file to Firebase Storage
         inputStream?.let { stream : InputStream ->
-            val uploadTask = imageRef.putStream(stream)
+            val uploadTask = imageRef.putStream(stream).await()
 
             // Register observers to listen for upload success or failure
-            uploadTask.addOnSuccessListener { taskSnapshot ->
                 // Image uploaded successfully
                 // Get the download URL of the image
-                imageRef.downloadUrl.addOnSuccessListener { downloadUri : Uri ->
+                val downloadUri = imageRef.downloadUrl.await()
                     // Store the download URL in Firestore or Realtime Database
-                    userRef.update("pfpURL", downloadUri.toString())
-                }.addOnFailureListener { exception ->
-                    Log.e(TAG, "Failed to get download URL: $exception")
-                    // Handle any errors while getting download URL
-                }
-            }.addOnFailureListener { exception ->
-                // Handle unsuccessful uploads
-                Log.e(TAG, "Failed to upload image: $exception")
-            }
+                    userRef.update("pfpURL", downloadUri.toString()).await()
         } ?: run {
             Log.e(TAG, "Failed to open input stream for URI: $uri")
         }
-
-        notifySubscribers()
     }
 
     suspend fun removeNotification(reviewID: String, uid: String) {
