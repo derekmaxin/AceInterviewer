@@ -21,3 +21,5 @@ _Release 4.1.0 was created to fix bugs and make minor changes to suit the reccom
 * [Derek Maxin](https://git.uwaterloo.ca/kotlin-gang/team-101-5/-/wikis/Derek-Development-Journal)
 * [Marcus Puntillo](https://git.uwaterloo.ca/kotlin-gang/team-101-5/-/wikis/Marcus-Development-Journal)
 * [Jia Wen Li](https://git.uwaterloo.ca/kotlin-gang/team-101-5/-/wikis/Jia-Wen-Development-Journal)
+
+**[Meeting Minutes](https://git.uwaterloo.ca/kotlin-gang/team-101-5/-/wikis/Meeting-Minutes)**
