@@ -23,3 +23,5 @@ _Release 4.1.0 was created to fix bugs and make minor changes to suit the reccom
 * [Jia Wen Li](https://git.uwaterloo.ca/kotlin-gang/team-101-5/-/wikis/Jia-Wen-Development-Journal)
 
 **[Meeting Minutes](https://git.uwaterloo.ca/kotlin-gang/team-101-5/-/wikis/Meeting-Minutes)**: _Note that meeting minutes are also contained in each of our development journals_
+
+**[Reflection](https://git.uwaterloo.ca/kotlin-gang/team-101-5/-/wikis/Reflection)**
