@@ -46,13 +46,19 @@ fun LeaderboardView(mm: MainModel, c: UserController)
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.Start
     ) {
-        Text("Leaderboard",
-            style = TextStyle(
-                fontSize = 20.sp,
-                color = Color.Black,
-                fontWeight = FontWeight.Bold
+        Row(
+            horizontalArrangement = Arrangement.Center,
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            Text(
+                "Leaderboard",
+                style = TextStyle(
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold
+                )
             )
-        )
+        }
+        Spacer(modifier = Modifier.padding(4.dp))
         if (vm.topUsers.size > 2) Podium(vm.topUsers[0], vm.topUsers[1], vm.topUsers[2])
 
         Spacer(modifier = Modifier.height(16.dp))

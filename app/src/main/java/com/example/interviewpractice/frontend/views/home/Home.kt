@@ -16,9 +16,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -82,6 +86,19 @@ fun HomeScreen(
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.Start
         ) {
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                Text(
+                    "Home",
+                    style = TextStyle(
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                )
+            }
+            Spacer(modifier = Modifier.padding(4.dp))
             TextButton(onClick = { }) {
                 Text("Question of the day",
                     style = TextStyle(
@@ -148,9 +165,9 @@ fun QuestionAnswered(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(125.dp)
+            .wrapContentHeight(),
     ) {
-        Box() {// Needed to align notification number in top-right
+        Box() {
             Button(
                 onClick = { },
                 modifier = Modifier.fillMaxSize(),
@@ -164,8 +181,16 @@ fun QuestionAnswered(
                 Column(
                     modifier = Modifier.fillMaxSize()
                 ) {
+                    val questionText = buildAnnotatedString {
+                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                            append("Question: ")
+                        }
+                        withStyle(style = SpanStyle(fontWeight = FontWeight.Normal)) {
+                            append("${questionAnswer.questionText}")
+                        }
+                    }
                     Text(
-                        text = "${questionAnswer.questionText}",
+                        text = questionText,
                         style = TextStyle(
                             fontSize = 14.sp,
                             color = Color.Black,
@@ -173,6 +198,16 @@ fun QuestionAnswered(
                         modifier = Modifier.padding(8.dp),
                         overflow = TextOverflow.Ellipsis,
                         maxLines = 1
+                    )
+                    Text(
+                        text = "Your Answer",
+                        style = TextStyle(
+                            fontWeight = FontWeight.Bold,
+                            textDecoration = TextDecoration.Underline,
+                            fontSize = 14.sp,
+                            color = Color.Black
+                        ),
+                        modifier = Modifier.padding(8.dp),
                     )
                     Text(
                         text = "${questionAnswer.textResponse}",
