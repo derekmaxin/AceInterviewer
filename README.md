@@ -32,4 +32,4 @@ _Release 4.1.0 was created to fix bugs and make minor changes to suit the reccom
 **[Design Documentation](https://git.uwaterloo.ca/kotlin-gang/team-101-5/-/wikis/Design-Documentation)**
 
 ### User Documentation
-**[User Documentation](https://git.uwaterloo.ca/kotlin-gang/team-101-5/-/wikis/User-Documentation)**
+**[User Documentation/Getting Started](https://git.uwaterloo.ca/kotlin-gang/team-101-5/-/wikis/Getting-Started)**
