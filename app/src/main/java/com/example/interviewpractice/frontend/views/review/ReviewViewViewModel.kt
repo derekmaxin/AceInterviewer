@@ -18,6 +18,8 @@ class ReviewViewViewModel(): MMViewModel() {
     var questions = mutableListOf<Question>()
     val questionsIndex = mutableIntStateOf(0)
 
+    var cpage by mutableIntStateOf(0)
+
     var currentReviewData by mutableStateOf<List<AnsweredQuestion>>(emptyList())
     var currentIDData by mutableStateOf<List<String>>(emptyList())
 //    val questionVM = mutableStateOf(QuestionViewModel(model))

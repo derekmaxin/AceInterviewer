@@ -44,19 +44,20 @@ import com.example.interviewpractice.types.Question
 fun PlayBar(mm: MainModel, url: String = "", length: Int) {
 
     val playBarViewModel: PlayBarViewModel = viewModel(key = url)
+    if (playBarViewModel.audioURL != url) playBarViewModel.audioURL = url
+    if (playBarViewModel.audioLength != length)
+
+
+    Log.d("PlayBarView", "${playBarViewModel.audioURL} + ${playBarViewModel.audioLength}")
 
     LaunchedEffect(Unit){
         playBarViewModel.addModel(mm)
-        playBarViewModel.audioURL = url
-        playBarViewModel.audioLength = length
-//        Log.d("PlayBarView", playBarViewModel.audioURL)
+
     }
     DisposableEffect(Unit) {
         onDispose {
             //playBarViewModel.mps.stop()
             playBarViewModel.mps.release()
-            Log.d("mps", "Released")
-            Log.d("MPS", "Released")
             playBarViewModel.unsubscribe()
         }
     }

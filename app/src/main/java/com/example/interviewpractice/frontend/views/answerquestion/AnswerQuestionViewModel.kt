@@ -18,6 +18,8 @@ class AnswerQuestionViewModel(): LoaderMMViewModel() {
     var context by mutableStateOf<Context?>(null)
     var audioFile by mutableStateOf<File?>(null)
 
+    var onRecord by mutableStateOf(true)
+
     //DATA FROM BACKEND
     var currentQuestion by mutableStateOf<Question?>(null)
 

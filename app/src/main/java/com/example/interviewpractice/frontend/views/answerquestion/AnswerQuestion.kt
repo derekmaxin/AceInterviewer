@@ -90,12 +90,17 @@ fun AnswerScreen(mm: MainModel, qc: QuestionController, router: Router) {
             }
             Button(
                 onClick = {
-                    val file = vm.audioFile
-                    val context = vm.context
-                    if (question!= null) {
-                        qc.verifySubmitAnswer(answerText = vm.textAnswer,question.questionID, file, context, tags=question.tags, questionText = question.questionText, router.goToHome)
-                        Log.d("AnswerQuestion","Going to home screen after answering question")
+                    Log.d("ANSWERQUESTION",vm.onRecord.toString())
+                    if (vm.onRecord) {
+                        val file = vm.audioFile
+                        val context = vm.context
+                        if (question!= null) {
+                            qc.verifySubmitAnswer(answerText = vm.textAnswer,question.questionID, file, context, tags=question.tags, questionText = question.questionText, router.goToHome)
+                            Log.d("AnswerQuestion","Going to home screen after answering question")
+                        }
                     }
+
+
 
                 },
                 modifier = Modifier

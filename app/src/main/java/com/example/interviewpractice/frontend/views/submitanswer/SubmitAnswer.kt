@@ -109,7 +109,7 @@ fun SubmitAnswer(qc: QuestionController,vm: AnswerQuestionViewModel) {
         }
 
     val context = LocalContext.current
-    var onRecord = remember {mutableStateOf(true) }
+
     val recorder = AudioRecord(context)
 
     Surface(
@@ -122,8 +122,8 @@ fun SubmitAnswer(qc: QuestionController,vm: AnswerQuestionViewModel) {
                     context,
                     Manifest.permission.RECORD_AUDIO
                 ) -> {
-                    recorder.onRecord(onRecord.value, qc, vm)
-                    onRecord.value = !onRecord.value
+                    recorder.onRecord(vm.onRecord, qc, vm)
+                    vm.onRecord = !vm.onRecord
                 }
 
                 else -> {
@@ -133,7 +133,7 @@ fun SubmitAnswer(qc: QuestionController,vm: AnswerQuestionViewModel) {
             }
 
         }) {
-            Text(if (onRecord.value) "Start Recording" else "Stop Recording")
+            Text(if (vm.onRecord) "Start Recording" else "Stop Recording")
         }
     }
 }
