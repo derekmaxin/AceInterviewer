@@ -57,6 +57,7 @@ import com.example.interviewpractice.helpers.navToQuestion
 import com.example.interviewpractice.model.MainModel
 import com.example.interviewpractice.types.FetchType
 import com.example.interviewpractice.types.Tag
+import com.example.interviewpractice.types.UIError
 
 @Composable
 //@Preview
@@ -225,7 +226,7 @@ fun SearchView(c: QuestionController, mm: MainModel, r: Router) {
             Column(modifier = Modifier.verticalScroll(scrollState)) {
                 if (vm.localLoading) Loader()
                 for (question in vm.searchResults) {
-                    Question(question.first,question.second) { navToQuestion(r.goToAnswerQuestion,question.first,c) }
+                    Question(question.first,question.second) {}
                     Spacer(modifier = Modifier.padding(4.dp))
                 }
             }
