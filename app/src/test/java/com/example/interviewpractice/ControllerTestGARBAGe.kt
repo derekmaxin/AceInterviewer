@@ -13,8 +13,9 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.After
 import org.mockito.Mockito
-
+import java.util.Calendar
 import java.util.Date
+import kotlin.Exception
 
 class AuthControllerTest {
     lateinit var authmodel: AuthModel
@@ -37,48 +38,166 @@ class AuthControllerTest {
 
     }
 
-    @Test(expected = UserException::class)
+    @Test
     fun usernameBlank() {
-        authcontroller.verifyUsernameFormat("")
+        //arrange
+        val username = ""
+        var isCorrect : Boolean
+
+        //act
+        try {
+            authcontroller.verifyUsernameFormat(username)
+            isCorrect = false
+        } catch (e : Exception) {
+            isCorrect = true
+        }
+
+        //assert
+        assert(isCorrect)
     }
 
     @Test
     fun usernamePerfect() {
-        authcontroller.verifyUsernameFormat("testuser1")
+        //arrange
+        val username = "testuser1"
+        var isCorrect : Boolean
+
+        //act
+        try {
+            authcontroller.verifyUsernameFormat(username)
+            isCorrect = true
+        } catch (e : Exception) {
+            isCorrect = false
+        }
+
+        //assert
+        assert(isCorrect)
     }
 
-    @Test(expected = UserException::class)
+   @Test
     fun passwordBlank() {
-        authcontroller.verifyPasswordFormat("")
+        //arrange
+        val text = ""
+        var isCorrect : Boolean
+
+        //act
+        try {
+            authcontroller.verifyPasswordFormat(text)
+            isCorrect = false
+        } catch (e: Exception) {
+            //should throw an exception
+            isCorrect = true
+        }
+
+        //assert
+        assert(isCorrect)
     }
     @Test
     fun passwordPerfect() {
-        authcontroller.verifyPasswordFormat("pass06")
+        //arrange
+        val text = "pass06"
+        var isCorrect : Boolean
+
+        //act
+        try {
+            authcontroller.verifyPasswordFormat(text)
+            isCorrect = true
+        } catch (e: Exception) {
+            isCorrect = false
+        }
+
+        //assert
+        assert(isCorrect)
     }
 
-    @Test(expected = UserException::class)
+    @Test
     fun passwordsDoNotMatch() {
-        authcontroller.verifyConfirm("123456", "654321")
+        //arrange
+        val password = "123456"
+        val confirm = "654321"
+        var isCorrect : Boolean
+
+        //act
+        try {
+            authcontroller.verifyConfirm(password, confirm)
+            isCorrect = false
+        } catch (e: Exception) {
+            isCorrect = true
+        }
+
+        //asset
+        assert(isCorrect)
     }
 
-    @Test(expected = UserException::class)
+    @Test
     fun emailBlank() {
-        authcontroller.verifyEmailFormat("")
+        //arrange
+        val email = ""
+        var isCorrect : Boolean
+
+        //act
+        try {
+            authcontroller.verifyEmailFormat(email)
+            isCorrect = false
+        } catch (e: Exception) {
+            isCorrect = true
+        }
+
+        //assert
+        assert(isCorrect)
     }
 
     @Test
     fun emailPerfect() {
-        authcontroller.verifyEmailFormat("ryan@gmail.com")
+        //arrange
+        val email = "user@gmail.com"
+        var isCorrect : Boolean
+
+        //act
+        try {
+            authcontroller.verifyEmailFormat(email)
+            isCorrect = true
+        } catch (e: Exception) {
+            isCorrect = false
+        }
+
+        //assert
+        assert(isCorrect)
     }
 
-    @Test(expected = UserException::class)
+    @Test
     fun birthdayInvalidUnder16() {
-        authcontroller.verifyBirthday(Date())
+        //arrange
+        val date = Date()
+        var isCorrect: Boolean
+
+        //act
+        try {
+            authcontroller.verifyBirthday(date)
+            isCorrect = false
+        } catch (e: Exception) {
+            isCorrect = true
+        }
+
+        //assert
+        assert(isCorrect)
     }
 
-    @Test(expected = UserException::class)
+    @Test
     fun noInterestsSelected() {
-        authcontroller.verifyFOI(emptySet())
+        //arrange
+        var isCorrect: Boolean
+
+        //act
+        try {
+            authcontroller.verifyFOI(emptySet())
+            isCorrect = false
+        } catch (e: Exception) {
+            isCorrect = true
+        }
+
+        //assert
+        assert(isCorrect)
     }
 
     @After
